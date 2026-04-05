@@ -174,10 +174,10 @@ export function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-16 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-12 sm:pb-16 w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left */}
-          <div className="space-y-8">
+          <div className="space-y-5 sm:space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight"
+              className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight"
             >
               {t('title').split(' ').map((word, i) => (
                 <motion.span
@@ -200,7 +200,7 @@ export function Hero() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.15 + i * 0.08 }}
-                  className={`inline-block mr-[0.3em] ${i === 1 ? 'text-teal' : ''}`}
+                  className={`inline mr-[0.15em] sm:mr-[0.3em] ${i === 1 ? 'text-teal' : ''}`}
                 >
                   {word}
                 </motion.span>
@@ -211,7 +211,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
-              className="text-lg text-white/60 max-w-lg leading-relaxed"
+              className="text-base sm:text-lg text-white/60 max-w-lg leading-relaxed"
             >
               {t('subtitle')}
             </motion.p>
@@ -220,11 +220,11 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25"
               >
                 {t('cta_primary')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -242,14 +242,14 @@ export function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }}
-              className="flex flex-wrap gap-2 lg:hidden"
+              className="flex gap-2 lg:hidden overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap"
             >
               {[
                 { icon: Briefcase, label: t('badge_role') },
                 { icon: Euro, label: t('badge_salary') },
                 { icon: Users, label: t('badge_team') },
               ].map(({ icon: Icon, label }, i) => (
-                <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 flex-shrink-0">
                   <Icon className="w-3.5 h-3.5 text-teal flex-shrink-0" />
                   <span className="text-xs font-semibold text-white">{label}</span>
                 </div>
