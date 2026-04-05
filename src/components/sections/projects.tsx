@@ -23,7 +23,7 @@ export function Projects() {
   ];
 
   return (
-    <section id="projects" className="py-24 bg-background-alt">
+    <section id="projects" className="py-16 sm:py-24 bg-background-alt">
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-accent uppercase tracking-wider">
@@ -32,7 +32,7 @@ export function Projects() {
           </span>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mt-4">{t('title')}</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mt-4">{t('title')}</h2>
         </Reveal>
         <Reveal delay={0.15}>
           <p className="text-foreground-muted mt-3 text-lg">{t('subtitle')}</p>

@@ -192,7 +192,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight"
             >
               {t('title').split(' ').map((word, i) => (
                 <motion.span
@@ -235,6 +235,25 @@ export function Hero() {
               >
                 {t('cta_secondary')}
               </a>
+            </motion.div>
+
+            {/* Mobile badges - visible below lg */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }}
+              className="flex flex-wrap gap-2 lg:hidden"
+            >
+              {[
+                { icon: Briefcase, label: t('badge_role') },
+                { icon: Euro, label: t('badge_salary') },
+                { icon: Users, label: t('badge_team') },
+              ].map(({ icon: Icon, label }, i) => (
+                <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                  <Icon className="w-3.5 h-3.5 text-teal flex-shrink-0" />
+                  <span className="text-xs font-semibold text-white">{label}</span>
+                </div>
+              ))}
             </motion.div>
 
             {/* Company marquee */}

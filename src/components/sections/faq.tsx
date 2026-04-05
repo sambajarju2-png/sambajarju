@@ -13,10 +13,10 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-16 sm:py-24 bg-background">
       <div className="max-w-4xl mx-auto px-6">
         <Reveal>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight text-center">{t('title')}</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight text-center">{t('title')}</h2>
         </Reveal>
 
         <Reveal delay={0.1}>

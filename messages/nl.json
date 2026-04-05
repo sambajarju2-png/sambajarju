@@ -199,6 +199,12 @@
     "dashboard_subtitle": "Het soort dashboard dat ik elke ochtend check. Fictieve cijfers, maar de patronen zijn echt.",
     "back": "Terug naar portfolio",
     "sql_showcase_title": "SQL in Marketing",
-    "sql_showcase_subtitle": "Hoe ik marketingdoelen vertaal naar code. Toggle tussen de business vraag en de technische oplossing."
+    "sql_showcase_subtitle": "Hoe ik marketingdoelen vertaal naar code. Toggle tussen de business vraag en de technische oplossing.",
+    "ab_title": "A/B Test Arena",
+    "ab_subtitle": "Denk je dat je de winnende subject line kunt kiezen? Test je marketingintuïtie tegen echte campagnedata.",
+    "funnel_title": "Funnel Simulator",
+    "funnel_subtitle": "Pas conversiepercentages aan bij elke fase en zie hoe kleine verbeteringen zich opstapelen tot grote omzetveranderingen.",
+    "analyzer_title": "Subject Line Analyzer",
+    "analyzer_subtitle": "Plak een email subject line en krijg direct AI-feedback over wat werkt en wat niet."
   }
 }

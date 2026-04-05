@@ -123,7 +123,7 @@ export function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="fixed bottom-24 right-6 z-50 w-[370px] max-w-[calc(100vw-48px)] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-border"
+            className="fixed bottom-24 right-4 left-4 sm:left-auto sm:right-6 z-50 sm:w-[370px] rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-border"
             style={{ maxHeight: 'min(520px, calc(100vh - 140px))' }}
           >
             {/* Header bar — iOS style */}

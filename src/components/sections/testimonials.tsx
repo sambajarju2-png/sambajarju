@@ -10,7 +10,7 @@ export function Testimonials() {
   const t = useTranslations('testimonials');
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-16 sm:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-accent uppercase tracking-wider">
@@ -19,7 +19,7 @@ export function Testimonials() {
           </span>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mt-4">{t('title')}</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mt-4">{t('title')}</h2>
         </Reveal>
 
         <StaggerContainer className="grid md:grid-cols-2 gap-6 mt-12">

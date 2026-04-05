@@ -199,6 +199,12 @@
     "dashboard_subtitle": "The kind of dashboard I check every morning. These are fictional numbers, but the patterns are real.",
     "back": "Back to portfolio",
     "sql_showcase_title": "SQL in Marketing",
-    "sql_showcase_subtitle": "How I turn marketing goals into code. Toggle between the business ask and the technical solution."
+    "sql_showcase_subtitle": "How I turn marketing goals into code. Toggle between the business ask and the technical solution.",
+    "ab_title": "A/B Test Arena",
+    "ab_subtitle": "Think you can pick the winning subject line? Test your marketing instincts against real campaign data.",
+    "funnel_title": "Funnel Simulator",
+    "funnel_subtitle": "Adjust conversion rates at each stage and see how small improvements compound into big revenue changes.",
+    "analyzer_title": "Subject Line Analyzer",
+    "analyzer_subtitle": "Paste any email subject line and get instant AI-powered feedback on what works and what doesn't."
   }
 }

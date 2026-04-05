@@ -59,7 +59,7 @@ export function ToolStack() {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   return (
-    <section id="tools" className="py-24 bg-background">
+    <section id="tools" className="py-16 sm:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-accent uppercase tracking-wider">

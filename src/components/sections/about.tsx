@@ -15,7 +15,7 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-24 bg-background">
+    <section id="about" className="py-16 sm:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left - Images */}
@@ -44,7 +44,7 @@ export function About() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
                 {t('title')}
               </h2>
             </Reveal>
