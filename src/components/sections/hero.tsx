@@ -10,21 +10,19 @@ interface FloatingTool {
   color: string;
   name: string;
   usage: string;
-  // Position as percentage — works on any screen size
   x: string;
   y: string;
-  // Mobile-specific position (smaller screens need different layout)
   mobileX?: string;
   mobileY?: string;
   dur: number;
   delay: number;
-  size: number; // icon container size in px
+  size: number;
 }
 
 const floatingTools: FloatingTool[] = [
   { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', x: '85%', y: '12%', mobileX: '78%', mobileY: '6%', dur: 5, delay: 0, size: 40 },
   { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', x: '75%', y: '80%', mobileX: '8%', mobileY: '4%', dur: 6, delay: 0.5, size: 36 },
-  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', x: '90%', y: '45%', mobileX: '88%', mobileY: '42%', dur: 4.5, delay: 1, size: 34 },
+  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', x: '90%', y: '45%', mobileX: '82%', mobileY: '42%', dur: 4.5, delay: 1, size: 34 },
   { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, row-level security, real-time.', x: '70%', y: '60%', mobileX: '5%', mobileY: '38%', dur: 5.5, delay: 1.5, size: 36 },
   { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping. Designed PayWatch mockups here.', x: '5%', y: '20%', mobileX: '45%', mobileY: '3%', dur: 6.5, delay: 2, size: 32 },
   { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. This entire portfolio runs on it.', x: '8%', y: '65%', mobileX: '75%', mobileY: '88%', dur: 4, delay: 2.5, size: 34 },
@@ -36,7 +34,7 @@ export function Hero() {
   const t = useTranslations('hero');
   const containerRef = useRef<HTMLElement>(null);
   const [selectedTool, setSelectedTool] = useState<FloatingTool | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
@@ -47,10 +45,6 @@ export function Hero() {
   const gridY = useTransform(springY, [0, 1], ['-5px', '5px']);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
@@ -59,21 +53,16 @@ export function Hero() {
     };
     const el = containerRef.current;
     el?.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      el?.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () => { el?.removeEventListener('mousemove', handleMouseMove); };
   }, [mouseX, mouseY]);
 
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
     <section ref={containerRef} className="relative min-h-[100svh] flex items-center">
-      {/* Background — this layer has overflow hidden for decorations */}
+      {/* Background layer — overflow-hidden for decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
-
-        {/* Parallax grid */}
         <motion.div className="absolute inset-0 opacity-[0.06]" style={{ x: gridX, y: gridY }}>
           <svg width="100%" height="100%">
             <defs>
@@ -84,28 +73,26 @@ export function Hero() {
             <rect width="100%" height="100%" fill="url(#hero-grid)" />
           </svg>
         </motion.div>
-
-        {/* Floating orbs */}
         <div className="absolute w-72 h-72 rounded-full blur-[140px] pointer-events-none" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
         <div className="absolute w-56 h-56 rounded-full blur-[120px] pointer-events-none" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-
-        {/* Bottom fade */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
       </div>
 
-      {/* Floating tool icons — visible on ALL screens */}
-      <div className="absolute inset-0 pointer-events-none z-[5]">
+      {/* Floating icons — overflow-hidden clips at edges, CSS vars for SSR-safe responsive */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[5]">
         {floatingTools.map((tool) => (
           <motion.button
             key={tool.slug}
             onClick={() => setSelectedTool(tool)}
-            className="absolute pointer-events-auto rounded-xl bg-white/[0.07] backdrop-blur-[2px] border border-white/[0.1] flex items-center justify-center hover:bg-white/[0.12] hover:border-white/[0.2] transition-colors"
             style={{
-              left: isMobile ? (tool.mobileX || tool.x) : tool.x,
-              top: isMobile ? (tool.mobileY || tool.y) : tool.y,
-              width: isMobile ? tool.size * 0.85 : tool.size,
-              height: isMobile ? tool.size * 0.85 : tool.size,
-            }}
+              '--mobile-x': tool.mobileX || tool.x,
+              '--mobile-y': tool.mobileY || tool.y,
+              '--desktop-x': tool.x,
+              '--desktop-y': tool.y,
+              '--size-mobile': `${tool.size * 0.85}px`,
+              '--size-desktop': `${tool.size}px`,
+            } as React.CSSProperties}
+            className="absolute left-[var(--mobile-x)] top-[var(--mobile-y)] w-[var(--size-mobile)] h-[var(--size-mobile)] lg:left-[var(--desktop-x)] lg:top-[var(--desktop-y)] lg:w-[var(--size-desktop)] lg:h-[var(--size-desktop)] pointer-events-auto rounded-xl bg-white/[0.07] backdrop-blur-[2px] border border-white/[0.1] flex items-center justify-center hover:bg-white/[0.12] hover:border-white/[0.2] transition-colors"
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: tool.dur, repeat: Infinity, ease: 'easeInOut', delay: tool.delay }}
             whileHover={{ scale: 1.15 }}
@@ -114,9 +101,7 @@ export function Hero() {
             <img
               src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`}
               alt={tool.name}
-              width={isMobile ? 14 : 18}
-              height={isMobile ? 14 : 18}
-              className="opacity-60"
+              className="w-[14px] h-[14px] lg:w-[18px] lg:h-[18px] opacity-60"
               loading="lazy"
             />
           </motion.button>
@@ -150,10 +135,9 @@ export function Hero() {
         </div>
       )}
 
-      {/* Content — NO overflow hidden here, so text never clips */}
+      {/* Content — NO overflow hidden */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-12 sm:pb-16 w-full">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left column */}
           <div className="space-y-4 sm:space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -165,14 +149,13 @@ export function Hero() {
               <span className="text-xs sm:text-sm text-teal font-medium">{t('greeting')}</span>
             </motion.div>
 
-            {/* Title — sized to fit mobile without overflow */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
               className="text-[1.75rem] leading-[1.15] sm:text-[2.8rem] md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white tracking-tight"
             >
-              {t('title').split(' ').map((word, i) => (
+              {t('title').split(' ').map((word: string, i: number) => (
                 <span key={i} className={i === 1 ? 'text-teal' : ''}>
                   {word}{' '}
                 </span>
@@ -188,7 +171,6 @@ export function Hero() {
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,15 +178,14 @@ export function Hero() {
               className="flex flex-col sm:flex-row gap-3"
             >
               <a href="#contact" className="group flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-accent/25">
-                {t('cta_primary')}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span className="shrink-0">{t('cta_primary')}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform shrink-0" />
               </a>
               <a href="#projects" className="flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all">
-                {t('cta_secondary')}
+                <span className="shrink-0">{t('cta_secondary')}</span>
               </a>
             </motion.div>
 
-            {/* Badges — horizontal scroll on mobile */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -223,7 +204,6 @@ export function Hero() {
               ))}
             </motion.div>
 
-            {/* Company marquee */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -241,7 +221,6 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right — Photo placeholder + badges (desktop only) */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -260,7 +239,6 @@ export function Hero() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_3s_ease_infinite]" />
               </div>
-
               <motion.div className="absolute -bottom-3 -left-3 right-3 flex gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}>
                 {[
                   { icon: Briefcase, label: t('badge_role') },
