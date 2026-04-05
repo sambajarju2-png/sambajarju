@@ -28,23 +28,27 @@ const Filing = memo(function Filing({ mouseX, mouseY }: { mouseX: ReturnType<typ
     <motion.div
       ref={ref}
       style={{ rotate }}
-      className="w-[2px] h-5 rounded-full bg-white/[0.18]"
+      className="w-[2px] h-5 rounded-full bg-white/[0.15]"
     />
   );
 });
 
-/* ── Orbital tools (desktop) ── */
+/* ── Orbital tools (desktop) — expanded list ── */
 const orbitTools = [
   { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', arc: 1 as const, dur: 35, begin: '0s' },
-  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1 as const, dur: 35, begin: '-8s' },
+  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1 as const, dur: 35, begin: '-7s' },
   { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum.', arc: 2 as const, dur: 30, begin: '0s' },
-  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, RLS, real-time.', arc: 1 as const, dur: 35, begin: '-18s' },
-  { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping before building.', arc: 2 as const, dur: 30, begin: '-10s' },
-  { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows.', arc: 1 as const, dur: 35, begin: '-28s' },
-  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. This entire portfolio runs on it.', arc: 2 as const, dur: 30, begin: '-20s' },
-  { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'GA4 setup and event tracking.', arc: 2 as const, dur: 30, begin: '-16s' },
-  { slug: 'mailchimp', color: 'FFE01B', name: 'Mailchimp', usage: 'Email campaigns for freelance clients.', arc: 1 as const, dur: 35, begin: '-14s' },
-  { slug: 'resend', color: 'ffffff', name: 'Resend', usage: 'Transactional email for PayWatch.app.', arc: 2 as const, dur: 30, begin: '-6s' },
+  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, RLS, real-time.', arc: 1 as const, dur: 35, begin: '-14s' },
+  { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping before building.', arc: 2 as const, dur: 30, begin: '-8s' },
+  { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows.', arc: 1 as const, dur: 35, begin: '-21s' },
+  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. This entire portfolio runs on it.', arc: 2 as const, dur: 30, begin: '-16s' },
+  { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'GA4 setup and event tracking.', arc: 2 as const, dur: 30, begin: '-12s' },
+  { slug: 'salesforce', color: '00A1E0', name: 'Salesforce', usage: 'Marketing Cloud at Vandebron — 500k+ emails/month.', arc: 1 as const, dur: 35, begin: '-28s' },
+  { slug: 'resend', color: 'ffffff', name: 'Resend', usage: 'Transactional email for PayWatch.app.', arc: 2 as const, dur: 30, begin: '-4s' },
+  { slug: 'semrush', color: 'FF642D', name: 'SEMRush', usage: 'SEO research and competitive analysis.', arc: 2 as const, dur: 30, begin: '-22s' },
+  { slug: 'hotjar', color: 'FF3C00', name: 'Hotjar', usage: 'Heatmaps and session recordings for CRO.', arc: 1 as const, dur: 35, begin: '-32s' },
+  { slug: 'anthropic', color: 'D97757', name: 'Claude AI', usage: 'AI assistant for coding, content, and automation.', arc: 2 as const, dur: 30, begin: '-26s' },
+  { slug: 'postgresql', color: '4169E1', name: 'PostgreSQL', usage: 'Database for PayWatch via Supabase.', arc: 1 as const, dur: 35, begin: '-4s' },
 ];
 
 const arcPaths = {
@@ -61,7 +65,7 @@ const allTools = [
   { slug: 'tailwindcss', color: '06B6D4' },
   { slug: 'zapier', color: 'FF4F00' },
   { slug: 'googleanalytics', color: 'E37400' },
-  { slug: 'mailchimp', color: 'FFE01B' },
+  { slug: 'salesforce', color: '00A1E0' },
   { slug: 'resend', color: 'ffffff' },
   { slug: 'semrush', color: 'FF642D' },
   { slug: 'hotjar', color: 'FF3C00' },
@@ -75,8 +79,9 @@ const allTools = [
   { slug: 'googlegemini', color: '8E75B2' },
 ];
 
-const FILING_COLS = 16;
-const FILING_ROWS = 10;
+/* Filings grid — full banner, responsive density */
+const FILING_COLS = 28;
+const FILING_ROWS = 12;
 const FILING_COUNT = FILING_COLS * FILING_ROWS;
 
 export function Hero() {
@@ -99,21 +104,29 @@ export function Hero() {
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative min-h-[100svh] flex items-end sm:items-center overflow-hidden">
+    <section ref={containerRef} className="relative overflow-hidden" style={{ minHeight: '100svh' }}>
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
         <div className="absolute w-72 h-72 rounded-full blur-[140px] pointer-events-none" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
         <div className="absolute w-56 h-56 rounded-full blur-[120px] pointer-events-none" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-        {/* Smoother bottom fade — taller gradient with solid base */}
+        {/* Smooth bottom fade */}
         <div className="absolute bottom-0 left-0 right-0 h-48 z-10" style={{ background: 'linear-gradient(to top, var(--background) 0%, var(--background) 8%, transparent 100%)' }} />
       </div>
 
-      {/* DESKTOP: Magnetic filings grid */}
-      <div className="absolute inset-0 hidden lg:flex items-center justify-center pointer-events-none" style={{ paddingLeft: '45%' }}>
+      {/* DESKTOP: Full-width magnetic filings grid */}
+      <div className="absolute inset-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden">
         <div
-          className="grid gap-6 opacity-60"
-          style={{ gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)` }}
+          className="opacity-50"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)`,
+            gap: '20px',
+            padding: '40px',
+            width: '100%',
+            height: '100%',
+            alignContent: 'center',
+          }}
         >
           {Array.from({ length: FILING_COUNT }).map((_, i) => (
             <Filing key={i} mouseX={mouseX} mouseY={mouseY} />
@@ -122,12 +135,12 @@ export function Hero() {
       </div>
 
       {/* DESKTOP: Orbital SVG */}
-      <div className="absolute inset-0 hidden lg:block">
+      <div className="absolute inset-0 hidden lg:block pointer-events-none">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
           <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
           <path d={arcPaths[2]} fill="none" stroke="rgba(167,218,220,0.06)" strokeWidth="0.5" />
           {orbitTools.map((tool) => (
-            <g key={tool.slug} style={{ cursor: 'pointer' }} onClick={() => setSelectedTool(tool)}>
+            <g key={tool.slug} style={{ cursor: 'pointer', pointerEvents: 'auto' }} onClick={() => setSelectedTool(tool)}>
               <animateMotion dur={`${tool.dur}s`} repeatCount="indefinite" path={arcPaths[tool.arc]} begin={tool.begin} />
               <circle r="22" fill={`#${tool.color}`} opacity="0.08" />
               <circle r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
@@ -146,7 +159,7 @@ export function Hero() {
             <button onClick={() => setSelectedTool(null)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-background-alt text-foreground-subtle"><X className="w-4 h-4" /></button>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl bg-background-alt border border-border flex items-center justify-center p-2">
-                <img src={`https://cdn.simpleicons.org/${selectedTool.slug}/${selectedTool.color}`} alt={selectedTool.name} width={24} height={24} className="dark:brightness-0 dark:invert dark:opacity-80" />
+                <img src={`https://cdn.simpleicons.org/${selectedTool.slug}/${selectedTool.color}`} alt={selectedTool.name} width={24} height={24} />
               </div>
               <h3 className="font-bold text-foreground">{selectedTool.name}</h3>
             </div>
@@ -156,16 +169,16 @@ export function Hero() {
         </div>
       )}
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-8 sm:pb-16">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+      {/* Content — vertically centered with reasonable mobile spacing */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex items-center" style={{ minHeight: '100svh', paddingTop: '80px', paddingBottom: '32px' }}>
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-4">
               <Sparkles className="w-3.5 h-3.5" style={{ color: '#A7DADC' }} />
               <span className="text-xs sm:text-sm font-medium" style={{ color: '#A7DADC' }}>{t('greeting')}</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mb-4">
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mb-4">
               {t('title').split(' ').map((word: string, i: number) => (
                 <span key={i} style={{ color: i === 1 ? '#A7DADC' : '#ffffff' }}>{word}{' '}</span>
               ))}
@@ -175,45 +188,13 @@ export function Hero() {
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — pure inline styles to beat Tailwind v4 specificity on all devices */}
+            {/* CTAs — using globals.css classes with !important */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a
-                href="#contact"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  padding: '12px 20px',
-                  borderRadius: '9999px',
-                  backgroundColor: '#EF476F',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  WebkitTextFillColor: '#ffffff',
-                }}
-              >
+              <a href="#contact" className="hero-cta-primary">
                 {t('cta_primary')}
-                <ArrowRight style={{ width: 16, height: 16, color: '#ffffff' }} />
+                <ArrowRight />
               </a>
-              <a
-                href="#projects"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  padding: '12px 20px',
-                  borderRadius: '9999px',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  WebkitTextFillColor: '#ffffff',
-                }}
-              >
+              <a href="#projects" className="hero-cta-secondary">
                 {t('cta_secondary')}
               </a>
             </motion.div>
@@ -227,7 +208,7 @@ export function Hero() {
               ].map(({ icon: Icon, label }, i) => (
                 <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 flex-shrink-0">
                   <Icon className="w-3 h-3 flex-shrink-0" style={{ color: '#A7DADC' }} />
-                  <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#ffffff' }}>{label}</span>
+                  <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#ffffff', WebkitTextFillColor: '#ffffff' }}>{label}</span>
                 </div>
               ))}
             </motion.div>
@@ -236,9 +217,9 @@ export function Hero() {
             <div className="lg:hidden mb-4 overflow-hidden">
               <div className="flex gap-3 animate-marquee" style={{ width: 'max-content' }}>
                 {[...allTools, ...allTools].map((tool, i) => (
-                  <div key={`${tool.slug}-${i}`} className="w-8 h-8 rounded-lg bg-white/[0.07] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
+                  <a key={`${tool.slug}-${i}`} href="#tools" className="w-8 h-8 rounded-lg bg-white/[0.07] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
                     <img src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} alt="" width={13} height={13} className="opacity-40" loading="lazy" />
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>

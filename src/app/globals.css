@@ -92,6 +92,45 @@ body {
   50% { transform: translateY(-10px); }
 }
 
+/* Hero CTA — nuclear override for mobile Safari */
+.hero-cta-primary {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 14px 24px !important;
+  border-radius: 9999px !important;
+  background-color: #EF476F !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+.hero-cta-primary svg {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+.hero-cta-secondary {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 14px 24px !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+
 .dot-pattern {
   background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
   background-size: 24px 24px;
