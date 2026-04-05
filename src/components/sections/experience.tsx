@@ -4,10 +4,11 @@ import { useTranslations } from 'next-intl';
 import { Reveal } from '@/components/ui/motion';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Zap, Briefcase, Rocket, Building2, Award, ChevronRight } from 'lucide-react';
+import { Zap, Briefcase, Rocket, Building2, Award, ChevronRight, Sparkles } from 'lucide-react';
 
 const experiences = [
   { key: 'vandebron', icon: Zap, active: true, color: 'bg-accent' },
+  { key: 'cleanprofs', icon: Sparkles, active: true, color: 'bg-teal' },
   { key: 'cordital', icon: Rocket, active: false, color: 'bg-teal' },
   { key: 'guardey', icon: Building2, active: false, color: 'bg-navy dark:bg-secondary' },
   { key: 'silverflow', icon: Briefcase, active: false, color: 'bg-navy dark:bg-secondary' },

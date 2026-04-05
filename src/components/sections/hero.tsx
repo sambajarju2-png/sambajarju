@@ -38,7 +38,7 @@ export function Hero() {
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden cursor-crosshair">
+    <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
       {/* Base gradient */}
       <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
 

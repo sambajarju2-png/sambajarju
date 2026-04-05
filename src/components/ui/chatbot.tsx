@@ -1,8 +1,37 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User, Loader2 } from 'lucide-react';
+
+const loadingMessages = [
+  'Even mijn motor starten...',
+  'Even wachten gabber van me...',
+  'Doe de groetjes aan tante Greet...',
+  'Koffie aan het zetten...',
+  'Even m\'n hersenen opwarmen...',
+  'Bezig bezig bezig...',
+  'Eén momentje, ik check m\'n notities...',
+  'Siri zou hier langer over doen...',
+  'Even snel door m\'n LinkedIn scrollen...',
+  'Marketing magie aan het brouwen...',
+  'Laden... net als mijn geduld op maandagochtend...',
+  'SQL query aan het draaien in m\'n hoofd...',
+  'Bijna klaar, beloofd!',
+];
+
+function getRandomLoading() {
+  return loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+}
+
+function renderMarkdown(text: string) {
+  // Convert **bold** to <strong>, *italic* to <em>, and newlines to <br>
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code style="background:rgba(255,255,255,0.1);padding:1px 4px;border-radius:3px;font-size:12px">$1</code>')
+    .replace(/\n/g, '<br/>');
+}
 
 interface Message {
   role: 'user' | 'assistant';
@@ -12,20 +41,35 @@ interface Message {
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hey! Ik ben Samba-Bot. Stel me een vraag over Samba — zijn ervaring, skills, projecten, of wat dan ook. 🙂' },
+    { role: 'assistant', content: 'Yo! Ik ben Samba — of ja, een digitale versie van mezelf. Vraag me alles over m\'n werk, skills, projecten, of gewoon wat ik luister op Spotify. Let\'s go!' },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const loadingInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, loadingText]);
 
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+
+  // Rotate loading messages
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingText(getRandomLoading());
+      loadingInterval.current = setInterval(() => {
+        setLoadingText(getRandomLoading());
+      }, 2500);
+    } else {
+      if (loadingInterval.current) clearInterval(loadingInterval.current);
+    }
+    return () => { if (loadingInterval.current) clearInterval(loadingInterval.current); };
+  }, [isLoading]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -45,13 +89,12 @@ export function ChatBot() {
       });
 
       if (!res.ok) throw new Error('API error');
-
       const data = await res.json();
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Oops, er ging iets mis. Probeer het later nog eens, of neem direct contact op met Samba via samba@sambajarju.nl.',
+        content: 'Oeps, er ging iets mis aan mijn kant. Stuur me anders een mailtje op samba@sambajarju.nl — dan antwoord de echte Samba!',
       }]);
     } finally {
       setIsLoading(false);
@@ -59,10 +102,30 @@ export function ChatBot() {
   };
 
   const quickQuestions = [
-    'What tools does Samba use?',
-    'Wat doet hij bij Vandebron?',
-    'Tell me about PayWatch',
+    'Wat luister je nu?',
+    'Waarom zou ik je aannemen?',
+    'Vertel over PayWatch',
   ];
+
+  const handleQuickQuestion = (q: string) => {
+    setInput(q);
+    // Need to trigger send after state update
+    setTimeout(() => {
+      const fakeEvent = { trim: () => q } as unknown;
+      setMessages(prev => [...prev, { role: 'user', content: q }]);
+      setIsLoading(true);
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages.slice(1), { role: 'user', content: q }] }),
+      })
+        .then(r => r.json())
+        .then(data => setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]))
+        .catch(() => setMessages(prev => [...prev, { role: 'assistant', content: 'Oeps, probeer het later nog eens!' }]))
+        .finally(() => setIsLoading(false));
+      setInput('');
+    }, 50);
+  };
 
   return (
     <>
@@ -95,16 +158,14 @@ export function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-48px)] rounded-2xl border border-border bg-surface shadow-2xl overflow-hidden flex flex-col"
-            style={{ maxHeight: 'min(520px, calc(100vh - 140px))' }}
+            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-48px)] rounded-2xl border border-border bg-surface shadow-2xl overflow-hidden flex flex-col"
+            style={{ maxHeight: 'min(540px, calc(100vh - 140px))' }}
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-border bg-background-alt flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white">
-                <Bot className="w-4 h-4" />
-              </div>
+              <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold">SJ</div>
               <div>
-                <p className="font-bold text-foreground text-sm">Samba-Bot</p>
+                <p className="font-bold text-foreground text-sm">Samba (AI clone)</p>
                 <p className="text-[11px] text-foreground-subtle flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
                   Powered by Claude
@@ -122,9 +183,7 @@ export function ChatBot() {
                   className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Bot className="w-3 h-3 text-accent" />
-                    </div>
+                    <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-[9px] font-bold">SJ</div>
                   )}
                   <div
                     className={`px-3 py-2 rounded-xl text-sm leading-relaxed max-w-[80%] ${
@@ -132,8 +191,9 @@ export function ChatBot() {
                         ? 'bg-accent text-white rounded-br-md'
                         : 'bg-background-alt text-foreground rounded-bl-md'
                     }`}
+                    dangerouslySetInnerHTML={msg.role === 'assistant' ? { __html: renderMarkdown(msg.content) } : undefined}
                   >
-                    {msg.content}
+                    {msg.role === 'user' ? msg.content : undefined}
                   </div>
                   {msg.role === 'user' && (
                     <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -145,11 +205,17 @@ export function ChatBot() {
 
               {isLoading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-3 h-3 text-accent" />
-                  </div>
+                  <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center flex-shrink-0 text-white text-[9px] font-bold">SJ</div>
                   <div className="px-3 py-2 rounded-xl bg-background-alt rounded-bl-md">
-                    <Loader2 className="w-4 h-4 text-foreground-subtle animate-spin" />
+                    <motion.p
+                      key={loadingText}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm text-foreground-subtle italic flex items-center gap-1.5"
+                    >
+                      <Loader2 className="w-3 h-3 animate-spin flex-shrink-0" />
+                      {loadingText}
+                    </motion.p>
                   </div>
                 </motion.div>
               )}
@@ -157,13 +223,13 @@ export function ChatBot() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick questions (only show when few messages) */}
-            {messages.length <= 2 && (
+            {/* Quick questions */}
+            {messages.length <= 2 && !isLoading && (
               <div className="px-4 pb-2 flex flex-wrap gap-1.5">
                 {quickQuestions.map((q) => (
                   <button
                     key={q}
-                    onClick={() => { setInput(q); setTimeout(() => { setInput(q); sendMessage(); }, 50); }}
+                    onClick={() => handleQuickQuestion(q)}
                     className="text-[11px] px-2.5 py-1 rounded-full border border-border bg-background-alt text-foreground-muted hover:text-foreground hover:border-border-hover transition-all"
                   >
                     {q}
@@ -181,7 +247,7 @@ export function ChatBot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                  placeholder="Stel een vraag..."
+                  placeholder="Vraag me wat..."
                   className="flex-1 bg-background-alt border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-foreground-subtle outline-none focus:border-accent transition-colors"
                   disabled={isLoading}
                 />
