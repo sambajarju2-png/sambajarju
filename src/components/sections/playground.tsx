@@ -1,59 +1,19 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Reveal } from '@/components/ui/motion';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { Mail, MousePointerClick, TrendingUp, Users, ArrowUpRight, Activity, Workflow } from 'lucide-react';
-import { EmailFlowVisualizer } from './email-flow';
-
-function AnimatedCounter({ end, suffix = '', duration = 2000 }: { end: number; suffix?: string; duration?: number }) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    if (!started) return;
-    let start = 0;
-    const step = end / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [started, end, duration]);
-
-  return (
-    <motion.span
-      onViewportEnter={() => setStarted(true)}
-      className="tabular-nums"
-    >
-      {count.toLocaleString()}{suffix}
-    </motion.span>
-  );
-}
-
-const miniChart = [35, 45, 38, 52, 48, 65, 58, 72, 68, 85, 78, 92];
+import { useTranslations, useLocale } from 'next-intl';
+import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
+import { Workflow, Calculator, Database, BarChart3, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export function Playground() {
   const t = useTranslations('playground');
-  const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'flow'>('flow');
+  const locale = useLocale();
 
-  const metrics = [
-    { icon: Mail, label: t('emails_sent'), value: 524890, suffix: '', color: 'text-accent' },
-    { icon: TrendingUp, label: t('open_rate'), value: 34, suffix: '%', color: 'text-emerald-500' },
-    { icon: MousePointerClick, label: t('click_rate'), value: 8, suffix: '%', color: 'text-blue-500' },
-    { icon: Users, label: t('conversions'), value: 1247, suffix: '', color: 'text-amber-500' },
-  ];
-
-  const tabs = [
-    { key: 'flow' as const, icon: Workflow, label: 'Automation Flow' },
-    { key: 'dashboard' as const, icon: Activity, label: 'Campaign Dashboard' },
+  const demos = [
+    { icon: Workflow, title: 'Email Automation Flow', desc: 'Watch a subscriber journey from signup to conversion with animated emails flowing through the pipeline.', color: 'from-blue-500/10 to-violet-500/10', border: 'hover:border-blue-300 dark:hover:border-blue-700' },
+    { icon: Calculator, title: 'ROI Calculator', desc: 'Calculate how much time and money marketing automation saves with interactive sliders.', color: 'from-emerald-500/10 to-teal-500/10', border: 'hover:border-emerald-300 dark:hover:border-emerald-700' },
+    { icon: Database, title: 'SQL in Marketing', desc: 'See how marketing goals translate to SQL queries and AMPscript — the code behind 500k+ emails/month.', color: 'from-amber-500/10 to-orange-500/10', border: 'hover:border-amber-300 dark:hover:border-amber-700' },
+    { icon: BarChart3, title: 'Campaign Dashboard', desc: 'Live metrics from a fictional email campaign with animated charts and counters.', color: 'from-pink-500/10 to-rose-500/10', border: 'hover:border-pink-300 dark:hover:border-pink-700' },
   ];
 
   return (
@@ -72,111 +32,26 @@ export function Playground() {
           <p className="text-foreground-muted mt-3 text-lg">{t('subtitle')}</p>
         </Reveal>
 
-        {/* Tab switcher */}
-        <Reveal delay={0.2}>
-          <div className="flex gap-1 p-1 rounded-xl bg-surface border border-border w-fit mt-8">
-            {tabs.map(({ key, icon: Icon, label }) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={`flex items-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
-                  activeTab === key
-                    ? 'bg-accent text-white shadow-sm'
-                    : 'text-foreground-subtle hover:text-foreground-muted hover:bg-background-alt'
-                }`}
+        <StaggerContainer className="grid md:grid-cols-2 gap-5 mt-10">
+          {demos.map(({ icon: Icon, title, desc, color, border }) => (
+            <StaggerItem key={title}>
+              <Link
+                href={`/${locale}/playground`}
+                className={`group block rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:shadow-md ${border}`}
               >
-                <Icon className="w-4 h-4" />
-                {label}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.25}>
-          <div className="mt-6">
-            <AnimatePresence mode="wait">
-              {activeTab === 'flow' ? (
-                <motion.div
-                  key="flow"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <EmailFlowVisualizer />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="dashboard"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="rounded-2xl border border-border bg-surface overflow-hidden shadow-sm">
-                    {/* Dashboard header */}
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-accent" />
-                        <span className="font-bold text-foreground text-sm">{t('dashboard_title')}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                        </span>
-                        <span className="text-xs text-green-600 dark:text-green-400">Live</span>
-                      </div>
-                    </div>
-
-                    {/* Metrics row */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border">
-                      {metrics.map(({ icon: Icon, label, value, suffix, color }) => (
-                        <div key={label} className="bg-surface p-5 group hover:bg-surface-hover transition-colors">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Icon className={`w-4 h-4 ${color}`} />
-                            <span className="text-xs text-foreground-subtle font-medium">{label}</span>
-                          </div>
-                          <div className="text-2xl font-bold text-foreground flex items-baseline gap-1">
-                            <AnimatedCounter end={value} suffix={suffix} />
-                            <ArrowUpRight className="w-3 h-3 text-emerald-500" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Mini chart */}
-                    <div className="p-6">
-                      <div className="flex items-end gap-2 h-32">
-                        {miniChart.map((value, i) => (
-                          <motion.div
-                            key={i}
-                            className="flex-1 rounded-t-md cursor-pointer transition-colors"
-                            style={{
-                              height: `${value}%`,
-                              background: hoveredBar === i ? 'var(--accent)' : 'var(--secondary)',
-                            }}
-                            onHoverStart={() => setHoveredBar(i)}
-                            onHoverEnd={() => setHoveredBar(null)}
-                            initial={{ height: 0 }}
-                            whileInView={{ height: `${value}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.05 }}
-                          />
-                        ))}
-                      </div>
-                      <div className="flex justify-between mt-2 text-xs text-foreground-subtle">
-                        <span>Jan</span>
-                        <span>Jun</span>
-                        <span>Dec</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </Reveal>
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4`}>
+                  <Icon className="w-5 h-5 text-foreground" />
+                </div>
+                <h3 className="font-bold text-foreground text-lg mb-2 group-hover:text-accent transition-colors">{title}</h3>
+                <p className="text-sm text-foreground-muted leading-relaxed">{desc}</p>
+                <div className="mt-4 flex items-center gap-1 text-sm font-medium text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                  Try it
+                  <ArrowRight className="w-3 h-3" />
+                </div>
+              </Link>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </div>
     </section>
   );

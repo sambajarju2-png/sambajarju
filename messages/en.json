@@ -171,5 +171,26 @@
     "kvk": "KvK: 83474889",
     "location": "Rotterdam, Netherlands",
     "designed": "Designed & built by Samba"
+  },
+  "playground_page": {
+    "title": "Playground",
+    "subtitle": "Interactive demos that show how I think about marketing automation, data, and systems.",
+    "flow_title": "Email Automation Flow",
+    "flow_subtitle": "A subscriber journey from signup to conversion. Watch emails flow through the pipeline in real-time.",
+    "roi_title": "Automation ROI Calculator",
+    "roi_subtitle": "See how much time and money marketing automation saves.",
+    "roi_list_size": "Email list size",
+    "roi_manual_hours": "Manual hours per week",
+    "roi_hourly_rate": "Hourly rate",
+    "roi_hours_saved": "Hours saved / month",
+    "roi_money_saved": "Money saved / month",
+    "roi_emails_auto": "Emails automated / month",
+    "sql_title": "SQL in Marketing",
+    "sql_subtitle": "How I translate marketing goals into technical solutions at Vandebron.",
+    "sql_goal": "Marketing goal",
+    "sql_code": "Technical solution",
+    "dashboard_title": "Campaign Dashboard",
+    "dashboard_subtitle": "Live metrics from a fictional email campaign — the kind of data I monitor daily.",
+    "back": "Back to portfolio"
   }
 }
