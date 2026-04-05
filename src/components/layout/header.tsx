@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LanguageToggle } from '@/components/ui/language-toggle';
+import { CommandMenu } from '@/components/ui/command-menu';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,6 +62,7 @@ export function Header() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
+          <CommandMenu />
           <ThemeToggle />
           <LanguageToggle />
           <button
