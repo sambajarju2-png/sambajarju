@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { ChatBot } from "@/components/ui/chatbot";
 
 const geistSans = localFont({
   src: "../../../public/fonts/GeistVF.woff2",
@@ -59,6 +60,7 @@ export default async function LocaleLayout({
             <Header />
             <main>{children}</main>
             <Footer />
+            <ChatBot />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
