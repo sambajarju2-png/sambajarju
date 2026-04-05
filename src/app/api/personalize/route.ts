@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sharp from 'sharp';
+import { getPalette } from 'colorthief';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,35 +14,17 @@ export async function POST(request: NextRequest) {
       ? `https://img.logo.dev/${domain}?token=${logoDevToken}&size=200&format=png`
       : null;
 
-    // Step 1: Extract colors from logo via Sharp (free, no API)
+    // Step 1: Color Thief — proper MMCQ quantization from logo
     let colors: string[] = [];
     if (logoUrl) {
       try {
         const imgRes = await fetch(logoUrl);
         if (imgRes.ok) {
           const buffer = Buffer.from(await imgRes.arrayBuffer());
-          const { data, info } = await sharp(buffer)
-            .resize(50, 50, { fit: 'cover' })
-            .raw()
-            .toBuffer({ resolveWithObject: true });
-
-          const colorMap = new Map<string, number>();
-          for (let i = 0; i < data.length; i += info.channels) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            if (r + g + b > 700 || r + g + b < 60) continue;
-            const qr = Math.round(r / 32) * 32;
-            const qg = Math.round(g / 32) * 32;
-            const qb = Math.round(b / 32) * 32;
-            const hex = `#${qr.toString(16).padStart(2, '0')}${qg.toString(16).padStart(2, '0')}${qb.toString(16).padStart(2, '0')}`;
-            colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
+          const palette = await getPalette(buffer, { colorCount: 6 });
+          if (palette) {
+            colors = palette.map(c => c.hex());
           }
-
-          colors = [...colorMap.entries()]
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
-            .map(([hex]) => hex);
         }
       } catch (e) {
         console.error('Color extraction error:', e);
@@ -52,8 +34,8 @@ export async function POST(request: NextRequest) {
     const primaryColor = colors[0] || '#023047';
     const secondaryColor = colors[1] || colors[0] || '#EF476F';
 
-    // Step 2: Claude Haiku — greeting text only (cheapest)
-    let greeting = `Ik help bedrijven hun marketing te automatiseren en impact te maximaliseren. Laten we kijken wat ik voor jullie kan betekenen.`;
+    // Step 2: Claude Haiku — greeting only (cheapest, runs in parallel later)
+    let greeting = `Ik help bedrijven hun marketing te automatiseren en impact te maximaliseren.`;
     let tagline = 'Marketing automation op maat';
     let companyName = domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
 
