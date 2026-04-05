@@ -1,10 +1,39 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, Briefcase, Euro, Users, Sparkles, X } from 'lucide-react';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, memo } from 'react';
 
+/* ── Magnetic Filing ── */
+const Filing = memo(function Filing({ mouseX, mouseY }: { mouseX: ReturnType<typeof useMotionValue<number>>; mouseY: ReturnType<typeof useMotionValue<number>> }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotate = useSpring(0, { damping: 20, stiffness: 150 });
+
+  useEffect(() => {
+    const update = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const angle = Math.atan2(mouseY.get() - cy, mouseX.get() - cx);
+      rotate.set(angle * (180 / Math.PI));
+    };
+    const unX = mouseX.on('change', update);
+    const unY = mouseY.on('change', update);
+    return () => { unX(); unY(); };
+  }, [mouseX, mouseY, rotate]);
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ rotate }}
+      className="w-[2px] h-5 rounded-full bg-white/[0.18]"
+    />
+  );
+});
+
+/* ── Orbital tools (desktop) ── */
 const orbitTools = [
   { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', arc: 1 as const, dur: 35, begin: '0s' },
   { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1 as const, dur: 35, begin: '-8s' },
@@ -23,7 +52,6 @@ const arcPaths = {
   2: 'M 950 -50 Q 1350 450 750 950',
 };
 
-// All tools for mobile ticker — includes Salesforce, Deployteq, etc.
 const allTools = [
   { slug: 'react', color: '61DAFB' },
   { slug: 'nextdotjs', color: 'ffffff' },
@@ -47,28 +75,25 @@ const allTools = [
   { slug: 'googlegemini', color: '8E75B2' },
 ];
 
+const FILING_COLS = 16;
+const FILING_ROWS = 10;
+const FILING_COUNT = FILING_COLS * FILING_ROWS;
+
 export function Hero() {
   const t = useTranslations('hero');
   const containerRef = useRef<HTMLElement>(null);
   const [selectedTool, setSelectedTool] = useState<typeof orbitTools[0] | null>(null);
 
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-  const gridX = useTransform(springX, [0, 1], ['-5px', '5px']);
-  const gridY = useTransform(springY, [0, 1], ['-5px', '5px']);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
     const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      mouseX.set((e.clientX - rect.left) / rect.width);
-      mouseY.set((e.clientY - rect.top) / rect.height);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
-    el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
+    window.addEventListener('pointermove', onMove);
+    return () => window.removeEventListener('pointermove', onMove);
   }, [mouseX, mouseY]);
 
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
@@ -78,18 +103,25 @@ export function Hero() {
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
-        <motion.div className="absolute inset-0 opacity-[0.06]" style={{ x: gridX, y: gridY }}>
-          <svg width="100%" height="100%">
-            <defs><pattern id="hero-grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" /></pattern></defs>
-            <rect width="100%" height="100%" fill="url(#hero-grid)" />
-          </svg>
-        </motion.div>
         <div className="absolute w-72 h-72 rounded-full blur-[140px] pointer-events-none" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
         <div className="absolute w-56 h-56 rounded-full blur-[120px] pointer-events-none" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
+        {/* Smoother bottom fade — taller gradient with solid base */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 z-10" style={{ background: 'linear-gradient(to top, var(--background) 0%, var(--background) 8%, transparent 100%)' }} />
       </div>
 
-      {/* DESKTOP: Orbital SVG (lg+) */}
+      {/* DESKTOP: Magnetic filings grid */}
+      <div className="absolute inset-0 hidden lg:flex items-center justify-center pointer-events-none" style={{ paddingLeft: '45%' }}>
+        <div
+          className="grid gap-6 opacity-60"
+          style={{ gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)` }}
+        >
+          {Array.from({ length: FILING_COUNT }).map((_, i) => (
+            <Filing key={i} mouseX={mouseX} mouseY={mouseY} />
+          ))}
+        </div>
+      </div>
+
+      {/* DESKTOP: Orbital SVG */}
       <div className="absolute inset-0 hidden lg:block">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
           <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
@@ -110,7 +142,7 @@ export function Hero() {
       {/* Desktop tool popover */}
       {selectedTool && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setSelectedTool(null)}>
-          <motion.div initial={{ opacity: 0, scale: 0.9, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 25 }} className="w-full max-w-[280px] rounded-2xl bg-surface border border-border shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
+          <motion.div initial={{ opacity: 0, scale: 0.9, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 25 }} className="relative w-full max-w-[280px] rounded-2xl bg-surface border border-border shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setSelectedTool(null)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-background-alt text-foreground-subtle"><X className="w-4 h-4" /></button>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl bg-background-alt border border-border flex items-center justify-center p-2">
@@ -127,30 +159,61 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-8 sm:pb-16">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
-          {/* Left column */}
           <div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-teal" />
-              <span className="text-xs sm:text-sm text-teal font-medium">{t('greeting')}</span>
+              <Sparkles className="w-3.5 h-3.5" style={{ color: '#A7DADC' }} />
+              <span className="text-xs sm:text-sm font-medium" style={{ color: '#A7DADC' }}>{t('greeting')}</span>
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mb-4">
               {t('title').split(' ').map((word: string, i: number) => (
-                <span key={i} className={i === 1 ? 'text-teal' : 'text-white'}>{word}{' '}</span>
+                <span key={i} style={{ color: i === 1 ? '#A7DADC' : '#ffffff' }}>{word}{' '}</span>
               ))}
             </motion.h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }} className="text-sm sm:text-base lg:text-lg text-white/60 leading-relaxed mb-6 max-w-lg">
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }} className="text-sm sm:text-base lg:text-lg leading-relaxed mb-6 max-w-lg" style={{ color: 'rgba(255,255,255,0.6)' }}>
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — explicit white color on every text element */}
+            {/* CTAs — pure inline styles to beat Tailwind v4 specificity on all devices */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a href="#contact" style={{ backgroundColor: '#EF476F', color: '#ffffff' }} className="flex items-center justify-center gap-2 px-5 py-3 rounded-full text-sm font-semibold transition-opacity hover:opacity-90">
+              <a
+                href="#contact"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px 20px',
+                  borderRadius: '9999px',
+                  backgroundColor: '#EF476F',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  WebkitTextFillColor: '#ffffff',
+                }}
+              >
                 {t('cta_primary')}
-                <ArrowRight className="w-4 h-4" style={{ color: '#ffffff' }} />
+                <ArrowRight style={{ width: 16, height: 16, color: '#ffffff' }} />
               </a>
-              <a href="#projects" style={{ color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }} className="flex items-center justify-center gap-2 px-5 py-3 rounded-full border text-sm font-medium transition-all hover:bg-white/10">
+              <a
+                href="#projects"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px 20px',
+                  borderRadius: '9999px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  WebkitTextFillColor: '#ffffff',
+                }}
+              >
                 {t('cta_secondary')}
               </a>
             </motion.div>
@@ -163,13 +226,13 @@ export function Hero() {
                 { icon: Users, label: t('badge_team') },
               ].map(({ icon: Icon, label }, i) => (
                 <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 flex-shrink-0">
-                  <Icon className="w-3 h-3 text-teal flex-shrink-0" />
-                  <span className="text-[11px] font-semibold text-white whitespace-nowrap">{label}</span>
+                  <Icon className="w-3 h-3 flex-shrink-0" style={{ color: '#A7DADC' }} />
+                  <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#ffffff' }}>{label}</span>
                 </div>
               ))}
             </motion.div>
 
-            {/* MOBILE: Floating tool ticker — 20 tools, smooth scroll, above marquee */}
+            {/* MOBILE: Tool ticker */}
             <div className="lg:hidden mb-4 overflow-hidden">
               <div className="flex gap-3 animate-marquee" style={{ width: 'max-content' }}>
                 {[...allTools, ...allTools].map((tool, i) => (
@@ -182,11 +245,11 @@ export function Hero() {
 
             {/* Company marquee */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} className="pt-4 border-t border-white/10">
-              <p className="text-[10px] sm:text-xs text-white/40 mb-2 uppercase tracking-wider">{t('visited')}</p>
+              <p className="text-[10px] sm:text-xs mb-2 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>{t('visited')}</p>
               <div className="overflow-hidden relative">
                 <div className="flex animate-marquee whitespace-nowrap">
                   {[...companies, ...companies].map((name, i) => (
-                    <span key={i} className="text-xs sm:text-sm font-semibold text-white/25 mx-4 sm:mx-6">{name}</span>
+                    <span key={i} className="text-xs sm:text-sm font-semibold mx-4 sm:mx-6" style={{ color: 'rgba(255,255,255,0.25)' }}>{name}</span>
                   ))}
                 </div>
               </div>
@@ -199,8 +262,8 @@ export function Hero() {
               <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 rounded-full bg-white/10 mx-auto flex items-center justify-center"><Users className="w-8 h-8 text-white/30" /></div>
-                    <p className="text-white/25 text-sm">Photo placeholder</p>
+                    <div className="w-16 h-16 rounded-full bg-white/10 mx-auto flex items-center justify-center"><Users className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.3)' }} /></div>
+                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.25)' }}>Photo placeholder</p>
                   </div>
                 </div>
               </div>
@@ -211,8 +274,8 @@ export function Hero() {
                   { icon: Users, label: t('badge_team') },
                 ].map(({ icon: Icon, label }, i) => (
                   <motion.div key={i} className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 shadow-lg" animate={{ y: [0, -4, 0] }} transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}>
-                    <Icon className="w-3.5 h-3.5 text-teal flex-shrink-0" />
-                    <span className="text-xs font-semibold text-white truncate">{label}</span>
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#A7DADC' }} />
+                    <span className="text-xs font-semibold truncate" style={{ color: '#ffffff' }}>{label}</span>
                   </motion.div>
                 ))}
               </motion.div>
