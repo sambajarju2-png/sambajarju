@@ -1,7 +1,7 @@
 import { Hero } from '@/components/sections/hero';
 import { About } from '@/components/sections/about';
 import { Projects } from '@/components/sections/projects';
-import { ToolStack } from '@/components/sections/tool-stack';
+import { ToolStackFloat } from '@/components/sections/tool-stack-float';
 import { Experience } from '@/components/sections/experience';
 import { Testimonials } from '@/components/sections/testimonials';
 import { Playground } from '@/components/sections/playground';
@@ -14,7 +14,7 @@ export default function Home() {
       <Hero />
       <About />
       <Projects />
-      <ToolStack />
+      <ToolStackFloat />
       <Experience />
       <Testimonials />
       <Playground />
