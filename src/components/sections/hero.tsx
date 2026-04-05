@@ -5,42 +5,46 @@ import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight, Briefcase, Euro, Users, Sparkles, X } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 
-interface FloatingTool {
-  slug: string;
-  color: string;
-  name: string;
-  usage: string;
-  x: string;
-  y: string;
-  mobileX?: string;
-  mobileY?: string;
-  dur: number;
-  delay: number;
-  size: number;
-}
+// Desktop orbital tools
+const orbitTools = [
+  { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', arc: 1 as const, dur: 35, begin: '0s' },
+  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1 as const, dur: 35, begin: '-8s' },
+  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', arc: 2 as const, dur: 30, begin: '0s' },
+  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, row-level security, real-time.', arc: 1 as const, dur: 35, begin: '-18s' },
+  { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping. Designed PayWatch mockups here.', arc: 2 as const, dur: 30, begin: '-10s' },
+  { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows across all marketing roles.', arc: 1 as const, dur: 35, begin: '-28s' },
+  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. This entire portfolio runs on it.', arc: 2 as const, dur: 30, begin: '-20s' },
+  { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'GA4 setup and event tracking across all projects.', arc: 2 as const, dur: 30, begin: '-16s' },
+];
 
-const floatingTools: FloatingTool[] = [
-  { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', x: '85%', y: '12%', mobileX: '78%', mobileY: '6%', dur: 5, delay: 0, size: 40 },
-  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', x: '75%', y: '80%', mobileX: '8%', mobileY: '4%', dur: 6, delay: 0.5, size: 36 },
-  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', x: '90%', y: '45%', mobileX: '82%', mobileY: '42%', dur: 4.5, delay: 1, size: 34 },
-  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, row-level security, real-time.', x: '70%', y: '60%', mobileX: '5%', mobileY: '38%', dur: 5.5, delay: 1.5, size: 36 },
-  { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping. Designed PayWatch mockups here.', x: '5%', y: '20%', mobileX: '45%', mobileY: '3%', dur: 6.5, delay: 2, size: 32 },
-  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. This entire portfolio runs on it.', x: '8%', y: '65%', mobileX: '75%', mobileY: '88%', dur: 4, delay: 2.5, size: 34 },
-  { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows across all marketing roles.', x: '92%', y: '70%', mobileX: '10%', mobileY: '85%', dur: 5, delay: 3, size: 32 },
-  { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'GA4 setup and event tracking across all projects.', x: '3%', y: '45%', mobileX: '60%', mobileY: '90%', dur: 5.5, delay: 0.8, size: 30 },
+const arcPaths = {
+  1: 'M 900 -100 Q 1300 400 700 900',
+  2: 'M 950 -50 Q 1350 450 750 950',
+};
+
+// Mobile horizontal strip tools (subset, simpler)
+const mobileTools = [
+  { slug: 'react', color: '61DAFB', name: 'React' },
+  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js' },
+  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot' },
+  { slug: 'supabase', color: '3FCF8E', name: 'Supabase' },
+  { slug: 'figma', color: 'F24E1E', name: 'Figma' },
+  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind' },
+  { slug: 'zapier', color: 'FF4F00', name: 'Zapier' },
+  { slug: 'googleanalytics', color: 'E37400', name: 'Analytics' },
+  { slug: 'mailchimp', color: 'FFE01B', name: 'Mailchimp' },
+  { slug: 'resend', color: 'ffffff', name: 'Resend' },
 ];
 
 export function Hero() {
   const t = useTranslations('hero');
   const containerRef = useRef<HTMLElement>(null);
-  const [selectedTool, setSelectedTool] = useState<FloatingTool | null>(null);
+  const [selectedTool, setSelectedTool] = useState<typeof orbitTools[0] | null>(null);
 
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
-
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-
   const gridX = useTransform(springX, [0, 1], ['-5px', '5px']);
   const gridY = useTransform(springY, [0, 1], ['-5px', '5px']);
 
@@ -59,8 +63,8 @@ export function Hero() {
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative min-h-[100svh] flex items-center">
-      {/* Background layer — overflow-hidden for decorations */}
+    <section ref={containerRef} className="relative min-h-[100svh] flex items-center overflow-x-hidden">
+      {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
         <motion.div className="absolute inset-0 opacity-[0.06]" style={{ x: gridX, y: gridY }}>
@@ -78,37 +82,56 @@ export function Hero() {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
       </div>
 
-      {/* Floating icons — overflow-hidden clips at edges, CSS vars for SSR-safe responsive */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[5]">
-        {floatingTools.map((tool) => (
-          <motion.button
-            key={tool.slug}
-            onClick={() => setSelectedTool(tool)}
-            style={{
-              '--mobile-x': tool.mobileX || tool.x,
-              '--mobile-y': tool.mobileY || tool.y,
-              '--desktop-x': tool.x,
-              '--desktop-y': tool.y,
-              '--size-mobile': `${tool.size * 0.85}px`,
-              '--size-desktop': `${tool.size}px`,
-            } as React.CSSProperties}
-            className="absolute left-[var(--mobile-x)] top-[var(--mobile-y)] w-[var(--size-mobile)] h-[var(--size-mobile)] lg:left-[var(--desktop-x)] lg:top-[var(--desktop-y)] lg:w-[var(--size-desktop)] lg:h-[var(--size-desktop)] pointer-events-auto rounded-xl bg-white/[0.07] backdrop-blur-[2px] border border-white/[0.1] flex items-center justify-center hover:bg-white/[0.12] hover:border-white/[0.2] transition-colors"
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: tool.dur, repeat: Infinity, ease: 'easeInOut', delay: tool.delay }}
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <img
-              src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`}
-              alt={tool.name}
-              className="w-[14px] h-[14px] lg:w-[18px] lg:h-[18px] opacity-60"
-              loading="lazy"
-            />
-          </motion.button>
-        ))}
+      {/* ═══ DESKTOP: Orbital SVG satellites (lg+) ═══ */}
+      <div className="absolute inset-0 overflow-hidden hidden lg:block">
+        <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
+          <path d={arcPaths[2]} fill="none" stroke="rgba(167,218,220,0.06)" strokeWidth="0.5" />
+          {orbitTools.map((tool) => (
+            <g key={tool.slug} style={{ cursor: 'pointer' }} onClick={() => setSelectedTool(tool)}>
+              <animateMotion dur={`${tool.dur}s`} repeatCount="indefinite" path={arcPaths[tool.arc]} begin={tool.begin} />
+              <circle r="22" fill={`#${tool.color}`} opacity="0.08" />
+              <circle r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
+              <image href={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} x="-10" y="-10" width="20" height="20" opacity="0.7" />
+            </g>
+          ))}
+          <circle r="2" fill="white" opacity="0.3">
+            <animateMotion dur="18s" repeatCount="indefinite" path={arcPaths[1]} begin="-5s" />
+          </circle>
+          <circle r="1.5" fill="#EF476F" opacity="0.4">
+            <animateMotion dur="22s" repeatCount="indefinite" path={arcPaths[2]} begin="-12s" />
+          </circle>
+        </svg>
       </div>
 
-      {/* Tool popover */}
+      {/* ═══ MOBILE: Horizontal floating icon strip (below lg) ═══ */}
+      <div className="absolute top-16 left-0 right-0 overflow-hidden lg:hidden z-[5]">
+        <motion.div
+          className="flex gap-4 px-4 whitespace-nowrap"
+          animate={{ x: [0, -400, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        >
+          {[...mobileTools, ...mobileTools].map((tool, i) => (
+            <motion.div
+              key={`${tool.slug}-${i}`}
+              className="w-9 h-9 rounded-xl bg-white/[0.07] border border-white/[0.1] flex items-center justify-center flex-shrink-0"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3 + (i % 3), repeat: Infinity, ease: 'easeInOut', delay: i * 0.2 }}
+            >
+              <img
+                src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`}
+                alt={tool.name}
+                width={14}
+                height={14}
+                className="opacity-50"
+                loading="lazy"
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Tool popover (desktop orbital click) */}
       {selectedTool && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setSelectedTool(null)}>
           <motion.div
@@ -135,8 +158,8 @@ export function Hero() {
         </div>
       )}
 
-      {/* Content — NO overflow hidden */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-12 sm:pb-16 w-full">
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-24 pb-10 sm:pb-16 w-full">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="space-y-4 sm:space-y-6">
             <motion.div
@@ -153,7 +176,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
-              className="text-[1.75rem] leading-[1.15] sm:text-[2.8rem] md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white tracking-tight"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight tracking-tight"
             >
               {t('title').split(' ').map((word: string, i: number) => (
                 <span key={i} className={i === 1 ? 'text-teal' : ''}>
@@ -166,7 +189,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
-              className="text-sm sm:text-base lg:text-lg text-white/60 max-w-lg leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg text-white/60 leading-relaxed max-w-lg"
             >
               {t('subtitle')}
             </motion.p>
@@ -178,14 +201,15 @@ export function Hero() {
               className="flex flex-col sm:flex-row gap-3"
             >
               <a href="#contact" className="group flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-accent/25">
-                <span className="shrink-0">{t('cta_primary')}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                <span>{t('cta_primary')}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a href="#projects" className="flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-all">
-                <span className="shrink-0">{t('cta_secondary')}</span>
+                <span>{t('cta_secondary')}</span>
               </a>
             </motion.div>
 
+            {/* Badges */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -197,13 +221,14 @@ export function Hero() {
                 { icon: Euro, label: t('badge_salary') },
                 { icon: Users, label: t('badge_team') },
               ].map(({ icon: Icon, label }, i) => (
-                <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10 flex-shrink-0">
+                <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 flex-shrink-0">
                   <Icon className="w-3 h-3 text-teal flex-shrink-0" />
                   <span className="text-[11px] font-semibold text-white whitespace-nowrap">{label}</span>
                 </div>
               ))}
             </motion.div>
 
+            {/* Marquee */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -221,6 +246,7 @@ export function Hero() {
             </motion.div>
           </div>
 
+          {/* Desktop right column */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -237,7 +263,6 @@ export function Hero() {
                     <p className="text-white/25 text-sm">Photo placeholder</p>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_3s_ease_infinite]" />
               </div>
               <motion.div className="absolute -bottom-3 -left-3 right-3 flex gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}>
                 {[
