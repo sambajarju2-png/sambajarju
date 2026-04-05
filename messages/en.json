@@ -174,23 +174,25 @@
   },
   "playground_page": {
     "title": "Playground",
-    "subtitle": "Interactive demos that show how I think about marketing automation, data, and systems.",
+    "subtitle": "I built these to show how I think — not just talk about it. Each demo is a piece of what I actually do at Vandebron.",
     "flow_title": "Email Automation Flow",
-    "flow_subtitle": "A subscriber journey from signup to conversion. Watch emails flow through the pipeline in real-time.",
+    "flow_subtitle": "This is how I design subscriber journeys. Trigger → nurture → convert. Watch the simulation run through both paths.",
     "roi_title": "Automation ROI Calculator",
-    "roi_subtitle": "See how much time and money marketing automation saves.",
+    "roi_subtitle": "The question I always get: \"What's the ROI?\" Play with the numbers yourself.",
     "roi_list_size": "Email list size",
     "roi_manual_hours": "Manual hours per week",
     "roi_hourly_rate": "Hourly rate",
     "roi_hours_saved": "Hours saved / month",
     "roi_money_saved": "Money saved / month",
     "roi_emails_auto": "Emails automated / month",
-    "sql_title": "SQL in Marketing",
-    "sql_subtitle": "How I translate marketing goals into technical solutions at Vandebron.",
+    "sql_title": "SQL Query Builder",
+    "sql_subtitle": "I write queries like these daily at Vandebron for 500k+ emails/month. Try the presets or write your own — the results might surprise you.",
     "sql_goal": "Marketing goal",
     "sql_code": "Technical solution",
     "dashboard_title": "Campaign Dashboard",
-    "dashboard_subtitle": "Live metrics from a fictional email campaign — the kind of data I monitor daily.",
-    "back": "Back to portfolio"
+    "dashboard_subtitle": "The kind of dashboard I check every morning. These are fictional numbers, but the patterns are real.",
+    "back": "Back to portfolio",
+    "sql_showcase_title": "SQL in Marketing",
+    "sql_showcase_subtitle": "How I turn marketing goals into code. Toggle between the business ask and the technical solution."
   }
 }

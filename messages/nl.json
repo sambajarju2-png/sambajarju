@@ -174,23 +174,25 @@
   },
   "playground_page": {
     "title": "Speeltuin",
-    "subtitle": "Interactieve demos die laten zien hoe ik denk over marketing automation, data en systemen.",
+    "subtitle": "Ik heb deze gebouwd om te laten zien hoe ik denk — niet alleen erover praten. Elke demo is een stukje van wat ik dagelijks doe bij Vandebron.",
     "flow_title": "Email Automation Flow",
-    "flow_subtitle": "Een subscriber journey van aanmelding tot conversie. Bekijk hoe emails door de pipeline stromen.",
+    "flow_subtitle": "Zo ontwerp ik subscriber journeys. Trigger → nurture → convert. Bekijk de simulatie door beide paden.",
     "roi_title": "Automation ROI Calculator",
-    "roi_subtitle": "Zie hoeveel tijd en geld marketing automation bespaart.",
+    "roi_subtitle": "De vraag die ik altijd krijg: \"Wat is de ROI?\" Speel zelf met de cijfers.",
     "roi_list_size": "Email lijst grootte",
     "roi_manual_hours": "Handmatige uren per week",
     "roi_hourly_rate": "Uurtarief",
     "roi_hours_saved": "Uren bespaard / maand",
     "roi_money_saved": "Geld bespaard / maand",
     "roi_emails_auto": "Emails geautomatiseerd / maand",
-    "sql_title": "SQL in Marketing",
-    "sql_subtitle": "Hoe ik marketingdoelen vertaal naar technische oplossingen bij Vandebron.",
+    "sql_title": "SQL Query Builder",
+    "sql_subtitle": "Dit soort queries schrijf ik dagelijks bij Vandebron voor 500k+ emails/maand. Probeer de presets of schrijf je eigen query.",
     "sql_goal": "Marketingdoel",
     "sql_code": "Technische oplossing",
     "dashboard_title": "Campagne Dashboard",
-    "dashboard_subtitle": "Live metrics van een fictieve email campagne — het soort data dat ik dagelijks monitor.",
-    "back": "Terug naar portfolio"
+    "dashboard_subtitle": "Het soort dashboard dat ik elke ochtend check. Fictieve cijfers, maar de patronen zijn echt.",
+    "back": "Terug naar portfolio",
+    "sql_showcase_title": "SQL in Marketing",
+    "sql_showcase_subtitle": "Hoe ik marketingdoelen vertaal naar code. Toggle tussen de business vraag en de technische oplossing."
   }
 }
