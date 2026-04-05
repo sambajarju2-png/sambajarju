@@ -24,6 +24,7 @@ const tools: Tool[] = [
   { name: 'HubSpot', slug: 'hubspot', color: '#FF7A59', category: 'Email & Marketing', categoryIcon: Mail, description: 'Used for CRM and marketing automation at Kes Visum. Set up lead scoring and nurture flows.', experience: '3+ years' },
   { name: 'Mailchimp', slug: 'mailchimp', color: '#FFE01B', category: 'Email & Marketing', categoryIcon: Mail, description: 'Email campaigns for smaller clients during freelance work at Cordital.', experience: '2+ years' },
   { name: 'Resend', slug: 'resend', color: '#000000', category: 'Email & Marketing', categoryIcon: Mail, description: 'Transactional email for PayWatch.app. Clean API, great developer experience.', experience: '1+ year' },
+  { name: 'Mailgun', slug: 'mailgun', color: '#F06B66', category: 'Email & Marketing', categoryIcon: Mail, description: 'Transactional email delivery. Used for PayWatch email infrastructure.', experience: '1+ year' },
 
   // Analytics & CRO
   { name: 'Google Analytics', slug: 'googleanalytics', color: '#E37400', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Tracking and analyzing marketing performance across all projects. GA4 setup and event tracking.', experience: '4+ years' },

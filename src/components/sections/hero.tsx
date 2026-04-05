@@ -2,24 +2,49 @@
 
 import { useTranslations } from 'next-intl';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { ArrowRight, Briefcase, Euro, Users, Sparkles } from 'lucide-react';
+import { ArrowRight, Briefcase, Euro, Users, Sparkles, X } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
+
+interface OrbitingTool {
+  slug: string;
+  color: string;
+  name: string;
+  usage: string;
+  arc: 1 | 2;
+  dur: number;
+  begin: string;
+}
+
+const orbitingTools: OrbitingTool[] = [
+  { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', arc: 1, dur: 35, begin: '0s' },
+  { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1, dur: 35, begin: '-8s' },
+  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', arc: 2, dur: 30, begin: '0s' },
+  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, row-level security, real-time.', arc: 1, dur: 35, begin: '-18s' },
+  { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping before building. Designed PayWatch mockups here.', arc: 2, dur: 30, begin: '-10s' },
+  { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows across all marketing roles.', arc: 1, dur: 35, begin: '-28s' },
+  { slug: 'tailwindcss', color: '06B6D4', name: 'Tailwind CSS', usage: 'Styling everything. Fast, consistent, and this entire portfolio runs on it.', arc: 2, dur: 30, begin: '-20s' },
+  { slug: 'mailchimp', color: 'FFE01B', name: 'Mailchimp', usage: 'Email campaigns for smaller clients during freelance work at Cordital.', arc: 2, dur: 30, begin: '-6s' },
+  { slug: 'resend', color: 'ffffff', name: 'Resend', usage: 'Transactional email for PayWatch.app. Clean API, great DX.', arc: 1, dur: 35, begin: '-14s' },
+  { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'Tracking and analyzing marketing performance. GA4 setup and event tracking.', arc: 2, dur: 30, begin: '-16s' },
+];
+
+const arcPaths = {
+  1: 'M 900 -100 Q 1300 400 700 900',
+  2: 'M 950 -50 Q 1350 450 750 950',
+};
 
 export function Hero() {
   const t = useTranslations('hero');
   const containerRef = useRef<HTMLElement>(null);
+  const [selectedTool, setSelectedTool] = useState<OrbitingTool | null>(null);
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
-  // Smooth spring-based cursor tracking
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
-  // Transform cursor position to gradient position
   const gradientX = useTransform(springX, [0, 1], ['20%', '80%']);
   const gradientY = useTransform(springY, [0, 1], ['20%', '80%']);
-
-  // Parallax for grid
   const gridX = useTransform(springX, [0, 1], ['-5px', '5px']);
   const gridY = useTransform(springY, [0, 1], ['-5px', '5px']);
 
@@ -39,7 +64,6 @@ export function Hero() {
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Base gradient */}
       <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
 
       {/* Mouse-tracking spotlight */}
@@ -53,7 +77,7 @@ export function Hero() {
         }}
       />
 
-      {/* Animated grid with parallax */}
+      {/* Parallax grid */}
       <motion.div className="absolute inset-0 opacity-[0.06]" style={{ x: gridX, y: gridY }}>
         <svg width="100%" height="100%">
           <defs>
@@ -65,79 +89,71 @@ export function Hero() {
         </svg>
       </motion.div>
 
-      {/* Orbital arc */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Orbital arcs with tool icons as satellites */}
+      <div className="absolute inset-0 overflow-hidden hidden lg:block">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
-          {/* Main arc */}
-          <path
-            d="M 900 -100 Q 1300 400 700 900"
-            fill="none"
-            stroke="rgba(167,218,220,0.15)"
-            strokeWidth="1"
-          />
-          {/* Second arc */}
-          <path
-            d="M 950 -50 Q 1350 450 750 950"
-            fill="none"
-            stroke="rgba(167,218,220,0.08)"
-            strokeWidth="0.5"
-          />
+          {/* Arc lines */}
+          <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
+          <path d={arcPaths[2]} fill="none" stroke="rgba(167,218,220,0.06)" strokeWidth="0.5" />
 
-          {/* Orbiting dots */}
-          <circle r="4" fill="#A7DADC" opacity="0.6">
-            <animateMotion dur="20s" repeatCount="indefinite" path="M 900 -100 Q 1300 400 700 900" />
-          </circle>
-          <circle r="2" fill="white" opacity="0.4">
-            <animateMotion dur="15s" repeatCount="indefinite" path="M 950 -50 Q 1350 450 750 950" begin="3s" />
-          </circle>
-          <circle r="3" fill="#EF476F" opacity="0.5">
-            <animateMotion dur="25s" repeatCount="indefinite" path="M 900 -100 Q 1300 400 700 900" begin="8s" />
-          </circle>
+          {/* Orbiting tool icons */}
+          {orbitingTools.map((tool) => (
+            <g key={tool.slug} style={{ cursor: 'pointer' }} onClick={() => setSelectedTool(tool)}>
+              <animateMotion
+                dur={`${tool.dur}s`}
+                repeatCount="indefinite"
+                path={arcPaths[tool.arc]}
+                begin={tool.begin}
+              />
+              {/* Glow behind icon */}
+              <circle r="22" fill={`#${tool.color}`} opacity="0.08" />
+              {/* Background circle */}
+              <circle r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
+              {/* Tool logo */}
+              <image
+                href={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`}
+                x="-10" y="-10" width="20" height="20"
+                opacity="0.7"
+              />
+            </g>
+          ))}
 
-          {/* Static glow points on arc */}
-          <circle cx="1050" cy="150" r="5" fill="#A7DADC" opacity="0.3">
-            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite" />
+          {/* Extra orbiting dots for atmosphere */}
+          <circle r="2" fill="white" opacity="0.3">
+            <animateMotion dur="18s" repeatCount="indefinite" path={arcPaths[1]} begin="-5s" />
           </circle>
-          <circle cx="1100" cy="350" r="3" fill="white" opacity="0.2">
-            <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite" begin="1s" />
-          </circle>
-          <circle cx="950" cy="600" r="4" fill="#EF476F" opacity="0.2">
-            <animate attributeName="opacity" values="0.15;0.4;0.15" dur="5s" repeatCount="indefinite" begin="2s" />
+          <circle r="1.5" fill="#EF476F" opacity="0.4">
+            <animateMotion dur="22s" repeatCount="indefinite" path={arcPaths[2]} begin="-12s" />
           </circle>
         </svg>
       </div>
 
-      {/* Floating tool icons */}
-      <div className="absolute inset-0 pointer-events-none hidden lg:block">
-        {[
-          { slug: 'react', color: '61DAFB', x: '8%', y: '20%', delay: 0, dur: 5 },
-          { slug: 'nextdotjs', color: 'ffffff', x: '15%', y: '75%', delay: 1, dur: 6 },
-          { slug: 'tailwindcss', color: '06B6D4', x: '82%', y: '15%', delay: 2, dur: 4.5 },
-          { slug: 'hubspot', color: 'FF7A59', x: '88%', y: '70%', delay: 0.5, dur: 5.5 },
-          { slug: 'supabase', color: '3FCF8E', x: '75%', y: '85%', delay: 1.5, dur: 4 },
-          { slug: 'figma', color: 'F24E1E', x: '5%', y: '50%', delay: 3, dur: 6.5 },
-          { slug: 'zapier', color: 'FF4F00', x: '92%', y: '40%', delay: 2.5, dur: 5 },
-        ].map(({ slug, color, x, y, delay, dur }) => (
-          <motion.a
-            key={slug}
-            href="#tools"
-            className="absolute w-10 h-10 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center pointer-events-auto hover:bg-white/10 hover:border-white/20 transition-colors cursor-pointer"
-            style={{ left: x, top: y }}
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut', delay }}
-            whileHover={{ scale: 1.2 }}
+      {/* Tool popover */}
+      {selectedTool && (
+        <div className="fixed inset-0 z-50" onClick={() => setSelectedTool(null)}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 rounded-2xl bg-surface border border-border shadow-2xl p-5 z-50"
+            onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={`https://cdn.simpleicons.org/${slug}/${color}`}
-              alt={slug}
-              width={20}
-              height={20}
-              className="opacity-60"
-              loading="lazy"
-            />
-          </motion.a>
-        ))}
-      </div>
+            <button onClick={() => setSelectedTool(null)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-background-alt text-foreground-subtle">
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-background-alt border border-border flex items-center justify-center p-2">
+                <img src={`https://cdn.simpleicons.org/${selectedTool.slug}/${selectedTool.color}`} alt={selectedTool.name} width={24} height={24} className="dark:brightness-0 dark:invert dark:opacity-80" />
+              </div>
+              <h3 className="font-bold text-foreground">{selectedTool.name}</h3>
+            </div>
+            <p className="text-sm text-foreground-muted leading-relaxed">{selectedTool.usage}</p>
+            <a href="#tools" onClick={() => setSelectedTool(null)} className="inline-flex items-center gap-1 text-xs font-medium text-accent mt-3 hover:underline">
+              See all tools <ArrowRight className="w-3 h-3" />
+            </a>
+          </motion.div>
+        </div>
+      )}
 
       {/* Floating orbs with cursor influence */}
       <motion.div
@@ -165,7 +181,7 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ type: 'spring', stiffness: 100, damping: 20 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm"
             >
               <Sparkles className="w-4 h-4 text-teal" />
@@ -175,7 +191,7 @@ export function Hero() {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
+              transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
               className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight"
             >
               {t('title').split(' ').map((word, i) => (
@@ -183,7 +199,7 @@ export function Hero() {
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.15 + i * 0.08 }}
+                  transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.15 + i * 0.08 }}
                   className={`inline-block mr-[0.3em] ${i === 1 ? 'text-teal' : ''}`}
                 >
                   {word}
@@ -194,7 +210,7 @@ export function Hero() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }}
               className="text-lg text-white/60 max-w-lg leading-relaxed"
             >
               {t('subtitle')}
@@ -203,12 +219,12 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }}
               className="flex flex-wrap gap-4"
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25 hover:scale-[1.02]"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25"
               >
                 {t('cta_primary')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -232,24 +248,21 @@ export function Hero() {
               <div className="overflow-hidden relative">
                 <div className="flex animate-marquee whitespace-nowrap">
                   {[...companies, ...companies].map((name, i) => (
-                    <span key={i} className="text-sm font-semibold text-white/25 mx-6 hover:text-white/50 transition-colors">
-                      {name}
-                    </span>
+                    <span key={i} className="text-sm font-semibold text-white/25 mx-6">{name}</span>
                   ))}
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Right — Photo placeholder + floating badges */}
+          {/* Right — Photo placeholder + badges */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.3 }}
             className="relative hidden lg:block"
           >
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
-              {/* Glassmorphism frame */}
               <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center space-y-3">
@@ -259,16 +272,14 @@ export function Hero() {
                     <p className="text-white/25 text-sm">Photo placeholder</p>
                   </div>
                 </div>
-                {/* Shimmer effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_3s_ease_infinite]" />
               </div>
 
-              {/* Floating glassmorphism badges */}
               <motion.div
                 className="absolute -bottom-3 -left-3 right-3 flex gap-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+                transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}
               >
                 {[
                   { icon: Briefcase, label: t('badge_role') },
@@ -291,7 +302,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
