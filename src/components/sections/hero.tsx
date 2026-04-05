@@ -192,18 +192,12 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }}
-              className="text-[2.2rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight break-words"
             >
               {t('title').split(' ').map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.15 + i * 0.08 }}
-                  className={`inline mr-[0.15em] sm:mr-[0.3em] ${i === 1 ? 'text-teal' : ''}`}
-                >
-                  {word}
-                </motion.span>
+                <span key={i} className={i === 1 ? 'text-teal' : ''}>
+                  {word}{' '}
+                </span>
               ))}
             </motion.h1>
 
@@ -224,14 +218,14 @@ export function Hero() {
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-accent/25 w-full sm:w-auto"
               >
                 {t('cta_primary')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-200 w-full sm:w-auto"
               >
                 {t('cta_secondary')}
               </a>
