@@ -107,6 +107,38 @@ export function Hero() {
         </svg>
       </div>
 
+      {/* Floating tool icons */}
+      <div className="absolute inset-0 pointer-events-none hidden lg:block">
+        {[
+          { slug: 'react', color: '61DAFB', x: '8%', y: '20%', delay: 0, dur: 5 },
+          { slug: 'nextdotjs', color: 'ffffff', x: '15%', y: '75%', delay: 1, dur: 6 },
+          { slug: 'tailwindcss', color: '06B6D4', x: '82%', y: '15%', delay: 2, dur: 4.5 },
+          { slug: 'hubspot', color: 'FF7A59', x: '88%', y: '70%', delay: 0.5, dur: 5.5 },
+          { slug: 'supabase', color: '3FCF8E', x: '75%', y: '85%', delay: 1.5, dur: 4 },
+          { slug: 'figma', color: 'F24E1E', x: '5%', y: '50%', delay: 3, dur: 6.5 },
+          { slug: 'zapier', color: 'FF4F00', x: '92%', y: '40%', delay: 2.5, dur: 5 },
+        ].map(({ slug, color, x, y, delay, dur }) => (
+          <motion.a
+            key={slug}
+            href="#tools"
+            className="absolute w-10 h-10 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center pointer-events-auto hover:bg-white/10 hover:border-white/20 transition-colors cursor-pointer"
+            style={{ left: x, top: y }}
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: dur, repeat: Infinity, ease: 'easeInOut', delay }}
+            whileHover={{ scale: 1.2 }}
+          >
+            <img
+              src={`https://cdn.simpleicons.org/${slug}/${color}`}
+              alt={slug}
+              width={20}
+              height={20}
+              className="opacity-60"
+              loading="lazy"
+            />
+          </motion.a>
+        ))}
+      </div>
+
       {/* Floating orbs with cursor influence */}
       <motion.div
         className="absolute w-72 h-72 rounded-full blur-[140px] pointer-events-none"
