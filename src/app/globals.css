@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #023047;
+  --pink: #EF476F;
+  --teal: #A7DADC;
+
+  --background: #FAFBFC;
+  --background-alt: #F0F4F8;
+  --surface: #FFFFFF;
+  --surface-hover: #F7F9FB;
+  --foreground: #023047;
+  --foreground-muted: #4A6B7F;
+  --foreground-subtle: #8BA3B5;
+  --accent: #EF476F;
+  --accent-hover: #D93A5E;
+  --secondary: #A7DADC;
+  --secondary-hover: #8CCDD0;
+  --border: #E2E8F0;
+  --border-hover: #CBD5E1;
+  --card-shadow: 0 1px 3px rgba(2,48,71,0.06), 0 4px 12px rgba(2,48,71,0.04);
+  --card-shadow-hover: 0 4px 12px rgba(2,48,71,0.1), 0 8px 24px rgba(2,48,71,0.06);
+  --hero-gradient: linear-gradient(135deg, #023047 0%, #034B6F 50%, #023047 100%);
+  --glow-pink: rgba(239,71,111,0.15);
+  --glow-teal: rgba(167,218,220,0.2);
+}
+
+.dark {
+  --background: #011627;
+  --background-alt: #01223A;
+  --surface: #023047;
+  --surface-hover: #034B6F;
+  --foreground: #F0F4F8;
+  --foreground-muted: #A7DADC;
+  --foreground-subtle: #5B8A9A;
+  --accent: #EF476F;
+  --accent-hover: #FF5A82;
+  --secondary: #A7DADC;
+  --secondary-hover: #C0E8EA;
+  --border: #034B6F;
+  --border-hover: #056B99;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  --card-shadow-hover: 0 4px 12px rgba(239,71,111,0.1), 0 8px 24px rgba(0,0,0,0.3);
+  --hero-gradient: linear-gradient(135deg, #011627 0%, #023047 50%, #011627 100%);
+  --glow-pink: rgba(239,71,111,0.25);
+  --glow-teal: rgba(167,218,220,0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-navy: #023047;
+  --color-pink: #EF476F;
+  --color-teal: #A7DADC;
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

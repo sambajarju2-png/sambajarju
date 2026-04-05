@@ -1,0 +1,175 @@
+{
+  "nav": {
+    "about": "Over mij",
+    "projects": "Projecten",
+    "experience": "Ervaring",
+    "tools": "Tools",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hey, ik ben Samba",
+    "title": "Creativiteit ontmoet strategie",
+    "subtitle": "Ik gebruik data-driven strategieën om marketing te automatiseren en impact te maximaliseren.",
+    "cta_primary": "Laten we praten",
+    "cta_secondary": "Bekijk projecten",
+    "badge_role": "Email Marketeer",
+    "badge_salary": "€3.800–4.500",
+    "badge_team": "Team player",
+    "visited": "Website bezocht door"
+  },
+  "companies": {
+    "title": "Vertrouwd door bedrijven als"
+  },
+  "about": {
+    "label": "Over mij",
+    "title": "Wie ben ik eigenlijk?",
+    "subtitle": "Hier laat ik met een knipoog zien waarom ik de marketeer ben die je zoekt.",
+    "p1": "Als marketeer geloof ik heilig in één ding: weg met repetitieve taken, hallo automatisering! Waarom handmatig doen wat slimmer en sneller kan? Met mijn ervaring in CRM-systemen, social media marketing, automatisering en e-mailmarketing, help ik bedrijven groeien zonder dat ze vastlopen in tijdrovende processen.",
+    "p2": "Mijn werkstijl? Ik ben een hands-on aanpakker die meedenkt met ondernemers en niet in een standaard 9-tot-5 mentaliteit gelooft. Ik hou van efficiëntie, maar ik ben ook een teamspeler met humor – want laten we eerlijk zijn, marketing is al serieus genoeg zonder een lach op z'n tijd.",
+    "p3": "Ik heb gewerkt met tools als HubSpot, Pipedrive, Google Analytics, SEMrush, ActiveCampaign, Zapier en nog veel meer. Dus ja, ik ben redelijk technisch en duik met plezier in data om marketingprocessen te optimaliseren.",
+    "p4": "Maar naast marketing en automatisering zet ik me ook in voor iets groters. Met mijn initiatief Baraka4Gambia help ik de meest kansarme mensen in Gambia door kleding in te zamelen en geld in te zamelen voor voedselpakketten.",
+    "cta": "Bakkie doen?"
+  },
+  "projects": {
+    "label": "Projecten",
+    "title": "Wat ik heb gebouwd",
+    "subtitle": "Side projects waar marketing en code samenkomen.",
+    "paywatch": {
+      "title": "PayWatch.app",
+      "description": "AI-aangedreven facturentracker voor Nederlandse huishoudens. Scant facturen met Gemini AI, volgt betalingsdeadlines en voorkomt schuldenescalatie.",
+      "problem": "Veel Nederlandse huishoudens verliezen het overzicht over rekeningen, wat leidt tot onnodige incassokosten en stress.",
+      "solution": "Een full-stack app gebouwd die AI gebruikt om factuurgegevens uit PDF's te halen, deadlines bijhoudt en slimme herinneringen stuurt.",
+      "learned": "Geleerd hoe je meerdere AI-modellen integreert, productie-auth flows met Supabase bouwt en verantwoord omgaat met gevoelige financiële data.",
+      "tech": "Next.js 16 · Supabase · Sanity CMS · Gemini AI · Claude Haiku · Resend"
+    },
+    "workwings": {
+      "title": "Workwings.nl",
+      "description": "Moderne uitzendbureau website met dynamisch contentbeheer en SEO-optimalisatie."
+    },
+    "mariama": {
+      "title": "Mariama.nl",
+      "description": "Persoonlijke verjaardagssite — een creatief cadeau gebouwd met liefde en code."
+    },
+    "gluurder": {
+      "title": "B2B Gluurder",
+      "description": "WordPress plugin voor B2B bezoeker-identificatie via Apollo.io en Hunter.io API's."
+    },
+    "view_project": "Bekijk project",
+    "case_study": "Case study"
+  },
+  "tools": {
+    "label": "Tool stack",
+    "title": "Mijn arsenaal",
+    "subtitle": "Tools en technologieën waar ik dagelijks mee werk.",
+    "categories": {
+      "email": "Email & Marketing",
+      "analytics": "Analytics & CRO",
+      "crm": "CRM & Sales",
+      "dev": "Development",
+      "automation": "Automation",
+      "design": "Design & AI"
+    }
+  },
+  "experience": {
+    "label": "Ervaring",
+    "title": "Waar ik ben geweest",
+    "subtitle": "Mijn professionele reis tot nu toe.",
+    "vandebron": {
+      "company": "Vandebron",
+      "role": "Email Marketeer",
+      "period": "Apr 2025 – heden",
+      "description": "SQL queries schrijven, complexe AMPScript email campagnes bouwen, en projecten managen waarbij we 500k+ emails per maand versturen."
+    },
+    "cordital": {
+      "company": "Cordital",
+      "role": "Freelance Marketeer",
+      "period": "Jan 2023 – Nov 2024",
+      "description": "Allround marketingactiviteiten voor Cordital-partners, waaronder SEO, Zoho automations en AMP interactieve emails bouwen."
+    },
+    "guardey": {
+      "company": "Guardey",
+      "role": "Content Marketing",
+      "period": "Feb 2023 – Okt 2023",
+      "description": "Contentstrategie voor IT Partners aangestuurd, SEO geoptimaliseerd en community building voor merkzichtbaarheid."
+    },
+    "silverflow": {
+      "company": "Silverflow",
+      "role": "Sales & Marketing Stage",
+      "period": "Feb 2022 – Okt 2022",
+      "description": "Marketingafdeling geherstructureerd, salespipeline met Pipedrive beheerd en contentmarketingplan ontwikkeld."
+    },
+    "kesvisum": {
+      "company": "Kes Visum",
+      "role": "Marketing Lead",
+      "period": "2020 – 2025",
+      "description": "Marketingteam van 4 personen geleid, 4,4% conversiepercentage behaald en 80+ B2B leads per maand gegenereerd via LinkedIn outreach."
+    }
+  },
+  "testimonials": {
+    "label": "Referenties",
+    "title": "Wat anderen zeggen",
+    "nigel": {
+      "quote": "Samba toonde grondige kennis van marketingtechnologieën. Hij was hands-on, gemotiveerd, creatief en bovendien leuk om mee samen te werken.",
+      "name": "Nigel",
+      "role": "CMO @ Silverflow"
+    },
+    "keith": {
+      "quote": "Samba groeide van junior tot marketing lead binnen één jaar. Hij is geen standaard 9-tot-5 persoon — hij denkt mee met de ondernemer en geeft altijd 110%.",
+      "name": "Keith",
+      "role": "Eigenaar @ Kesvisum"
+    },
+    "rik": {
+      "quote": "We konden altijd bij Samba terecht. Hij kende de juiste toolstack, leverde altijd en is een echte aanpakker. Een fijn persoon om mee samen te werken.",
+      "name": "Rik",
+      "role": "Founder @ Cordital"
+    },
+    "stan": {
+      "quote": "Samba zit vol positieve energie. Buitengewoon bedreven met de nieuwste marketingtools — een fantastische toevoeging aan elk B2C/B2B marketingteam.",
+      "name": "Stan",
+      "role": "S.A. @ Silverflow"
+    }
+  },
+  "playground": {
+    "label": "Speeltuin",
+    "title": "Interactieve showcase",
+    "subtitle": "Zie hoe email marketing automatisering eruitziet in actie.",
+    "dashboard_title": "Campagne Dashboard",
+    "emails_sent": "Emails Verzonden",
+    "open_rate": "Open Rate",
+    "click_rate": "Click Rate",
+    "conversions": "Conversies"
+  },
+  "faq": {
+    "title": "FAQ",
+    "q1": "Waarom zouden we jou aannemen?",
+    "a1": "Ik breng een combinatie van data-driven marketing, automatisering en een hands-on mentaliteit mee. Ik denk mee met ondernemers, werk efficiënt en zoek altijd naar slimme oplossingen. Ik heb ervaring in zowel B2B als B2C marketing.",
+    "q2": "Hoe ver ben je bereid te reizen?",
+    "a2": "Ik woon in Rotterdam. Met de auto tot 1 uur, met het OV tot 1,5 uur. Reistijd is geen probleem voor de juiste kans.",
+    "q3": "Wat vind je belangrijk op de werkvloer?",
+    "a3": "Een goede sfeer, groeikansen en een omgeving waar ondernemerschap en initiatief worden gewaardeerd.",
+    "q4": "Hoeveel verwacht je te verdienen?",
+    "a4": "Mijn salarisindicatie ligt tussen de €3.800 en €4.500 bruto per maand, afhankelijk van de verantwoordelijkheden. Ik sta altijd open voor een gesprek hierover.",
+    "q5": "Werk je liever op kantoor of remote?",
+    "a5": "Ik ben flexibel! Ik werk het liefst hybride — kantoor voor teamwork en samenwerking, remote voor maximale focus en productiviteit.",
+    "q6": "Waarom heb je voor marketing gekozen?",
+    "a6": "Het begon tijdens mijn eindexamen toen ik mijn eigen webshop startte. Alles rondom marketing moest ik zelf uitzoeken — en dat vond ik superleuk. Sindsdien ben ik steeds meer de data-driven kant ingedoken.",
+    "q7": "Waar ben je geboren?",
+    "a7": "Ik ben geboren in Gambia en op mijn 9e naar Nederland verhuisd. Mijn achtergrond heeft mij gevormd tot een harde werker met een internationaal perspectief.",
+    "q8": "Hoe ga je om met feedback?",
+    "a8": "Feedback is een kans om te leren en te verbeteren. Ik sta open voor constructieve kritiek en vind het belangrijk om continu te groeien."
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Zin om te sparren?",
+    "subtitle": "Of het nu gaat om een project, een positie, of gewoon een goed bakkie koffie — ik hoor graag van je.",
+    "cta_phone": "Bel me",
+    "cta_email": "Stuur email",
+    "cta_linkedin": "LinkedIn"
+  },
+  "footer": {
+    "copyright": "Samba Jarju",
+    "kvk": "KvK: 83474889",
+    "location": "Rotterdam, Nederland",
+    "designed": "Ontworpen & gebouwd door Samba"
+  }
+}
