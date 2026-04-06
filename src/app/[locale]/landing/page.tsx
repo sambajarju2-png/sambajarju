@@ -1,14 +1,12 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { ArrowRight, Mail, Phone,  Briefcase, Code, BarChart3, Zap } from 'lucide-react';
+import { Mail, Phone, Code, BarChart3, Zap } from 'lucide-react';
 import { useEffect, useState, Suspense } from 'react';
 
 function LandingContent() {
   const params = useSearchParams();
-  const t = useTranslations('landing');
   const company = params.get('company') || '';
   const contactName = params.get('contactname') || '';
   const [logoUrl, setLogoUrl] = useState('');
@@ -19,8 +17,7 @@ function LandingContent() {
 
   useEffect(() => {
     if (!company) return;
-    const token = (typeof window !== 'undefined' && (window as Record<string, unknown>).__LOGO_TOKEN) || '';
-    setLogoUrl(`https://img.logo.dev/${company}?token=${process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || token}&size=200&format=png`);
+    setLogoUrl(`https://img.logo.dev/${company}?token=${process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN || ''}&size=200&format=png`);
 
     // Track page view
     fetch('/api/landing/track', {
