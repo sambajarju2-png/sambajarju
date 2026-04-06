@@ -150,7 +150,7 @@ export async function GET(request: NextRequest) {
     React.createElement(CVDocument, { primary, secondary, companyName, contactName, logoUrl }) as any
   );
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="CV_Samba_Jarju${companyName ? `_${companyName}` : ''}.pdf"`,
