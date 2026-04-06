@@ -4,8 +4,17 @@ import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { ArrowRight, Zap, Users, Target, Heart } from 'lucide-react';
 
-export function About() {
+interface AboutData {
+  photo1Url?: string | null;
+  photo2Url?: string | null;
+  photo3Url?: string | null;
+  photo4Url?: string | null;
+  [key: string]: unknown;
+}
+
+export function About({ aboutData }: { aboutData?: AboutData | null }) {
   const t = useTranslations('about');
+  const photoUrls = [aboutData?.photo1Url, aboutData?.photo2Url, aboutData?.photo3Url, aboutData?.photo4Url];
 
   const highlights = [
     { icon: Zap, label: 'Automation-first', color: 'text-accent' },
@@ -21,14 +30,18 @@ export function About() {
           {/* Left - Images */}
           <Reveal direction="left">
             <div className="grid grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map((i) => (
+              {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className={`aspect-square rounded-2xl border-2 border-dashed border-border bg-background-alt flex items-center justify-center ${
-                    i === 1 ? 'rounded-br-none' : i === 2 ? 'rounded-bl-none' : i === 3 ? 'rounded-tr-none' : 'rounded-tl-none'
+                  className={`aspect-square rounded-2xl overflow-hidden border border-border bg-background-alt flex items-center justify-center ${
+                    i === 0 ? 'rounded-br-none' : i === 1 ? 'rounded-bl-none' : i === 2 ? 'rounded-tr-none' : 'rounded-tl-none'
                   }`}
                 >
-                  <span className="text-foreground-subtle text-xs">Photo {i}</span>
+                  {photoUrls[i] ? (
+                    <img src={photoUrls[i]!} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-foreground-subtle text-xs">Photo {i + 1}</span>
+                  )}
                 </div>
               ))}
             </div>

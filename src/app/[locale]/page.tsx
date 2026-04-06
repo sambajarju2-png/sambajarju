@@ -7,21 +7,27 @@ import { Testimonials } from '@/components/sections/testimonials';
 import { Playground } from '@/components/sections/playground';
 import { FAQ } from '@/components/sections/faq';
 import { Contact } from '@/components/sections/contact';
-import { getHeroSettings } from '@/lib/sanity-queries';
+import { getHeroSettings, getAbout, getExperiences, getTestimonials, getFAQs } from '@/lib/sanity-queries';
 
 export default async function Home() {
-  const heroData = await getHeroSettings();
+  const [heroData, aboutData, experienceData, testimonialData, faqData] = await Promise.all([
+    getHeroSettings(),
+    getAbout(),
+    getExperiences(),
+    getTestimonials(),
+    getFAQs(),
+  ]);
 
   return (
     <>
       <Hero heroData={heroData} />
-      <About />
+      <About aboutData={aboutData} />
       <Projects />
       <ToolStackFloat />
-      <Experience />
-      <Testimonials />
+      <Experience experienceData={experienceData} />
+      <Testimonials testimonialData={testimonialData} />
       <Playground />
-      <FAQ />
+      <FAQ faqData={faqData} />
       <Contact />
     </>
   );

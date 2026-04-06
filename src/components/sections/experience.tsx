@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Reveal } from '@/components/ui/motion';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
@@ -15,10 +15,30 @@ const experiences = [
   { key: 'kesvisum', icon: Award, active: false, color: 'bg-accent' },
 ];
 
-export function Experience() {
+interface ExperienceItem {
+  company: string;
+  role_nl?: string;
+  role_en?: string;
+  period: string;
+  description_nl?: string;
+  description_en?: string;
+  active?: boolean;
+  [key: string]: unknown;
+}
+
+export function Experience({ experienceData }: { experienceData?: ExperienceItem[] | null }) {
   const t = useTranslations('experience');
+  const locale = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Use Sanity data if available
+  const sanityItem = experienceData?.[activeIndex];
+  const getSanity = (field: string) => {
+    if (!sanityItem) return null;
+    const localized = sanityItem[`${field}_${locale}`] as string | undefined;
+    return localized || (sanityItem[field] as string) || null;
+  };
 
   const handleSelect = (index: number) => {
     setActiveIndex(index);
@@ -35,22 +55,22 @@ export function Experience() {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-xl sm:text-2xl font-bold text-foreground">
-            {t(`${activeExp.key}.company`)}
+            {getSanity('company') || t(`${activeExp.key}.company`)}
           </h3>
           <p className="text-accent font-semibold mt-1">
-            {t(`${activeExp.key}.role`)}
+            {getSanity('role') || t(`${activeExp.key}.role`)}
           </p>
         </div>
         <span className="px-3 py-1 rounded-full text-[10px] sm:text-xs font-medium bg-background-alt border border-border text-foreground-subtle whitespace-nowrap">
-          {t(`${activeExp.key}.period`)}
+          {sanityItem?.period || t(`${activeExp.key}.period`)}
         </span>
       </div>
 
       <p className="text-foreground-muted leading-relaxed text-sm sm:text-lg mt-4">
-        {t(`${activeExp.key}.description`)}
+        {getSanity('description') || t(`${activeExp.key}.description`)}
       </p>
 
-      {activeExp.active && (
+      {(sanityItem?.active ?? activeExp.active) && (
         <div className="mt-4 sm:mt-6 flex items-center gap-2">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
