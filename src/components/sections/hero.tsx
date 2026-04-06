@@ -108,10 +108,11 @@ export function Hero() {
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
         <div className="absolute w-72 h-72 rounded-full blur-[140px]" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
         <div className="absolute w-56 h-56 rounded-full blur-[120px]" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-        <div className="absolute bottom-0 left-0 right-0 h-48 z-10" style={{ background: 'linear-gradient(to top, var(--background) 0%, var(--background) 8%, transparent 100%)' }} />
+        {/* Gradient fade — z-0 so it sits BEHIND the marquee text */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent z-0" />
       </div>
 
-      {/* Magnetic Filings — full screen, 1fr grid for even distribution */}
+      {/* Magnetic Filings — full screen 1fr grid */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none overflow-hidden z-[1]">
         <div
           className="w-full h-full opacity-50"
@@ -129,7 +130,7 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Orbital SVG — z-[15] so icons float above the z-10 content/glass card */}
+      {/* Orbital SVG — z-[15] above content glass card */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none z-[15]">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
           <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
@@ -164,7 +165,7 @@ export function Hero() {
         </div>
       )}
 
-      {/* Content — mobile: auto height + pt-28, desktop: full viewport centered */}
+      {/* Content — mobile: auto height, desktop: full viewport */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-12 lg:pt-[80px] lg:pb-[32px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
@@ -183,14 +184,14 @@ export function Hero() {
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — shrink-0 spans prevent flex collapse */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a href="#contact" className="hero-cta-primary group">
-                <span className="shrink-0">{t('cta_primary')}</span>
-                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
+            {/* CTAs — brute-forced with Tailwind, no external CSS classes */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-8">
+              <a href="#contact" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#EF476F] hover:bg-[#d83c5f] transition-colors shadow-lg shadow-pink-500/25">
+                <span className="text-white font-semibold shrink-0">{t('cta_primary')}</span>
+                <ArrowRight className="text-white w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
               </a>
-              <a href="#projects" className="hero-cta-secondary">
-                <span className="shrink-0">{t('cta_secondary')}</span>
+              <a href="#projects" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/30 hover:border-white hover:bg-white/10 transition-all">
+                <span className="text-white font-semibold shrink-0">{t('cta_secondary')}</span>
               </a>
             </motion.div>
 
@@ -219,8 +220,8 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Company marquee */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} className="pt-4 border-t border-white/10">
+            {/* Company marquee — z-10 to stay above gradient */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} className="pt-4 border-t border-white/10 relative z-10">
               <p className="text-[10px] sm:text-xs mb-2 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>{t('visited')}</p>
               <div className="overflow-hidden relative">
                 <div className="flex animate-marquee whitespace-nowrap">
