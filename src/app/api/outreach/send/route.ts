@@ -114,11 +114,11 @@ export async function POST(request: NextRequest) {
 </body></html>`;
 
     // 4. Generate branded CV PDF
-    let pdfBuffer: Buffer | null = null;
+    let pdfBuffer: Uint8Array | null = null;
     try {
       const cvRes = await fetch(`https://sambajarju.com/api/cv/generate?company=${companyDomain}&contactname=${contactFirstName}`);
       if (cvRes.ok) {
-        pdfBuffer = Buffer.from(await cvRes.arrayBuffer());
+        pdfBuffer = new Uint8Array(await cvRes.arrayBuffer());
       }
     } catch (e) {
       console.error('CV generation error:', e);
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
 
     // Attach PDF if generated
     if (pdfBuffer) {
-      formData.append('attachment', new Blob([pdfBuffer], { type: 'application/pdf' }), `CV_Samba_Jarju_${company.name}.pdf`);
+      formData.append('attachment', new Blob([new Uint8Array(pdfBuffer)], { type: 'application/pdf' }), `CV_Samba_Jarju_${company.name}.pdf`);
     }
 
     const mgRes = await fetch(`https://api.eu.mailgun.net/v3/${mailgunDomain}/messages`, {
