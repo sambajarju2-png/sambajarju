@@ -206,5 +206,9 @@
     "funnel_subtitle": "Pas conversiepercentages aan bij elke fase en zie hoe kleine verbeteringen zich opstapelen tot grote omzetveranderingen.",
     "analyzer_title": "Subject Line Analyzer",
     "analyzer_subtitle": "Plak een email subject line en krijg direct AI-feedback over wat werkt en wat niet."
+  },
+  "landing": {
+    "title": "Persoonlijk voor jou",
+    "cta": "Laten we praten"
   }
 }

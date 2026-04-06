@@ -206,5 +206,9 @@
     "funnel_subtitle": "Adjust conversion rates at each stage and see how small improvements compound into big revenue changes.",
     "analyzer_title": "Subject Line Analyzer",
     "analyzer_subtitle": "Paste any email subject line and get instant AI-powered feedback on what works and what doesn't."
+  },
+  "landing": {
+    "title": "Personally for you",
+    "cta": "Let us talk"
   }
 }
