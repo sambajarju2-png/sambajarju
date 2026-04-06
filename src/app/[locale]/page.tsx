@@ -7,11 +7,14 @@ import { Testimonials } from '@/components/sections/testimonials';
 import { Playground } from '@/components/sections/playground';
 import { FAQ } from '@/components/sections/faq';
 import { Contact } from '@/components/sections/contact';
+import { getHeroSettings } from '@/lib/sanity-queries';
 
-export default function Home() {
+export default async function Home() {
+  const heroData = await getHeroSettings();
+
   return (
     <>
-      <Hero />
+      <Hero heroData={heroData} />
       <About />
       <Projects />
       <ToolStackFloat />

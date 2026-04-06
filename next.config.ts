@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'logistiekpersoneel.online' },
       { protocol: 'https', hostname: 'www.paywatch.app' },
+      { protocol: 'https', hostname: 'cdn.sanity.io' },
     ],
   },
 };

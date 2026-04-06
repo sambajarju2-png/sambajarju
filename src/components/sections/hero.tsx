@@ -72,7 +72,19 @@ const FILING_COLS = 28;
 const FILING_ROWS = 12;
 const FILING_COUNT = FILING_COLS * FILING_ROWS;
 
-export function Hero() {
+interface HeroData {
+  photoUrl?: string | null;
+  greeting_nl?: string;
+  greeting_en?: string;
+  title_nl?: string;
+  title_en?: string;
+  subtitle_nl?: string;
+  subtitle_en?: string;
+  companies?: string[];
+  [key: string]: unknown;
+}
+
+export function Hero({ heroData }: { heroData?: HeroData | null }) {
   const t = useTranslations('hero');
   const containerRef = useRef<HTMLElement>(null);
   const [selectedTool, setSelectedTool] = useState<typeof orbitTools[0] | null>(null);
@@ -260,12 +272,16 @@ export function Hero() {
           <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.3 }} className="relative hidden lg:block">
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
               <div style={{ position: 'absolute', inset: 0, borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', overflow: 'hidden' }}>
+                {heroData?.photoUrl ? (
+                  <img src={heroData.photoUrl} alt="Samba Jarju" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Users style={{ width: 32, height: 32, color: 'rgba(255,255,255,0.3)' }} /></div>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.25)' }}>Photo placeholder</p>
                   </div>
                 </div>
+                )}
               </div>
               <motion.div style={{ position: 'absolute', bottom: -12, left: -12, right: 12, display: 'flex', gap: 8 }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}>
                 {[
