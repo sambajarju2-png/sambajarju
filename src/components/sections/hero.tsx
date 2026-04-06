@@ -33,7 +33,6 @@ const Filing = memo(function Filing({ mouseX, mouseY }: { mouseX: ReturnType<typ
   );
 });
 
-/* ── Orbital tools (desktop) — expanded list ── */
 const orbitTools = [
   { slug: 'react', color: '61DAFB', name: 'React', usage: 'UI library for all my web projects — PayWatch, this portfolio, Workwings.', arc: 1 as const, dur: 35, begin: '0s' },
   { slug: 'nextdotjs', color: 'ffffff', name: 'Next.js', usage: 'My go-to framework. App Router, server components, Turbopack.', arc: 1 as const, dur: 35, begin: '-7s' },
@@ -79,7 +78,6 @@ const allTools = [
   { slug: 'googlegemini', color: '8E75B2' },
 ];
 
-/* Filings grid — full banner, responsive density */
 const FILING_COLS = 28;
 const FILING_ROWS = 12;
 const FILING_COUNT = FILING_COLS * FILING_ROWS;
@@ -104,28 +102,25 @@ export function Hero() {
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden" style={{ minHeight: '100svh' }}>
+    <section ref={containerRef} className="relative overflow-hidden bg-background">
       {/* Background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
-        <div className="absolute w-72 h-72 rounded-full blur-[140px] pointer-events-none" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
-        <div className="absolute w-56 h-56 rounded-full blur-[120px] pointer-events-none" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-        {/* Smooth bottom fade */}
+        <div className="absolute w-72 h-72 rounded-full blur-[140px]" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
+        <div className="absolute w-56 h-56 rounded-full blur-[120px]" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
         <div className="absolute bottom-0 left-0 right-0 h-48 z-10" style={{ background: 'linear-gradient(to top, var(--background) 0%, var(--background) 8%, transparent 100%)' }} />
       </div>
 
-      {/* DESKTOP: Full-width magnetic filings grid */}
-      <div className="absolute inset-0 hidden lg:flex items-center justify-center pointer-events-none overflow-hidden">
+      {/* Magnetic Filings — full screen, 1fr grid for even distribution */}
+      <div className="absolute inset-0 hidden lg:block pointer-events-none overflow-hidden z-[1]">
         <div
-          className="opacity-50"
+          className="w-full h-full opacity-50"
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)`,
-            gap: '20px',
-            padding: '40px',
-            width: '100%',
-            height: '100%',
-            alignContent: 'center',
+            gridTemplateRows: `repeat(${FILING_ROWS}, 1fr)`,
+            justifyItems: 'center',
+            alignItems: 'center',
           }}
         >
           {Array.from({ length: FILING_COUNT }).map((_, i) => (
@@ -134,8 +129,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* DESKTOP: Orbital SVG */}
-      <div className="absolute inset-0 hidden lg:block pointer-events-none">
+      {/* Orbital SVG — z-[15] so icons float above the z-10 content/glass card */}
+      <div className="absolute inset-0 hidden lg:block pointer-events-none z-[15]">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
           <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
           <path d={arcPaths[2]} fill="none" stroke="rgba(167,218,220,0.06)" strokeWidth="0.5" />
@@ -152,7 +147,7 @@ export function Hero() {
         </svg>
       </div>
 
-      {/* Desktop tool popover */}
+      {/* Tool popover */}
       {selectedTool && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setSelectedTool(null)}>
           <motion.div initial={{ opacity: 0, scale: 0.9, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 25 }} className="relative w-full max-w-[280px] rounded-2xl bg-surface border border-border shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
@@ -169,8 +164,8 @@ export function Hero() {
         </div>
       )}
 
-      {/* Content — vertically centered with reasonable mobile spacing */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex items-center" style={{ minHeight: '100svh', paddingTop: '80px', paddingBottom: '32px' }}>
+      {/* Content — mobile: auto height + pt-28, desktop: full viewport centered */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-12 lg:pt-[80px] lg:pb-[32px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-4">
@@ -188,14 +183,14 @@ export function Hero() {
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — using globals.css classes with !important */}
+            {/* CTAs — shrink-0 spans prevent flex collapse */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-3 mb-6">
-              <a href="#contact" className="hero-cta-primary">
-                {t('cta_primary')}
-                <ArrowRight />
+              <a href="#contact" className="hero-cta-primary group">
+                <span className="shrink-0">{t('cta_primary')}</span>
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
               </a>
               <a href="#projects" className="hero-cta-secondary">
-                {t('cta_secondary')}
+                <span className="shrink-0">{t('cta_secondary')}</span>
               </a>
             </motion.div>
 
@@ -213,7 +208,7 @@ export function Hero() {
               ))}
             </motion.div>
 
-            {/* MOBILE: Tool ticker */}
+            {/* Mobile tool ticker */}
             <div className="lg:hidden mb-4 overflow-hidden">
               <div className="flex gap-3 animate-marquee" style={{ width: 'max-content' }}>
                 {[...allTools, ...allTools].map((tool, i) => (
@@ -237,7 +232,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right — Photo + badges (desktop only) */}
+          {/* Right — Photo + badges (desktop) */}
           <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.3 }} className="relative hidden lg:block">
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
               <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
