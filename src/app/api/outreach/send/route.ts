@@ -122,7 +122,8 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = new FormData();
-    formData.append('from', `Samba Jarju <samba@${mailgunDomain}>`);
+    formData.append('from', 'Samba Jarju <samba@sambajarju.com>');
+    formData.append('h:Reply-To', 'samba@sambajarju.com');
     formData.append('to', contactEmail);
     formData.append('subject', `${contactFirstName}, zo kan ik ${company.name} helpen`);
     formData.append('html', emailHtml);
@@ -142,12 +143,25 @@ export async function POST(request: NextRequest) {
     }
 
     // 5. Log outreach
+    const cleanMsgId = mgData.id?.replace(/[<>]/g, '') || null;
     await supabase.from('outreach_logs').insert({
       contact_id: contact.id,
       company_id: company.id,
-      message_id: mgData.id?.replace(/[<>]/g, '') || null,
+      message_id: cleanMsgId,
       subject: `${contactFirstName}, zo kan ik ${company.name} helpen`,
       status: 'sent',
+    });
+
+    // 6. Store in email threads for conversation view
+    await supabase.from('email_threads').insert({
+      contact_id: contact.id,
+      company_id: company.id,
+      direction: 'outbound',
+      from_email: 'samba@sambajarju.com',
+      to_email: contactEmail,
+      subject: `${contactFirstName}, zo kan ik ${company.name} helpen`,
+      body_html: emailHtml,
+      message_id: cleanMsgId,
     });
 
     return NextResponse.json({ success: true, messageId: mgData.id });

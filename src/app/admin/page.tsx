@@ -6,7 +6,7 @@ import type { User } from '@supabase/supabase-js';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
 
-interface Stats { companies: number; contacts: number; sent: number; opened: number; clicked: number; pageViews: number; recentOutreach: Record<string, unknown>[]; }
+interface Stats { companies: number; contacts: number; sent: number; opened: number; clicked: number; replied: number; pageViews: number; recentOutreach: Record<string, unknown>[]; inboxReplies: Record<string, unknown>[]; }
 
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -90,6 +90,7 @@ export default function AdminPage() {
           { label: 'Verzonden', value: stats?.sent ?? '—', color: '#EF476F' },
           { label: 'Geopend', value: stats?.opened ?? '—', color: '#3FCF8E' },
           { label: 'Geklikt', value: stats?.clicked ?? '—', color: '#06B6D4' },
+          { label: 'Replied', value: stats?.replied ?? '—', color: '#8B5CF6' },
           { label: 'Pagina views', value: stats?.pageViews ?? '—' },
         ].map(({ label, value, color }) => (
           <div key={label} style={{ padding: 16, borderRadius: 12, background: '#fff', border: '1px solid #E2E8F0' }}>
@@ -150,6 +151,25 @@ export default function AdminPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Inbox — received replies */}
+      {stats?.inboxReplies && stats.inboxReplies.length > 0 && (
+        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginTop: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>📬 Inbox (ontvangen replies)</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {stats.inboxReplies.map((msg: Record<string, unknown>, i: number) => (
+              <div key={i} style={{ padding: 16, borderRadius: 12, background: '#f8fafc', border: '1px solid #E2E8F0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#023047' }}>{String(msg.from_email || '')}</span>
+                  <span style={{ fontSize: 11, color: '#8BA3B5' }}>{msg.received_at ? new Date(String(msg.received_at)).toLocaleString('nl-NL') : ''}</span>
+                </div>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#4A6B7F', margin: '0 0 6px' }}>{String(msg.subject || '(geen onderwerp)')}</p>
+                <p style={{ fontSize: 13, color: '#555', margin: 0, whiteSpace: 'pre-wrap', maxHeight: 120, overflow: 'hidden' }}>{String(msg.body_plain || '').slice(0, 500)}</p>
+              </div>
+            ))}
           </div>
         </div>
       )}
