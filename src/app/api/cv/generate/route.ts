@@ -146,7 +146,8 @@ export async function GET(request: NextRequest) {
   }
 
   const buffer = await renderToBuffer(
-    React.createElement(CVDocument, { primary, secondary, companyName, contactName, logoUrl })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    React.createElement(CVDocument, { primary, secondary, companyName, contactName, logoUrl }) as any
   );
 
   return new NextResponse(buffer, {
