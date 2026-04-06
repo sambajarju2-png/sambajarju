@@ -9,10 +9,11 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const company = url.searchParams.get('company') || '';
     const contactName = url.searchParams.get('contactname') || '';
+    const language = (url.searchParams.get('lang') || 'nl') as 'nl' | 'en';
 
     let companyName = '';
-    let primary = '#2563EB';
-    let secondary = '#3B82F6';
+    let primary = '#023047';
+    let secondary = '#EF476F';
     let logoUrl = '';
 
     if (company) {
@@ -35,12 +36,7 @@ export async function GET(request: NextRequest) {
     }
 
     const pdfBuffer = await generateCVBuffer({
-      companyDomain: company,
-      contactName,
-      companyName,
-      primary,
-      secondary,
-      logoUrl,
+      companyDomain: company, contactName, companyName, primary, secondary, logoUrl, language,
     });
 
     return new NextResponse(pdfBuffer as unknown as BodyInit, {

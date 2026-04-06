@@ -1,3 +1,5 @@
+import { safeBrandColors } from './color-utils';
+
 export interface GenerateCVOptions {
   companyDomain?: string;
   contactName?: string;
@@ -5,7 +7,74 @@ export interface GenerateCVOptions {
   primary?: string;
   secondary?: string;
   logoUrl?: string;
+  photoUrl?: string;
+  language?: 'nl' | 'en';
 }
+
+const PHOTO_URL = process.env.CV_PHOTO_URL || '';
+
+const content = {
+  nl: {
+    role: 'Email Marketeer',
+    roleDetail: 'Marketing Automation Specialist',
+    tagline: 'Creativiteit ontmoet strategie',
+    madeFor: 'Gemaakt voor',
+    personalCv: 'Persoonlijk CV',
+    greeting: (name: string) => `Hey ${name} — hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.`,
+    expertise: 'Expertise',
+    tools: 'Tools',
+    languages: 'Talen',
+    softSkills: 'Soft Skills',
+    experience: 'Werkervaring',
+    education: 'Educatie',
+    dutch: 'Nederlands',
+    english: 'Engels',
+    current: 'heden',
+    skills: ['Email Marketing', 'Marketing Automation', 'SQL / AMPScript', 'Data Analytics', 'SEO & CRO', 'Sales Automation'],
+    softSkillsList: ['Ambitieus', 'Hands-on', 'Proactief', 'Empathisch', 'Teamspeler', 'Data-driven'],
+    jobs: [
+      { company: 'Vandebron', date: 'Apr 2025 – heden', role: 'Email Marketeer', desc: 'SQL queries schrijven en documenteren voor data-driven campagnes. Complexe AMPScript email campagnes bouwen in Salesforce Marketing Cloud. Projectmanager voor 500.000+ emails per maand.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
+      { company: 'Cleanprofs.nl', date: '2025 – heden', role: 'Freelance Deployteq Expert', desc: 'Marketing automation campagnes opzetten in Deployteq. Geautomatiseerde email flows, segmentatie en data-integraties.', tags: ['Deployteq', 'Automation', 'Segmentatie'] },
+      { company: 'Cordital', date: 'Jan 2023 – Nov 2024', role: 'Freelance Marketeer', desc: 'SEO-strategie, marketing automations via Zoho en AMP interactieve e-mails voor hogere engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
+      { company: 'Guardey', date: 'Feb 2023 – Okt 2023', role: 'Content Marketing', desc: 'Contentstrategie voor IT Partners. Technische SEO, copywriting voor website en social media.', tags: ['Content', 'IT Security', 'SEO'] },
+      { company: 'Silverflow', date: 'Feb 2022 – Okt 2022', role: 'Sales & Marketing Stage', desc: 'Pre-sales research B2B payments. Salespipeline met Pipedrive. Contentmarketingplan met trendanalyse.', tags: ['B2B', 'Pipedrive', 'Payments'] },
+      { company: 'Kes Visum', date: '2020 – 2025', role: 'Marketing Lead', desc: 'Team van 4 aangestuurd. 4,4% conversie via social/display ads. 80+ LinkedIn leads per maand.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
+    ],
+    eduSchool: 'Hogeschool Rotterdam',
+    eduDegree: 'Entrepreneurship — Bachelor of Arts · 2021 – 2025',
+    eduHighlight: '🏆 Start-up prijs van het jaar (Fashionbot)',
+  },
+  en: {
+    role: 'Email Marketer',
+    roleDetail: 'Marketing Automation Specialist',
+    tagline: 'Where creativity meets strategy',
+    madeFor: 'Made for',
+    personalCv: 'Personal CV',
+    greeting: (name: string) => `Hey ${name} — here's my CV. Besides my work at Vandebron, I freelance at Cleanprofs.nl where I use Deployteq for automated email campaigns.`,
+    expertise: 'Expertise',
+    tools: 'Tools',
+    languages: 'Languages',
+    softSkills: 'Soft Skills',
+    experience: 'Work experience',
+    education: 'Education',
+    dutch: 'Dutch',
+    english: 'English',
+    current: 'present',
+    skills: ['Email Marketing', 'Marketing Automation', 'SQL / AMPScript', 'Data Analytics', 'SEO & CRO', 'Sales Automation'],
+    softSkillsList: ['Ambitious', 'Hands-on', 'Proactive', 'Empathic', 'Team player', 'Data-driven'],
+    jobs: [
+      { company: 'Vandebron', date: 'Apr 2025 – present', role: 'Email Marketer', desc: 'Writing and documenting SQL queries for data-driven campaigns. Building complex AMPScript email campaigns in Salesforce Marketing Cloud. Project managing 500,000+ emails per month.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
+      { company: 'Cleanprofs.nl', date: '2025 – present', role: 'Freelance Deployteq Expert', desc: 'Setting up marketing automation campaigns in Deployteq. Building automated email flows, segmentation and data integrations.', tags: ['Deployteq', 'Automation', 'Segmentation'] },
+      { company: 'Cordital', date: 'Jan 2023 – Nov 2024', role: 'Freelance Marketer', desc: 'SEO strategy, marketing automations via Zoho, and AMP interactive emails for higher engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
+      { company: 'Guardey', date: 'Feb 2023 – Oct 2023', role: 'Content Marketing', desc: 'Content strategy for IT Partners. Technical SEO, copywriting for website and social media.', tags: ['Content', 'IT Security', 'SEO'] },
+      { company: 'Silverflow', date: 'Feb 2022 – Oct 2022', role: 'Sales & Marketing Intern', desc: 'Pre-sales research for B2B payments clients. Built sales pipeline with Pipedrive. Developed content marketing plan with trend analysis.', tags: ['B2B', 'Pipedrive', 'Payments'] },
+      { company: 'Kes Visum', date: '2020 – 2025', role: 'Marketing Lead', desc: 'Led team of 4 marketers. Achieved 4.4% conversion via social/display ads. Generated 80+ LinkedIn leads per month.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
+    ],
+    eduSchool: 'Rotterdam University of Applied Sciences',
+    eduDegree: 'Entrepreneurship — Bachelor of Arts · 2021 – 2025',
+    eduHighlight: '🏆 Startup Award of the Year (Fashionbot)',
+  },
+};
 
 function buildCVHtml(opts: GenerateCVOptions): string {
   const {
@@ -14,10 +83,12 @@ function buildCVHtml(opts: GenerateCVOptions): string {
     primary = '#023047',
     secondary = '#EF476F',
     logoUrl = '',
+    photoUrl = PHOTO_URL,
+    language = 'nl',
   } = opts;
 
-  // Lighter shade of primary for backgrounds
-  const primaryLight = primary + '12';
+  const t = content[language] || content.nl;
+  const colors = safeBrandColors(primary, secondary);
 
   return `<!DOCTYPE html>
 <html>
@@ -26,444 +97,205 @@ function buildCVHtml(opts: GenerateCVOptions): string {
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; width: 210mm; height: 297mm; overflow: hidden; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; width: 210mm; height: 297mm; overflow: hidden; -webkit-font-smoothing: antialiased; }
   .page { width: 210mm; height: 297mm; display: flex; }
 
-  /* ===== LEFT PANEL ===== */
+  /* LEFT PANEL */
   .left {
-    width: 72mm;
-    height: 297mm;
-    background: ${primary};
-    color: #fff;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+    width: 70mm; height: 297mm;
+    background: ${colors.sidebarBg};
+    color: ${colors.sidebarText};
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
   }
   .left::before {
-    content: '';
-    position: absolute;
-    top: -50px; right: -50px;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .left::after {
-    content: '';
-    position: absolute;
-    bottom: -30px; left: -30px;
-    width: 150px; height: 150px;
-    background: radial-gradient(circle, ${secondary}22 0%, transparent 70%);
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
     border-radius: 50%;
   }
 
-  /* Profile section */
-  .profile {
-    padding: 28px 22px 20px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
+  .profile { padding: 24px 20px 16px; text-align: center; position: relative; z-index: 1; }
   .avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, ${secondary}, ${secondary}bb);
+    width: 68px; height: 68px; border-radius: 50%;
+    margin: 0 auto 10px;
+    border: 2.5px solid ${colors.accent}55;
+    overflow: hidden; background: ${colors.accent}33;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 12px;
-    font-size: 28px; font-weight: 900; color: #fff;
-    letter-spacing: -1px;
-    border: 3px solid rgba(255,255,255,0.2);
   }
-  .profile-name { font-size: 18pt; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
-  .profile-role { font-size: 7.5pt; color: ${secondary}; font-weight: 600; margin-top: 4px; letter-spacing: 0.3px; }
-  .profile-sub { font-size: 6.5pt; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-initials { font-size: 24px; font-weight: 800; color: ${colors.accent}; letter-spacing: -1px; }
+  .profile-name { font-size: 16pt; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
+  .profile-role { font-size: 7pt; color: ${colors.accent}; font-weight: 600; margin-top: 3px; }
+  .profile-sub { font-size: 6pt; color: rgba(255,255,255,0.4); margin-top: 1px; }
 
-  /* Contact strip */
-  .contact-strip {
-    background: rgba(0,0,0,0.15);
-    padding: 10px 22px;
-    position: relative; z-index: 1;
-  }
-  .contact-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-  .contact-icon {
-    width: 18px; height: 18px;
-    background: ${secondary};
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 8px; font-weight: 800; color: #fff; flex-shrink: 0;
-  }
-  .contact-text { font-size: 7pt; color: rgba(255,255,255,0.8); }
-  .contact-text a { color: ${secondary}; text-decoration: none; font-weight: 600; }
+  .contact-strip { background: rgba(0,0,0,0.12); padding: 8px 20px; position: relative; z-index: 1; }
+  .c-item { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+  .c-icon { width: 16px; height: 16px; background: ${colors.accent}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 7px; color: ${colors.accentText}; flex-shrink: 0; font-weight: 700; }
+  .c-text { font-size: 6.5pt; color: rgba(255,255,255,0.75); }
+  .c-text a { color: ${colors.accent}; text-decoration: none; font-weight: 600; }
 
-  /* Left sections */
-  .left-section {
-    padding: 12px 22px 0;
-    position: relative; z-index: 1;
-  }
-  .left-title {
-    font-size: 7pt; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 2px;
-    color: ${secondary};
-    margin-bottom: 8px;
+  .left-section { padding: 10px 20px 0; position: relative; z-index: 1; }
+  .l-title {
+    font-size: 6.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+    color: ${colors.accent}; margin-bottom: 6px;
     display: flex; align-items: center; gap: 6px;
   }
-  .left-title::after {
-    content: '';
-    flex: 1; height: 1px;
-    background: rgba(255,255,255,0.1);
-  }
+  .l-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
 
-  /* Skill bars */
-  .skill-bar-item { margin-bottom: 6px; }
-  .skill-bar-label { font-size: 7pt; color: rgba(255,255,255,0.8); margin-bottom: 2px; font-weight: 500; }
-  .skill-bar-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
-  .skill-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, ${secondary}, ${secondary}aa); }
+  .skill-row { margin-bottom: 5px; }
+  .skill-name { font-size: 6.5pt; color: rgba(255,255,255,0.7); margin-bottom: 1px; font-weight: 500; }
+  .skill-track { height: 3px; background: rgba(255,255,255,0.08); border-radius: 99px; }
+  .skill-fill { height: 100%; border-radius: 99px; background: ${colors.accent}; }
 
-  /* Tool tags */
-  .tool-group { margin-bottom: 8px; }
-  .tool-group-label { font-size: 6pt; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
-  .tool-tags { display: flex; flex-wrap: wrap; gap: 3px; }
-  .tool-tag {
-    font-size: 6pt; font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.7);
-    border: 0.5px solid rgba(255,255,255,0.1);
-  }
+  .tg-label { font-size: 5.5pt; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin: 6px 0 2px; }
+  .tg-wrap { display: flex; flex-wrap: wrap; gap: 2px; }
+  .tg { font-size: 5.5pt; font-weight: 600; padding: 1.5px 6px; border-radius: 99px; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6); }
 
-  /* Language */
-  .lang-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .lang-name { font-size: 7.5pt; color: rgba(255,255,255,0.8); }
-  .lang-dots { display: flex; gap: 3px; }
-  .lang-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-  .lang-dot.filled { background: ${secondary}; }
+  .lang-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .lang-name { font-size: 7pt; color: rgba(255,255,255,0.7); }
+  .lang-dots { display: flex; gap: 2px; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+  .dot.on { background: ${colors.accent}; }
 
-  /* Soft skills */
-  .soft-pills { display: flex; flex-wrap: wrap; gap: 3px; }
-  .soft-pill {
-    font-size: 6.5pt; font-weight: 600;
-    padding: 3px 8px; border-radius: 99px;
-    background: ${secondary}20;
-    color: ${secondary};
-    border: 0.5px solid ${secondary}40;
-  }
+  .soft-wrap { display: flex; flex-wrap: wrap; gap: 2px; }
+  .soft { font-size: 5.5pt; font-weight: 600; padding: 2px 7px; border-radius: 99px; background: ${colors.accent}18; color: ${colors.accent}; border: 0.5px solid ${colors.accent}30; }
 
-  /* ===== RIGHT PANEL ===== */
-  .right {
-    flex: 1;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-  }
+  /* RIGHT PANEL */
+  .right { flex: 1; display: flex; flex-direction: column; background: #fff; }
 
-  ${companyName ? `
-  /* Company banner */
-  .company-banner {
-    background: linear-gradient(135deg, ${primaryLight}, ${primary}08);
-    padding: 12px 24px;
+  .company-bar {
+    background: ${colors.headerBg};
+    padding: 10px 22px;
     display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 2px solid ${primary}15;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
   }
-  .company-banner-left { display: flex; align-items: center; gap: 10px; }
-  .company-banner-logo {
-    width: 32px; height: 32px;
-    border-radius: 8px;
+  .cb-left { display: flex; align-items: center; gap: 8px; }
+  .cb-logo { width: 28px; height: 28px; border-radius: 7px; background: #fff; border: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .cb-logo img { width: 20px; height: 20px; object-fit: contain; }
+  .cb-label { font-size: 5.5pt; color: ${colors.headerText}88; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .cb-name { font-size: 10pt; color: ${colors.headerText}; font-weight: 800; }
+  .cb-badge { font-size: 6pt; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: ${colors.accent}; color: ${colors.accentText}; }
+
+  .greeting-bar { padding: 8px 22px; font-size: 7.5pt; color: #475569; line-height: 1.5; border-bottom: 1px solid #f1f5f9; background: #fafbfc; }
+  .greeting-bar strong { color: ${colors.sidebarBg}; }
+
+  .r-body { padding: 14px 22px; flex: 1; }
+  .r-title {
+    font-size: 7.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+    color: ${colors.sidebarBg}; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .r-title::before { content: ''; width: 14px; height: 2.5px; background: ${colors.accent}; border-radius: 99px; }
+
+  /* Apple-style cards */
+  .card {
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 10px;
     background: #fff;
-    border: 1px solid ${primary}15;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .company-banner-logo img { width: 24px; height: 24px; object-fit: contain; }
-  .company-banner-label { font-size: 6pt; color: ${primary}80; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-  .company-banner-name { font-size: 11pt; color: ${primary}; font-weight: 800; }
-  .company-banner-badge {
-    font-size: 6.5pt; font-weight: 700;
-    padding: 4px 10px; border-radius: 99px;
-    background: ${secondary}; color: #fff;
-  }` : ''}
-
-  ${contactName ? `
-  .greeting {
-    padding: 10px 24px;
-    font-size: 8pt; color: #475569; line-height: 1.5;
-    border-bottom: 1px solid #f1f5f9;
-    background: #fafbfc;
-  }
-  .greeting strong { color: ${primary}; font-weight: 700; }` : ''}
-
-  /* Right body */
-  .right-body { padding: 16px 24px; flex: 1; }
-
-  .right-title {
-    font-size: 8pt; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 2px;
-    color: ${primary};
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .right-title::before {
-    content: '';
-    width: 16px; height: 3px;
-    background: ${secondary};
-    border-radius: 99px;
-  }
-
-  /* Experience cards */
-  .exp-card {
-    padding: 10px 14px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border: 1px solid #f1f5f9;
-    background: #fafbfc;
+    border: 1px solid #f0f0f5;
     position: relative;
-    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .exp-card::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: ${secondary};
-    border-radius: 3px 0 0 3px;
+  .card::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2.5px;
+    background: ${colors.accent}; border-radius: 0 2px 2px 0;
   }
-  .exp-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .exp-company { font-size: 10pt; font-weight: 800; color: #0f172a; }
-  .exp-date {
-    font-size: 6.5pt; font-weight: 700;
-    padding: 3px 8px; border-radius: 99px;
-    background: ${primary}; color: #fff;
-    white-space: nowrap;
-  }
-  .exp-role { font-size: 7.5pt; font-weight: 600; color: ${secondary}; margin: 2px 0 4px; }
-  .exp-desc { font-size: 7pt; color: #64748b; line-height: 1.6; }
-  .exp-tags { display: flex; gap: 3px; margin-top: 4px; flex-wrap: wrap; }
-  .exp-tag {
-    font-size: 5.5pt; font-weight: 600;
-    padding: 2px 6px; border-radius: 99px;
-    background: ${primary}0a; color: ${primary};
-    border: 0.5px solid ${primary}20;
-  }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; padding-left: 6px; }
+  .card-company { font-size: 9.5pt; font-weight: 800; color: #0f172a; }
+  .card-date { font-size: 5.5pt; font-weight: 700; padding: 2.5px 8px; border-radius: 99px; background: ${colors.dateBadgeBg}; color: ${colors.dateBadgeText}; white-space: nowrap; }
+  .card-role { font-size: 7pt; font-weight: 600; color: ${colors.accent}; margin: 1px 0 3px; padding-left: 6px; }
+  .card-desc { font-size: 6.5pt; color: #64748b; line-height: 1.55; padding-left: 6px; }
+  .card-tags { display: flex; gap: 2px; margin-top: 4px; flex-wrap: wrap; padding-left: 6px; }
+  .card-tag { font-size: 5pt; font-weight: 600; padding: 1.5px 5px; border-radius: 99px; background: ${colors.sidebarBg}08; color: ${colors.sidebarBg}; border: 0.5px solid ${colors.sidebarBg}18; }
 
-  /* Education */
   .edu-card {
-    padding: 10px 14px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, ${primary}08, ${secondary}08);
-    border: 1px solid ${primary}12;
+    padding: 10px 12px; border-radius: 10px;
+    background: linear-gradient(135deg, ${colors.sidebarBg}06, ${colors.accent}06);
+    border: 1px solid ${colors.sidebarBg}0a;
   }
-  .edu-school { font-size: 10pt; font-weight: 800; color: #0f172a; }
-  .edu-degree { font-size: 7.5pt; color: #64748b; font-weight: 500; }
-  .edu-highlight { font-size: 7pt; color: ${secondary}; font-weight: 600; margin-top: 3px; }
+  .edu-school { font-size: 9.5pt; font-weight: 800; color: #0f172a; }
+  .edu-degree { font-size: 7pt; color: #64748b; }
+  .edu-hl { font-size: 6.5pt; color: ${colors.accent}; font-weight: 600; margin-top: 2px; }
 
-  /* Footer */
-  .right-footer {
-    padding: 6px 24px;
-    border-top: 1px solid #f1f5f9;
+  .r-footer {
+    padding: 5px 22px; border-top: 1px solid #f1f5f9;
     display: flex; justify-content: space-between;
-    font-size: 6pt; color: #94a3b8;
+    font-size: 5.5pt; color: #94a3b8;
   }
-  .right-footer a { color: ${secondary}; text-decoration: none; font-weight: 600; }
+  .r-footer a { color: ${colors.accent}; text-decoration: none; font-weight: 600; }
 </style>
 </head>
 <body>
 <div class="page">
-
-  <!-- LEFT PANEL -->
   <div class="left">
     <div class="profile">
-      <div class="avatar">SJ</div>
+      <div class="avatar">
+        ${photoUrl ? `<img src="${photoUrl}" alt="Samba Jarju" />` : '<span class="avatar-initials">SJ</span>'}
+      </div>
       <div class="profile-name">Samba Jarju</div>
-      <div class="profile-role">Email Marketeer</div>
-      <div class="profile-sub">Marketing Automation Specialist</div>
+      <div class="profile-role">${t.role}</div>
+      <div class="profile-sub">${t.roleDetail}</div>
     </div>
 
     <div class="contact-strip">
-      <div class="contact-item">
-        <div class="contact-icon">📍</div>
-        <div class="contact-text">Rotterdam, Nederland</div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">🌐</div>
-        <div class="contact-text"><a href="https://sambajarju.com">sambajarju.com</a></div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">in</div>
-        <div class="contact-text"><a href="https://linkedin.com/in/sambajarju">linkedin.com/in/sambajarju</a></div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">✉</div>
-        <div class="contact-text">sambajarju2@gmail.com</div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-icon">📞</div>
-        <div class="contact-text">+31 6 87975656</div>
-      </div>
+      <div class="c-item"><div class="c-icon">📍</div><div class="c-text">Rotterdam, NL</div></div>
+      <div class="c-item"><div class="c-icon">🌐</div><div class="c-text"><a href="https://sambajarju.com">sambajarju.com</a></div></div>
+      <div class="c-item"><div class="c-icon">in</div><div class="c-text"><a href="https://linkedin.com/in/sambajarju">linkedin.com/in/sambajarju</a></div></div>
+      <div class="c-item"><div class="c-icon">✉</div><div class="c-text">sambajarju2@gmail.com</div></div>
+      <div class="c-item"><div class="c-icon">📞</div><div class="c-text">+31 6 87975656</div></div>
     </div>
 
     <div class="left-section">
-      <div class="left-title">Expertise</div>
-      ${[
-        ['Email Marketing', 95],
-        ['Marketing Automation', 90],
-        ['SQL / AMPScript', 85],
-        ['Data Analytics', 80],
-        ['SEO & CRO', 85],
-        ['Sales Automation', 75],
-      ].map(([name, pct]) => `
-      <div class="skill-bar-item">
-        <div class="skill-bar-label">${name}</div>
-        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${pct}%"></div></div>
-      </div>`).join('')}
+      <div class="l-title">${t.expertise}</div>
+      ${t.skills.map((s, i) => `<div class="skill-row"><div class="skill-name">${s}</div><div class="skill-track"><div class="skill-fill" style="width:${[95,90,85,80,85,75][i]}%"></div></div></div>`).join('')}
     </div>
 
     <div class="left-section">
-      <div class="left-title">Tools</div>
-      <div class="tool-group">
-        <div class="tool-group-label">Email & Marketing</div>
-        <div class="tool-tags">
-          ${['SFMC','Deployteq','HubSpot','Mailchimp','Resend'].map(t => `<span class="tool-tag">${t}</span>`).join('')}
-        </div>
-      </div>
-      <div class="tool-group">
-        <div class="tool-group-label">Analytics & CRO</div>
-        <div class="tool-tags">
-          ${['GA4','SEMRush','Hotjar','VWO'].map(t => `<span class="tool-tag">${t}</span>`).join('')}
-        </div>
-      </div>
-      <div class="tool-group">
-        <div class="tool-group-label">Development</div>
-        <div class="tool-tags">
-          ${['Next.js','React','TypeScript','Tailwind','Supabase','Vercel'].map(t => `<span class="tool-tag">${t}</span>`).join('')}
-        </div>
-      </div>
-      <div class="tool-group">
-        <div class="tool-group-label">CRM & Automation</div>
-        <div class="tool-tags">
-          ${['Salesforce','Apollo','Pipedrive','Zapier','Make'].map(t => `<span class="tool-tag">${t}</span>`).join('')}
-        </div>
-      </div>
+      <div class="l-title">${t.tools}</div>
+      <div class="tg-label">EMAIL & MARKETING</div>
+      <div class="tg-wrap">${['SFMC','Deployteq','HubSpot','Resend'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-label">ANALYTICS</div>
+      <div class="tg-wrap">${['GA4','SEMRush','Hotjar','VWO'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-label">DEVELOPMENT</div>
+      <div class="tg-wrap">${['Next.js','React','TypeScript','Tailwind','Supabase'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-label">CRM & AUTOMATION</div>
+      <div class="tg-wrap">${['Salesforce','Apollo','Pipedrive','Zapier','Make'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
     </div>
 
     <div class="left-section">
-      <div class="left-title">Talen</div>
-      <div class="lang-item">
-        <span class="lang-name">Nederlands</span>
-        <div class="lang-dots">${'<div class="lang-dot filled"></div>'.repeat(5)}</div>
-      </div>
-      <div class="lang-item">
-        <span class="lang-name">Engels</span>
-        <div class="lang-dots">${'<div class="lang-dot filled"></div>'.repeat(4)}<div class="lang-dot"></div></div>
-      </div>
+      <div class="l-title">${t.languages}</div>
+      <div class="lang-row"><span class="lang-name">${t.dutch}</span><div class="lang-dots">${'<div class="dot on"></div>'.repeat(5)}</div></div>
+      <div class="lang-row"><span class="lang-name">${t.english}</span><div class="lang-dots">${'<div class="dot on"></div>'.repeat(4)}<div class="dot"></div></div></div>
     </div>
 
-    <div class="left-section" style="padding-bottom: 20px;">
-      <div class="left-title">Soft Skills</div>
-      <div class="soft-pills">
-        ${['Ambitieus','Hands-on','Proactief','Empathisch','Teamspeler','Ondernemend','Data-driven'].map(s => `<span class="soft-pill">${s}</span>`).join('')}
-      </div>
+    <div class="left-section" style="padding-bottom: 16px;">
+      <div class="l-title">${t.softSkills}</div>
+      <div class="soft-wrap">${t.softSkillsList.map(s => `<span class="soft">${s}</span>`).join('')}</div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="right">
+    ${companyName ? `<div class="company-bar"><div class="cb-left">${logoUrl ? `<div class="cb-logo"><img src="${logoUrl}" /></div>` : ''}<div><div class="cb-label">${t.madeFor}</div><div class="cb-name">${companyName}</div></div></div><div class="cb-badge">${t.personalCv}</div></div>` : ''}
 
-    ${companyName ? `
-    <div class="company-banner">
-      <div class="company-banner-left">
-        ${logoUrl ? `<div class="company-banner-logo"><img src="${logoUrl}" alt="${companyName}" /></div>` : ''}
-        <div>
-          <div class="company-banner-label">Gemaakt voor</div>
-          <div class="company-banner-name">${companyName}</div>
-        </div>
-      </div>
-      <div class="company-banner-badge">Persoonlijk CV</div>
-    </div>` : ''}
+    ${contactName ? `<div class="greeting-bar"><strong>${contactName}</strong> — ${t.greeting(contactName).replace(`Hey ${contactName} — `, '')}</div>` : ''}
 
-    ${contactName ? `
-    <div class="greeting">
-      <strong>Hey ${contactName}</strong> — hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.
-    </div>` : ''}
+    <div class="r-body">
+      <div class="r-title">${t.experience}</div>
+      ${t.jobs.map(j => `<div class="card"><div class="card-top"><span class="card-company">${j.company}</span><span class="card-date">${j.date}</span></div><div class="card-role">${j.role}</div><div class="card-desc">${j.desc}</div><div class="card-tags">${j.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div></div>`).join('')}
 
-    <div class="right-body">
-      <div class="right-title">Werkervaring</div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Vandebron</span>
-          <span class="exp-date">Apr 2025 – heden</span>
-        </div>
-        <div class="exp-role">Email Marketeer</div>
-        <div class="exp-desc">SQL queries schrijven en documenteren voor data-driven campagnes. Complexe AMPScript email campagnes bouwen in Salesforce Marketing Cloud. Projectmanager voor 500.000+ emails per maand.</div>
-        <div class="exp-tags"><span class="exp-tag">SQL</span><span class="exp-tag">AMPScript</span><span class="exp-tag">SFMC</span><span class="exp-tag">500k+ emails/mo</span></div>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Cleanprofs.nl</span>
-          <span class="exp-date">2025 – heden</span>
-        </div>
-        <div class="exp-role">Freelance Deployteq Expert</div>
-        <div class="exp-desc">Marketing automation campagnes opzetten in Deployteq. Geautomatiseerde email flows, segmentatie en data-integraties.</div>
-        <div class="exp-tags"><span class="exp-tag">Deployteq</span><span class="exp-tag">Automation</span><span class="exp-tag">Segmentatie</span></div>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Cordital</span>
-          <span class="exp-date">Jan 2023 – Nov 2024</span>
-        </div>
-        <div class="exp-role">Freelance Marketeer</div>
-        <div class="exp-desc">SEO-strategie, marketing automations via Zoho en AMP interactieve e-mails voor hogere engagement.</div>
-        <div class="exp-tags"><span class="exp-tag">SEO</span><span class="exp-tag">Zoho</span><span class="exp-tag">AMP Email</span></div>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Guardey</span>
-          <span class="exp-date">Feb 2023 – Okt 2023</span>
-        </div>
-        <div class="exp-role">Content Marketing</div>
-        <div class="exp-desc">Contentstrategie voor IT Partners. Technische SEO, copywriting voor website en social media.</div>
-        <div class="exp-tags"><span class="exp-tag">Content</span><span class="exp-tag">IT Security</span><span class="exp-tag">SEO</span></div>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Silverflow</span>
-          <span class="exp-date">Feb 2022 – Okt 2022</span>
-        </div>
-        <div class="exp-role">Sales & Marketing Stage</div>
-        <div class="exp-desc">Pre-sales research B2B payments. Salespipeline met Pipedrive. Contentmarketingplan met trendanalyse.</div>
-        <div class="exp-tags"><span class="exp-tag">B2B</span><span class="exp-tag">Pipedrive</span><span class="exp-tag">Payments</span></div>
-      </div>
-
-      <div class="exp-card">
-        <div class="exp-top">
-          <span class="exp-company">Kes Visum</span>
-          <span class="exp-date">2020 – 2025</span>
-        </div>
-        <div class="exp-role">Marketing Lead</div>
-        <div class="exp-desc">Team van 4 aangestuurd. 4,4% conversie via social/display ads. 80+ LinkedIn leads per maand.</div>
-        <div class="exp-tags"><span class="exp-tag">Team Lead</span><span class="exp-tag">4.4% CVR</span><span class="exp-tag">80+ leads/mo</span></div>
-      </div>
-
-      <div style="margin-top: 14px;">
-        <div class="right-title">Educatie</div>
+      <div style="margin-top: 10px;">
+        <div class="r-title">${t.education}</div>
         <div class="edu-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-              <div class="edu-school">Hogeschool Rotterdam</div>
-              <div class="edu-degree">Entrepreneurship — Bachelor of Arts · 2021 – 2025</div>
-            </div>
-            <span class="exp-date" style="font-size: 6pt;">2021 – 2025</span>
-          </div>
-          <div class="edu-highlight">🏆 Start-up prijs van het jaar (Fashionbot) · Workshops gegeven aan medestudenten</div>
+          <div class="edu-school">${t.eduSchool}</div>
+          <div class="edu-degree">${t.eduDegree}</div>
+          <div class="edu-hl">${t.eduHighlight}</div>
         </div>
       </div>
     </div>
 
-    <div class="right-footer">
+    <div class="r-footer">
       <span>Samba Jarju · KvK 83474889 · Rotterdam</span>
       <a href="https://sambajarju.com">sambajarju.com</a>
     </div>
@@ -477,9 +309,7 @@ export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer>
   const html = buildCVHtml(opts);
 
   const apiKey = process.env.YAKPDF_API_KEY;
-  if (!apiKey) {
-    throw new Error('YAKPDF_API_KEY not configured');
-  }
+  if (!apiKey) throw new Error('YAKPDF_API_KEY not configured');
 
   const response = await fetch('https://yakpdf.p.rapidapi.com/pdf', {
     method: 'POST',
@@ -489,12 +319,7 @@ export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer>
       'x-rapidapi-host': 'yakpdf.p.rapidapi.com',
     },
     body: JSON.stringify({
-      pdf: {
-        format: 'A4',
-        printBackground: true,
-        scale: 1,
-        margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
-      },
+      pdf: { format: 'A4', printBackground: true, scale: 1, margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' } },
       source: { html },
       wait: { for: 'navigation', timeout: 3000, waitUntil: 'networkidle0' },
     }),
@@ -505,6 +330,5 @@ export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer>
     throw new Error(`YakPDF error ${response.status}: ${text}`);
   }
 
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  return Buffer.from(await response.arrayBuffer());
 }
