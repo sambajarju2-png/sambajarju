@@ -181,16 +181,35 @@ async function getBrowser() {
   if (_cachedBrowser) return _cachedBrowser;
 
   const [chromiumModule, puppeteerModule] = await Promise.all([
-    import('@sparticuz/chromium'),
+    import('@sparticuz/chromium-min'),
     import('puppeteer-core'),
   ]);
   const chromium = chromiumModule.default;
   const puppeteer = puppeteerModule.default;
 
+  // Self-hosted chromium tar (packaged at build time by postinstall script)
+  // Falls back to GitHub releases for first deployment
+  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000';
+  const chromiumPackUrl = `${baseUrl}/chromium-pack.tar`;
+
+  let executablePath: string;
+  try {
+    executablePath = await chromium.executablePath(chromiumPackUrl);
+  } catch {
+    // Fallback to GitHub releases if self-hosted tar not yet available
+    executablePath = await chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar'
+    );
+  }
+
   _cachedBrowser = await puppeteer.launch({
     args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
+    executablePath,
     headless: chromium.headless,
   });
 
