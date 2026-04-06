@@ -1,5 +1,4 @@
-import chromium from '@sparticuz/chromium';
-import puppeteerCore from 'puppeteer-core';
+// Imports are dynamic — see getBrowser()
 
 export interface GenerateCVOptions {
   companyDomain?: string;
@@ -175,16 +174,24 @@ function buildCVHtml(opts: GenerateCVOptions): string {
 </html>`;
 }
 
-let _cachedBrowser: Awaited<ReturnType<typeof puppeteerCore.launch>> | null = null;
+// Dynamic imports — critical for Vercel serverless bundling
+let _cachedBrowser: Awaited<ReturnType<typeof import('puppeteer-core')['default']['launch']>> | null = null;
 
 async function getBrowser() {
   if (_cachedBrowser) return _cachedBrowser;
 
-  const executablePath = await chromium.executablePath();
-  _cachedBrowser = await puppeteerCore.launch({
-    args: chromium.args,
-    executablePath,
-    headless: true,
+  const [chromiumModule, puppeteerModule] = await Promise.all([
+    import('@sparticuz/chromium'),
+    import('puppeteer-core'),
+  ]);
+  const chromium = chromiumModule.default;
+  const puppeteer = puppeteerModule.default;
+
+  _cachedBrowser = await puppeteer.launch({
+    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
   });
 
   return _cachedBrowser;
