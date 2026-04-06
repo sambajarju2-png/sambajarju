@@ -1,5 +1,3 @@
-// Imports are dynamic — see getBrowser()
-
 export interface GenerateCVOptions {
   companyDomain?: string;
   contactName?: string;
@@ -174,62 +172,38 @@ function buildCVHtml(opts: GenerateCVOptions): string {
 </html>`;
 }
 
-// Dynamic imports — critical for Vercel serverless bundling
-let _cachedBrowser: Awaited<ReturnType<typeof import('puppeteer-core')['default']['launch']>> | null = null;
-
-async function getBrowser() {
-  if (_cachedBrowser) return _cachedBrowser;
-
-  const [chromiumModule, puppeteerModule] = await Promise.all([
-    import('@sparticuz/chromium-min'),
-    import('puppeteer-core'),
-  ]);
-  const chromium = chromiumModule.default;
-  const puppeteer = puppeteerModule.default;
-
-  // Self-hosted chromium tar (packaged at build time by postinstall script)
-  // Falls back to GitHub releases for first deployment
-  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
-  const chromiumPackUrl = `${baseUrl}/chromium-pack.tar`;
-
-  let executablePath: string;
-  try {
-    executablePath = await chromium.executablePath(chromiumPackUrl);
-  } catch {
-    // Fallback to GitHub releases if self-hosted tar not yet available
-    executablePath = await chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar'
-    );
-  }
-
-  _cachedBrowser = await puppeteer.launch({
-    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
-    defaultViewport: chromium.defaultViewport,
-    executablePath,
-    headless: chromium.headless,
-  });
-
-  return _cachedBrowser;
-}
-
 export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer> {
   const html = buildCVHtml(opts);
-  const browser = await getBrowser();
-  const page = await browser.newPage();
 
-  try {
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    const pdf = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: { top: '0', right: '0', bottom: '0', left: '0' },
-    });
-    return Buffer.from(pdf);
-  } finally {
-    await page.close();
+  const apiKey = process.env.YAKPDF_API_KEY;
+  if (!apiKey) {
+    throw new Error('YAKPDF_API_KEY not configured');
   }
+
+  const response = await fetch('https://yakpdf.p.rapidapi.com/pdf', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-rapidapi-key': apiKey,
+      'x-rapidapi-host': 'yakpdf.p.rapidapi.com',
+    },
+    body: JSON.stringify({
+      pdf: {
+        format: 'A4',
+        printBackground: true,
+        scale: 1,
+        margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
+      },
+      source: { html },
+      wait: { for: 'navigation', timeout: 2500, waitUntil: 'networkidle0' },
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`YakPDF error ${response.status}: ${text}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
 }
