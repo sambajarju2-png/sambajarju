@@ -56,26 +56,16 @@ const arcPaths = {
 };
 
 const allTools = [
-  { slug: 'react', color: '61DAFB' },
-  { slug: 'nextdotjs', color: 'ffffff' },
-  { slug: 'hubspot', color: 'FF7A59' },
-  { slug: 'supabase', color: '3FCF8E' },
-  { slug: 'figma', color: 'F24E1E' },
-  { slug: 'tailwindcss', color: '06B6D4' },
-  { slug: 'zapier', color: 'FF4F00' },
-  { slug: 'googleanalytics', color: 'E37400' },
-  { slug: 'salesforce', color: '00A1E0' },
-  { slug: 'resend', color: 'ffffff' },
-  { slug: 'semrush', color: 'FF642D' },
-  { slug: 'hotjar', color: 'FF3C00' },
-  { slug: 'typescript', color: '3178C6' },
-  { slug: 'postgresql', color: '4169E1' },
-  { slug: 'sanity', color: 'F03E2F' },
-  { slug: 'vercel', color: 'ffffff' },
-  { slug: 'make', color: '6D00CC' },
-  { slug: 'wordpress', color: '21759B' },
-  { slug: 'anthropic', color: 'D97757' },
-  { slug: 'googlegemini', color: '8E75B2' },
+  { slug: 'react', color: '61DAFB' }, { slug: 'nextdotjs', color: 'ffffff' },
+  { slug: 'hubspot', color: 'FF7A59' }, { slug: 'supabase', color: '3FCF8E' },
+  { slug: 'figma', color: 'F24E1E' }, { slug: 'tailwindcss', color: '06B6D4' },
+  { slug: 'zapier', color: 'FF4F00' }, { slug: 'googleanalytics', color: 'E37400' },
+  { slug: 'salesforce', color: '00A1E0' }, { slug: 'resend', color: 'ffffff' },
+  { slug: 'semrush', color: 'FF642D' }, { slug: 'hotjar', color: 'FF3C00' },
+  { slug: 'typescript', color: '3178C6' }, { slug: 'postgresql', color: '4169E1' },
+  { slug: 'sanity', color: 'F03E2F' }, { slug: 'vercel', color: 'ffffff' },
+  { slug: 'make', color: '6D00CC' }, { slug: 'wordpress', color: '21759B' },
+  { slug: 'anthropic', color: 'D97757' }, { slug: 'googlegemini', color: '8E75B2' },
 ];
 
 const FILING_COLS = 28;
@@ -99,38 +89,31 @@ export function Hero() {
     return () => window.removeEventListener('pointermove', onMove);
   }, [mouseX, mouseY]);
 
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-background">
-      {/* Background */}
+    <section ref={containerRef} className="relative overflow-hidden">
+      {/* Background — no bottom gradient, clean edge */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
         <div className="absolute w-72 h-72 rounded-full blur-[140px]" style={{ background: 'rgba(239,71,111,0.12)', left: '10%', top: '20%' }} />
         <div className="absolute w-56 h-56 rounded-full blur-[120px]" style={{ background: 'rgba(167,218,220,0.1)', right: '15%', bottom: '20%' }} />
-        {/* Gradient fade — z-0 so it sits BEHIND the marquee text */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent z-0" />
       </div>
 
-      {/* Magnetic Filings — full screen 1fr grid */}
+      {/* Magnetic Filings */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none overflow-hidden z-[1]">
-        <div
-          className="w-full h-full opacity-50"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)`,
-            gridTemplateRows: `repeat(${FILING_ROWS}, 1fr)`,
-            justifyItems: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <div className="w-full h-full opacity-50" style={{ display: 'grid', gridTemplateColumns: `repeat(${FILING_COLS}, 1fr)`, gridTemplateRows: `repeat(${FILING_ROWS}, 1fr)`, justifyItems: 'center', alignItems: 'center' }}>
           {Array.from({ length: FILING_COUNT }).map((_, i) => (
             <Filing key={i} mouseX={mouseX} mouseY={mouseY} />
           ))}
         </div>
       </div>
 
-      {/* Orbital SVG — z-[15] above content glass card */}
+      {/* Orbital SVG */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none z-[15]">
         <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
           <path d={arcPaths[1]} fill="none" stroke="rgba(167,218,220,0.12)" strokeWidth="1" />
@@ -143,8 +126,6 @@ export function Hero() {
               <image href={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} x="-10" y="-10" width="20" height="20" opacity="0.7" />
             </g>
           ))}
-          <circle r="2" fill="white" opacity="0.3"><animateMotion dur="18s" repeatCount="indefinite" path={arcPaths[1]} begin="-5s" /></circle>
-          <circle r="1.5" fill="#EF476F" opacity="0.4"><animateMotion dur="22s" repeatCount="indefinite" path={arcPaths[2]} begin="-12s" /></circle>
         </svg>
       </div>
 
@@ -160,39 +141,81 @@ export function Hero() {
               <h3 className="font-bold text-foreground">{selectedTool.name}</h3>
             </div>
             <p className="text-sm text-foreground-muted leading-relaxed">{selectedTool.usage}</p>
-            <a href="#tools" onClick={() => setSelectedTool(null)} className="inline-flex items-center gap-1 text-xs font-medium text-accent mt-3 hover:underline">See all tools <ArrowRight className="w-3 h-3" /></a>
           </motion.div>
         </div>
       )}
 
-      {/* Content — mobile: auto height, desktop: full viewport */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-12 lg:pt-[80px] lg:pb-[32px]">
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-16 lg:pt-[80px] lg:pb-[48px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-4">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: '#A7DADC' }} />
-              <span className="text-xs sm:text-sm font-medium" style={{ color: '#A7DADC' }}>{t('greeting')}</span>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)' }}>
+              <Sparkles style={{ width: 14, height: 14, color: '#A7DADC' }} />
+              <span style={{ color: '#A7DADC', fontSize: 13, fontWeight: 500 }}>{t('greeting')}</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mb-4">
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mt-4 mb-4">
               {t('title').split(' ').map((word: string, i: number) => (
                 <span key={i} style={{ color: i === 1 ? '#A7DADC' : '#ffffff' }}>{word}{' '}</span>
               ))}
             </motion.h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }} className="text-sm sm:text-base lg:text-lg leading-relaxed mb-6 max-w-lg" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }} style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — brute-forced with Tailwind, no external CSS classes */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-8">
-              <a href="#contact" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#EF476F] hover:bg-[#d83c5f] transition-colors shadow-lg shadow-pink-500/25">
-                <span className="text-white font-semibold shrink-0">{t('cta_primary')}</span>
-                <ArrowRight className="text-white w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a href="#projects" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/30 hover:border-white hover:bg-white/10 transition-all">
-                <span className="text-white font-semibold shrink-0">{t('cta_secondary')}</span>
-              </a>
+            {/*
+              NUCLEAR FIX: Using <button> instead of <a>.
+              Every <a> tag attempt has failed on mobile Safari.
+              <button> elements don't inherit anchor-specific browser resets.
+              ALL styling via inline style — zero Tailwind color classes.
+            */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }} className="sm:flex-row sm:items-center">
+              <button
+                type="button"
+                onClick={() => scrollTo('contact')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  padding: '14px 28px',
+                  borderRadius: 9999,
+                  border: 'none',
+                  backgroundColor: '#EF476F',
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {t('cta_primary')}
+                <ArrowRight style={{ width: 16, height: 16, color: '#ffffff' }} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo('projects')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  padding: '14px 28px',
+                  borderRadius: 9999,
+                  border: '1px solid rgba(255,255,255,0.25)',
+                  backgroundColor: 'transparent',
+                  color: '#ffffff',
+                  WebkitTextFillColor: '#ffffff',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {t('cta_secondary')}
+              </button>
             </motion.div>
 
             {/* Badges */}
@@ -202,9 +225,9 @@ export function Hero() {
                 { icon: Euro, label: t('badge_salary') },
                 { icon: Users, label: t('badge_team') },
               ].map(({ icon: Icon, label }, i) => (
-                <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 flex-shrink-0">
-                  <Icon className="w-3 h-3 flex-shrink-0" style={{ color: '#A7DADC' }} />
-                  <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: '#ffffff', WebkitTextFillColor: '#ffffff' }}>{label}</span>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
+                  <Icon style={{ width: 12, height: 12, color: '#A7DADC' }} />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: '#ffffff', WebkitTextFillColor: '#ffffff', whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
             </motion.div>
@@ -213,20 +236,20 @@ export function Hero() {
             <div className="lg:hidden mb-4 overflow-hidden">
               <div className="flex gap-3 animate-marquee" style={{ width: 'max-content' }}>
                 {[...allTools, ...allTools].map((tool, i) => (
-                  <a key={`${tool.slug}-${i}`} href="#tools" className="w-8 h-8 rounded-lg bg-white/[0.07] border border-white/[0.08] flex items-center justify-center flex-shrink-0">
-                    <img src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} alt="" width={13} height={13} className="opacity-40" loading="lazy" />
-                  </a>
+                  <div key={`${tool.slug}-${i}`} onClick={() => scrollTo('tools')} style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' }}>
+                    <img src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} alt="" width={13} height={13} style={{ opacity: 0.4 }} loading="lazy" />
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Company marquee — z-10 to stay above gradient */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} className="pt-4 border-t border-white/10 relative z-10">
-              <p className="text-[10px] sm:text-xs mb-2 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>{t('visited')}</p>
+            {/* Company marquee */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.6 }} style={{ paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t('visited')}</p>
               <div className="overflow-hidden relative">
                 <div className="flex animate-marquee whitespace-nowrap">
                   {[...companies, ...companies].map((name, i) => (
-                    <span key={i} className="text-xs sm:text-sm font-semibold mx-4 sm:mx-6" style={{ color: 'rgba(255,255,255,0.25)' }}>{name}</span>
+                    <span key={i} style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.3)', margin: '0 20px' }}>{name}</span>
                   ))}
                 </div>
               </div>
@@ -236,23 +259,23 @@ export function Hero() {
           {/* Right — Photo + badges (desktop) */}
           <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.3 }} className="relative hidden lg:block">
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
-              <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center space-y-3">
-                    <div className="w-16 h-16 rounded-full bg-white/10 mx-auto flex items-center justify-center"><Users className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.3)' }} /></div>
-                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.25)' }}>Photo placeholder</p>
+              <div style={{ position: 'absolute', inset: 0, borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Users style={{ width: 32, height: 32, color: 'rgba(255,255,255,0.3)' }} /></div>
+                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.25)' }}>Photo placeholder</p>
                   </div>
                 </div>
               </div>
-              <motion.div className="absolute -bottom-3 -left-3 right-3 flex gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}>
+              <motion.div style={{ position: 'absolute', bottom: -12, left: -12, right: 12, display: 'flex', gap: 8 }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.6 }}>
                 {[
                   { icon: Briefcase, label: t('badge_role') },
                   { icon: Euro, label: t('badge_salary') },
                   { icon: Users, label: t('badge_team') },
                 ].map(({ icon: Icon, label }, i) => (
-                  <motion.div key={i} className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 shadow-lg" animate={{ y: [0, -4, 0] }} transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}>
-                    <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#A7DADC' }} />
-                    <span className="text-xs font-semibold truncate" style={{ color: '#ffffff' }}>{label}</span>
+                  <motion.div key={i} style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 12, background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)' }} animate={{ y: [0, -4, 0] }} transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}>
+                    <Icon style={{ width: 14, height: 14, color: '#A7DADC', flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -260,6 +283,9 @@ export function Hero() {
           </motion.div>
         </div>
       </div>
+
+      {/* Clean bottom edge — simple divider, no gradient overlay */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, background: 'var(--border)' }} />
     </section>
   );
 }
