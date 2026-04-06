@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { ArrowRight, Mail, Phone, Linkedin, Briefcase, Code, BarChart3, Zap } from 'lucide-react';
+import { ArrowRight, Mail, Phone,  Briefcase, Code, BarChart3, Zap } from 'lucide-react';
 import { useEffect, useState, Suspense } from 'react';
 
 function LandingContent() {
@@ -88,7 +88,7 @@ function LandingContent() {
               <Mail style={{ width: 16, height: 16 }} /> Laten we praten
             </a>
             <a href="https://www.linkedin.com/in/sambajarju/" target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.25)', color: '#fff', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>
-              <Linkedin style={{ width: 16, height: 16 }} /> LinkedIn
+              <Mail style={{ width: 16, height: 16 }} /> LinkedIn
             </a>
           </motion.div>
         </div>
