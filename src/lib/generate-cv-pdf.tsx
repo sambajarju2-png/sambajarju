@@ -11,7 +11,7 @@ export interface GenerateCVOptions {
   language?: 'nl' | 'en';
 }
 
-const PHOTO_URL = process.env.CV_PHOTO_URL || '';
+const PHOTO_URL = process.env.CV_PHOTO_URL || 'https://znktohqimzhwoujxzkds.supabase.co/storage/v1/object/public/Profile%20pic/Zonder%20titel%20(400%20x%20400%20px).png';
 
 const content = {
   nl: {
