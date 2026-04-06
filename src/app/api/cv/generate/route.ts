@@ -206,7 +206,7 @@ export async function GET(request: NextRequest) {
   });
   await browser.close();
 
-  return new NextResponse(pdf, {
+  return new NextResponse(Buffer.from(pdf) as unknown as BodyInit, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="CV_Samba_Jarju${companyName ? `_${companyName}` : ''}.pdf"`,
