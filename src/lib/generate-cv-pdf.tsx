@@ -67,11 +67,11 @@ function CVDoc({ primary, secondary, companyName, contactName, logoUrl }: CVProp
     expHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     expCompany: { fontSize: 11, fontWeight: 700, color: '#1e293b' },
     expDate: { fontSize: 8, color: p, fontWeight: 600 },
-    expRole: { fontSize: 9, fontWeight: 600, color: '#64748b', fontStyle: 'italic', marginBottom: 3, marginTop: 1 },
+    expRole: { fontSize: 9, fontWeight: 600, color: '#64748b', marginBottom: 3, marginTop: 1 },
     bullet: { fontSize: 8.5, color: '#475569', marginBottom: 1, paddingLeft: 8 },
     eduRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
     eduTitle: { fontSize: 11, fontWeight: 700, color: '#1e293b' },
-    eduSub: { fontSize: 9, color: '#64748b', fontStyle: 'italic', marginTop: 1 },
+    eduSub: { fontSize: 9, color: '#64748b', marginTop: 1 },
     eduDate: { fontSize: 8, color: p, fontWeight: 600 },
     footer: { position: 'absolute', bottom: 14, left: 32, right: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: '#cbd5e1', borderTopWidth: 0.5, borderTopColor: '#f1f5f9', paddingTop: 6 },
   });
