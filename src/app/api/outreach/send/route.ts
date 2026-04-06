@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { generateCVBuffer } from '@/lib/generate-cv-pdf';
 
 export async function POST(request: NextRequest) {
   try {
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
     <a href="${landingUrl}" style="color:#ffffff;text-decoration:none;font-weight:600;font-size:14px">Bekijk mijn voorstel →</a>
   </td></tr></table>
   <p style="font-size:13px;color:#888;margin:0 0 0">
-    <a href="https://sambajarju.com/api/cv/generate?company=${companyDomain}&contactname=${contactFirstName}" style="color:${primary};text-decoration:underline">Download mijn CV (PDF)</a>
+    📎 Mijn CV vind je als bijlage bij deze email.
   </p>
 </td></tr>
 <tr><td style="padding:24px 32px;border-top:1px solid #eee">
@@ -113,13 +114,17 @@ export async function POST(request: NextRequest) {
 </table>
 </body></html>`;
 
-    // 4. Generate branded CV PDF
-    let pdfBuffer: Uint8Array | null = null;
+    // 4. Generate branded CV PDF directly (no HTTP self-fetch)
+    let pdfBuffer: Buffer | null = null;
     try {
-      const cvRes = await fetch(`https://sambajarju.com/api/cv/generate?company=${companyDomain}&contactname=${contactFirstName}`);
-      if (cvRes.ok) {
-        pdfBuffer = new Uint8Array(await cvRes.arrayBuffer());
-      }
+      pdfBuffer = await generateCVBuffer({
+        companyDomain,
+        contactName: contactFirstName,
+        companyName: company.name,
+        primary,
+        secondary: company.brand_color_secondary || primary,
+        logoUrl: company.logo_url || '',
+      });
     } catch (e) {
       console.error('CV generation error:', e);
     }
