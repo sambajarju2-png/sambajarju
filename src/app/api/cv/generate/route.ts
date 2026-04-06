@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
 
   const browser = await puppeteer.launch({
     args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
+    defaultViewport: { width: 1200, height: 1697 },
     executablePath: await chromium.executablePath(),
     headless: true,
   });
