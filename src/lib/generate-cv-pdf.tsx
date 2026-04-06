@@ -1,175 +1,7 @@
-import React from 'react';
-import { renderToBuffer, Document, Page, Text, View, Image, Link, StyleSheet, Font } from '@react-pdf/renderer';
+import chromium from '@sparticuz/chromium-min';
+import puppeteerCore from 'puppeteer-core';
 
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { src: 'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-300-normal.ttf', fontWeight: 300 },
-    { src: 'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf', fontWeight: 400 },
-    { src: 'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.ttf', fontWeight: 600 },
-    { src: 'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf', fontWeight: 700 },
-    { src: 'https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-800-normal.ttf', fontWeight: 800 },
-  ],
-});
-
-const experience = [
-  { company: 'Vandebron', period: 'April 2025 - heden', role: 'Email Marketeer', bullets: ['SQL queries schrijven en documenteren', 'AMPScript voor complexe email campagnes', 'Project manager: 500k+ emails per maand', 'Monitoring en recap van alle campagnes'] },
-  { company: 'Cleanprofs.nl', period: '2025 - heden', role: 'Freelance Deployteq Expert', bullets: ['Marketing automation campagnes in Deployteq', 'Geautomatiseerde email flows en segmentatie'] },
-  { company: 'Cordital', period: 'Jan 2023 - Nov 2024', role: 'Freelance Marketeer', bullets: ['SEO, automations via Zoho, content creatie', 'AMP interactieve e-mails bouwen'] },
-  { company: 'Guardey', period: 'Feb 2023 - Okt 2023', role: 'Content Marketing', bullets: ['Contentstrategie voor IT Partners, SEO', 'Copywriting: website, social, marketing'] },
-  { company: 'Silverflow (Stage)', period: 'Feb 2022 - Okt 2022', role: 'Sales & Marketing', bullets: ['Pre-sales research B2B klanten', 'Salespipeline met Pipedrive', 'Contentmarketingplan met trendanalyse'] },
-  { company: 'Kes Visum', period: 'Jan 2020 - Jan 2025', role: 'Marketing Lead', bullets: ['Team van 4 marketingmedewerkers', '4,4% conversie via social/display ads', '80+ LinkedIn leads per maand'] },
-];
-
-interface CVProps {
-  primary: string;
-  secondary: string;
-  companyName: string;
-  contactName: string;
-  logoUrl: string;
-}
-
-function CVDoc({ primary, secondary, companyName, contactName, logoUrl }: CVProps) {
-  const p = primary || '#2563EB';
-  const s2 = secondary || p;
-  const styles = StyleSheet.create({
-    page: { fontFamily: 'Inter', fontSize: 9.5, color: '#334155', padding: 0 },
-    topBar: { height: 5, backgroundColor: p },
-    header: { flexDirection: 'row', justifyContent: 'space-between', padding: '20 32 16 32' },
-    nameBlock: {},
-    name: { fontSize: 26, fontWeight: 300, color: '#1e293b' },
-    nameBold: { fontSize: 26, fontWeight: 800, color: '#1e293b' },
-    subtitle: { fontSize: 12, color: '#94a3b8', marginTop: 2 },
-    linkedinRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 5 },
-    linkedinBadge: { backgroundColor: p, borderRadius: 2, padding: '1 4' },
-    linkedinBadgeText: { color: '#fff', fontSize: 7, fontWeight: 700 },
-    linkedinText: { color: p, fontSize: 9 },
-    contactBlock: { textAlign: 'right', fontSize: 9, color: '#64748b' },
-    contactLabel: { fontWeight: 700, color: '#334155' },
-    contactLink: { color: p, textDecoration: 'none' },
-    companyBadge: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: `${p}10`, borderRadius: 6, padding: '5 10', marginBottom: 4, alignSelf: 'flex-end' },
-    companyLogo: { width: 22, height: 22, objectFit: 'contain' },
-    companyLabel: { fontSize: 7, color: p, fontWeight: 600 },
-    companyName: { fontSize: 10, color: p, fontWeight: 700 },
-    greetingBox: { marginHorizontal: 32, marginBottom: 12, padding: '8 12', backgroundColor: `${p}08`, borderLeftWidth: 3, borderLeftColor: p, borderRadius: 4 },
-    greetingBold: { fontWeight: 700, color: p, fontSize: 9.5 },
-    greetingText: { fontSize: 9, color: '#475569', lineHeight: 1.6 },
-    body: { flexDirection: 'row', paddingHorizontal: 32, gap: 20 },
-    sidebar: { width: 150 },
-    main: { flex: 1 },
-    sectionTitle: { fontSize: 10, fontWeight: 700, color: p, marginBottom: 6, marginTop: 14, paddingBottom: 3, borderBottomWidth: 0.5, borderBottomColor: '#f1f5f9' },
-    firstSection: { marginTop: 0 },
-    catLabel: { fontSize: 7, fontWeight: 700, color: s2, marginTop: 8, marginBottom: 2 },
-    skillItem: { fontSize: 8.5, color: '#64748b', marginBottom: 1.5 },
-    pillsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginTop: 3 },
-    pill: { fontSize: 7.5, color: p, backgroundColor: `${p}12`, borderRadius: 99, paddingVertical: 2, paddingHorizontal: 7, fontWeight: 600 },
-    expBlock: { marginBottom: 10 },
-    expHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    expCompany: { fontSize: 11, fontWeight: 700, color: '#1e293b' },
-    expDate: { fontSize: 8, color: p, fontWeight: 600 },
-    expRole: { fontSize: 9, fontWeight: 600, color: '#64748b', marginBottom: 3, marginTop: 1 },
-    bullet: { fontSize: 8.5, color: '#475569', marginBottom: 1, paddingLeft: 8 },
-    eduRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
-    eduTitle: { fontSize: 11, fontWeight: 700, color: '#1e293b' },
-    eduSub: { fontSize: 9, color: '#64748b', marginTop: 1 },
-    eduDate: { fontSize: 8, color: p, fontWeight: 600 },
-    footer: { position: 'absolute', bottom: 14, left: 32, right: 32, flexDirection: 'row', justifyContent: 'space-between', fontSize: 7, color: '#cbd5e1', borderTopWidth: 0.5, borderTopColor: '#f1f5f9', paddingTop: 6 },
-  });
-
-  const E = React.createElement;
-
-  return E(Document, {},
-    E(Page, { size: 'A4', style: styles.page },
-      E(View, { style: styles.topBar }),
-      E(View, { style: styles.header },
-        E(View, { style: styles.nameBlock },
-          E(View, { style: { flexDirection: 'row' } },
-            E(Text, { style: styles.nameBold }, 'Samba'),
-            E(Text, { style: styles.name }, ' Jarju'),
-          ),
-          E(Text, { style: styles.subtitle }, 'Marketing | Economie'),
-          E(View, { style: styles.linkedinRow },
-            E(View, { style: styles.linkedinBadge }, E(Text, { style: styles.linkedinBadgeText }, 'in')),
-            E(Link, { src: 'https://linkedin.com/in/sambajarju', style: styles.linkedinText }, 'linkedin.com/in/sambajarju'),
-          ),
-        ),
-        E(View, { style: { alignItems: 'flex-end' } },
-          companyName ? E(View, { style: styles.companyBadge },
-            logoUrl ? E(Image, { src: logoUrl, style: styles.companyLogo }) : null,
-            E(View, {},
-              E(Text, { style: styles.companyLabel }, 'SPECIAAL VOOR'),
-              E(Text, { style: styles.companyName }, companyName),
-            ),
-          ) : null,
-          E(View, { style: styles.contactBlock },
-            E(Text, { style: styles.contactLabel }, 'Locatie'),
-            E(Text, {}, 'Rotterdam'),
-            E(Text, { style: { marginTop: 6 } }, ''),
-            E(Link, { src: 'https://sambajarju.com', style: styles.contactLink }, 'sambajarju.com'),
-            E(Text, {}, 'sambajarju2@gmail.com'),
-          ),
-        ),
-      ),
-      contactName ? E(View, { style: styles.greetingBox },
-        E(Text, { style: styles.greetingText },
-          E(Text, { style: styles.greetingBold }, `Hey ${contactName}, `),
-          'hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.',
-        ),
-      ) : null,
-      E(View, { style: styles.body },
-        E(View, { style: styles.sidebar },
-          E(Text, { style: { ...styles.sectionTitle, ...styles.firstSection } }, 'Skills'),
-          ...['(Sales) Research', 'Sales Automation', 'Email Marketing', 'Data Analytics', '(Technische) SEO', 'Marketing Automation', 'CRO', 'SQL/AMPScript'].map(s =>
-            E(Text, { key: s, style: styles.skillItem }, `• ${s}`)
-          ),
-          E(Text, { style: styles.sectionTitle }, 'Tools & Tech'),
-          E(Text, { style: styles.catLabel }, 'SALES'),
-          ...['LinkedIn Sales Navigator', 'HubSpot / Pipedrive', 'Apollo', 'Salesforce'].map(s => E(Text, { key: s, style: styles.skillItem }, `• ${s}`)),
-          E(Text, { style: styles.catLabel }, 'MARKETING'),
-          ...['Google Analytics', 'SEMRush', 'Marketing Cloud', 'Zapier / Make'].map(s => E(Text, { key: s, style: styles.skillItem }, `• ${s}`)),
-          E(Text, { style: styles.catLabel }, 'DEVELOPMENT'),
-          ...['Next.js / React', 'TypeScript', 'Supabase', 'Tailwind CSS'].map(s => E(Text, { key: s, style: styles.skillItem }, `• ${s}`)),
-          E(Text, { style: styles.sectionTitle }, 'Talen'),
-          E(Text, { style: styles.skillItem }, '• Nederlands'),
-          E(Text, { style: styles.skillItem }, '• Engels'),
-          E(Text, { style: styles.sectionTitle }, 'Soft Skills'),
-          E(View, { style: styles.pillsRow },
-            ...['Ambitieus', 'Hands-on', 'Proactief', 'Empathisch', 'Teamspeler', 'Ondernemend'].map(s =>
-              E(Text, { key: s, style: styles.pill }, s)
-            ),
-          ),
-        ),
-        E(View, { style: styles.main },
-          E(Text, { style: { ...styles.sectionTitle, ...styles.firstSection, fontSize: 16, fontWeight: 300, color: '#94a3b8', borderBottomWidth: 0 } }, 'Ervaring'),
-          ...experience.map(exp =>
-            E(View, { key: exp.company, style: styles.expBlock },
-              E(View, { style: styles.expHeader },
-                E(Text, { style: styles.expCompany }, exp.company),
-                E(Text, { style: styles.expDate }, exp.period),
-              ),
-              E(Text, { style: styles.expRole }, exp.role),
-              ...exp.bullets.map((b, j) => E(Text, { key: j, style: styles.bullet }, `• ${b}`)),
-            ),
-          ),
-          E(Text, { style: { ...styles.sectionTitle, fontSize: 16, fontWeight: 300, color: '#94a3b8', borderBottomWidth: 0, marginTop: 12 } }, 'Educatie'),
-          E(View, { style: styles.eduRow },
-            E(View, {},
-              E(Text, { style: styles.eduTitle }, 'Hogeschool Rotterdam'),
-              E(Text, { style: styles.eduSub }, 'Entrepreneurship - Bachelor of Arts'),
-            ),
-            E(Text, { style: styles.eduDate }, '2021 - 2025'),
-          ),
-          E(Text, { style: { ...styles.bullet, marginTop: 4 } }, '• Start-up prijs van het jaar (Fashionbot)'),
-          E(Text, { style: styles.bullet }, '• Workshops gegeven aan medestudenten'),
-        ),
-      ),
-      E(View, { style: styles.footer },
-        E(Text, {}, 'Samba Jarju · KvK 83474889 · Rotterdam'),
-        E(Text, {}, 'sambajarju.com'),
-      ),
-    ),
-  );
-}
+const CHROMIUM_PACK = 'https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar';
 
 export interface GenerateCVOptions {
   companyDomain?: string;
@@ -180,19 +12,231 @@ export interface GenerateCVOptions {
   logoUrl?: string;
 }
 
-export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer> {
+function buildCVHtml(opts: GenerateCVOptions): string {
   const {
     companyName = '',
     contactName = '',
     primary = '#2563EB',
-    secondary = '#3B82F6',
+    secondary = primary,
     logoUrl = '',
   } = opts;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const buffer = await renderToBuffer(
-    React.createElement(CVDoc, { primary, secondary, companyName, contactName, logoUrl }) as any
-  );
+  const experience = [
+    { company: 'Vandebron', period: 'April 2025 - heden', role: 'Email Marketeer', bullets: ['SQL queries schrijven en documenteren', 'AMPScript voor complexe email campagnes', 'Project manager: 500k+ emails per maand', 'Monitoring en recap van alle campagnes'] },
+    { company: 'Cleanprofs.nl', period: '2025 - heden', role: 'Freelance Deployteq Expert', bullets: ['Marketing automation campagnes in Deployteq', 'Geautomatiseerde email flows en segmentatie'] },
+    { company: 'Cordital', period: 'Jan 2023 - Nov 2024', role: 'Freelance Marketeer', bullets: ['SEO, automations via Zoho, content creatie', 'AMP interactieve e-mails bouwen'] },
+    { company: 'Guardey', period: 'Feb 2023 - Okt 2023', role: 'Content Marketing', bullets: ['Contentstrategie voor IT Partners, SEO', 'Copywriting: website, social, marketing'] },
+    { company: 'Silverflow (Stage)', period: 'Feb 2022 - Okt 2022', role: 'Sales & Marketing', bullets: ['Pre-sales research B2B klanten', 'Salespipeline met Pipedrive', 'Contentmarketingplan met trendanalyse'] },
+    { company: 'Kes Visum', period: 'Jan 2020 - Jan 2025', role: 'Marketing Lead', bullets: ['Team van 4 marketingmedewerkers', '4,4% conversie via social/display ads', '80+ LinkedIn leads per maand'] },
+  ];
 
-  return Buffer.from(buffer);
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; font-size: 9.5pt; color: #334155; }
+  .page { width: 210mm; min-height: 297mm; position: relative; padding-bottom: 40px; }
+  .top-bar { height: 5px; background: ${primary}; }
+  .header { display: flex; justify-content: space-between; padding: 20px 32px 16px; }
+  .name-bold { font-size: 26pt; font-weight: 800; color: #1e293b; }
+  .name-light { font-size: 26pt; font-weight: 300; color: #1e293b; }
+  .subtitle { font-size: 12pt; color: #94a3b8; margin-top: 2px; }
+  .linkedin-row { display: flex; align-items: center; gap: 5px; margin-top: 8px; }
+  .linkedin-badge { background: ${primary}; color: #fff; font-size: 7pt; font-weight: 700; padding: 1px 4px; border-radius: 2px; }
+  .linkedin-text { color: ${primary}; font-size: 9pt; text-decoration: none; }
+  .right-block { text-align: right; }
+  .company-badge { display: inline-flex; align-items: center; gap: 8px; background: ${primary}10; border-radius: 6px; padding: 5px 10px; margin-bottom: 4px; }
+  .company-badge img { width: 22px; height: 22px; object-fit: contain; }
+  .company-label { font-size: 7pt; color: ${primary}; font-weight: 600; }
+  .company-name { font-size: 10pt; color: ${primary}; font-weight: 700; }
+  .contact-block { font-size: 9pt; color: #64748b; }
+  .contact-block .label { font-weight: 700; color: #334155; }
+  .contact-block a { color: ${primary}; text-decoration: none; }
+  .greeting-box { margin: 0 32px 12px; padding: 8px 12px; background: ${primary}08; border-left: 3px solid ${primary}; border-radius: 4px; }
+  .greeting-bold { font-weight: 700; color: ${primary}; }
+  .greeting-text { font-size: 9pt; color: #475569; line-height: 1.6; }
+  .body { display: flex; padding: 0 32px; gap: 20px; }
+  .sidebar { width: 150px; flex-shrink: 0; }
+  .main { flex: 1; }
+  .section-title { font-size: 10pt; font-weight: 700; color: ${primary}; margin-bottom: 6px; margin-top: 14px; padding-bottom: 3px; border-bottom: 0.5px solid #f1f5f9; }
+  .section-title.first { margin-top: 0; }
+  .cat-label { font-size: 7pt; font-weight: 700; color: ${secondary}; margin-top: 8px; margin-bottom: 2px; text-transform: uppercase; }
+  .skill-item { font-size: 8.5pt; color: #64748b; margin-bottom: 1.5px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+  .pill { font-size: 7.5pt; color: ${primary}; background: ${primary}12; border-radius: 99px; padding: 2px 7px; font-weight: 600; }
+  .exp-block { margin-bottom: 10px; }
+  .exp-header { display: flex; justify-content: space-between; align-items: center; }
+  .exp-company { font-size: 11pt; font-weight: 700; color: #1e293b; }
+  .exp-date { font-size: 8pt; color: ${primary}; font-weight: 600; }
+  .exp-role { font-size: 9pt; font-weight: 600; color: #64748b; font-style: italic; margin: 1px 0 3px; }
+  .bullet { font-size: 8.5pt; color: #475569; margin-bottom: 1px; padding-left: 8px; }
+  .big-section { font-size: 16pt; font-weight: 300; color: #94a3b8; border-bottom: none; }
+  .edu-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+  .edu-title { font-size: 11pt; font-weight: 700; color: #1e293b; }
+  .edu-sub { font-size: 9pt; color: #64748b; font-style: italic; margin-top: 1px; }
+  .edu-date { font-size: 8pt; color: ${primary}; font-weight: 600; }
+  .footer { position: absolute; bottom: 14px; left: 32px; right: 32px; display: flex; justify-content: space-between; font-size: 7pt; color: #cbd5e1; border-top: 0.5px solid #f1f5f9; padding-top: 6px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top-bar"></div>
+  <div class="header">
+    <div>
+      <div><span class="name-bold">Samba</span><span class="name-light"> Jarju</span></div>
+      <div class="subtitle">Marketing | Economie</div>
+      <div class="linkedin-row">
+        <span class="linkedin-badge">in</span>
+        <a href="https://linkedin.com/in/sambajarju" class="linkedin-text">linkedin.com/in/sambajarju</a>
+      </div>
+    </div>
+    <div class="right-block">
+      ${companyName ? `
+      <div class="company-badge">
+        ${logoUrl ? `<img src="${logoUrl}" />` : ''}
+        <div>
+          <div class="company-label">SPECIAAL VOOR</div>
+          <div class="company-name">${companyName}</div>
+        </div>
+      </div>` : ''}
+      <div class="contact-block">
+        <div class="label">Locatie</div>
+        <div>Rotterdam</div>
+        <div style="margin-top:6px"></div>
+        <a href="https://sambajarju.com">sambajarju.com</a>
+        <div>sambajarju2@gmail.com</div>
+      </div>
+    </div>
+  </div>
+
+  ${contactName ? `
+  <div class="greeting-box">
+    <div class="greeting-text">
+      <span class="greeting-bold">Hey ${contactName}, </span>
+      hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.
+    </div>
+  </div>` : ''}
+
+  <div class="body">
+    <div class="sidebar">
+      <div class="section-title first">Skills</div>
+      ${['(Sales) Research','Sales Automation','Email Marketing','Data Analytics','(Technische) SEO','Marketing Automation','CRO','SQL/AMPScript'].map(s => `<div class="skill-item">• ${s}</div>`).join('')}
+
+      <div class="section-title">Tools & Tech</div>
+      <div class="cat-label">SALES</div>
+      ${['LinkedIn Sales Navigator','HubSpot / Pipedrive','Apollo','Salesforce'].map(s => `<div class="skill-item">• ${s}</div>`).join('')}
+      <div class="cat-label">MARKETING</div>
+      ${['Google Analytics','SEMRush','Marketing Cloud','Zapier / Make'].map(s => `<div class="skill-item">• ${s}</div>`).join('')}
+      <div class="cat-label">DEVELOPMENT</div>
+      ${['Next.js / React','TypeScript','Supabase','Tailwind CSS'].map(s => `<div class="skill-item">• ${s}</div>`).join('')}
+
+      <div class="section-title">Talen</div>
+      <div class="skill-item">• Nederlands</div>
+      <div class="skill-item">• Engels</div>
+
+      <div class="section-title">Soft Skills</div>
+      <div class="pills">
+        ${['Ambitieus','Hands-on','Proactief','Empathisch','Teamspeler','Ondernemend'].map(s => `<span class="pill">${s}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="section-title first big-section">Ervaring</div>
+      ${experience.map(exp => `
+      <div class="exp-block">
+        <div class="exp-header">
+          <span class="exp-company">${exp.company}</span>
+          <span class="exp-date">${exp.period}</span>
+        </div>
+        <div class="exp-role">${exp.role}</div>
+        ${exp.bullets.map(b => `<div class="bullet">• ${b}</div>`).join('')}
+      </div>`).join('')}
+
+      <div class="section-title big-section" style="margin-top:12px">Educatie</div>
+      <div class="edu-row">
+        <div>
+          <div class="edu-title">Hogeschool Rotterdam</div>
+          <div class="edu-sub">Entrepreneurship - Bachelor of Arts</div>
+        </div>
+        <span class="edu-date">2021 - 2025</span>
+      </div>
+      <div class="bullet" style="margin-top:4px">• Start-up prijs van het jaar (Fashionbot)</div>
+      <div class="bullet">• Workshops gegeven aan medestudenten</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Samba Jarju · KvK 83474889 · Rotterdam</span>
+    <span>sambajarju.com</span>
+  </div>
+</div>
+</body>
+</html>`;
+}
+
+let _cachedBrowser: Awaited<ReturnType<typeof puppeteerCore.launch>> | null = null;
+
+async function getBrowser() {
+  if (_cachedBrowser) return _cachedBrowser;
+
+  const isVercel = !!process.env.VERCEL;
+
+  if (isVercel) {
+    const executablePath = await chromium.executablePath(CHROMIUM_PACK);
+    _cachedBrowser = await puppeteerCore.launch({
+      args: chromium.args,
+      executablePath,
+      headless: true,
+    });
+  } else {
+    // Local dev — use system Chrome
+    const possiblePaths = [
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium',
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    ];
+    let localPath = '';
+    for (const p of possiblePaths) {
+      try {
+        const { execSync } = await import('child_process');
+        execSync(`test -f "${p}"`);
+        localPath = p;
+        break;
+      } catch { /* try next */ }
+    }
+    // Fallback: try using chromium-min even locally
+    if (!localPath) {
+      const executablePath = await chromium.executablePath(CHROMIUM_PACK);
+      localPath = executablePath;
+    }
+    _cachedBrowser = await puppeteerCore.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: localPath,
+      headless: true,
+    });
+  }
+
+  return _cachedBrowser;
+}
+
+export async function generateCVBuffer(opts: GenerateCVOptions): Promise<Buffer> {
+  const html = buildCVHtml(opts);
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+
+  try {
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    const pdf = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '0', right: '0', bottom: '0', left: '0' },
+    });
+    return Buffer.from(pdf);
+  } finally {
+    await page.close();
+  }
 }
