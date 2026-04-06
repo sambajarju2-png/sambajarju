@@ -34,9 +34,28 @@ const emailCampaigns: Row[] = [
   { campaign_id: 'EM-008', campaign_name: 'App download push', send_date: '2025-04-03', total_sent: 120000, delivered: 118200, opened: 47280, clicked: 11820, unsubscribed: 60, bounced: 1800, revenue: 0 },
 ];
 
+// ── PayWatch.app — household debt & letters data ──
+const debtCases: Row[] = [
+  { case_id: 'PW-001', name: 'Maria Jansen', gender: 'vrouw', city: 'Rotterdam', total_debt: 4250.00, letters_received: 7, stage: 'incasso', creditor: 'Vattenfall', category: 'energie', resolved: 0 },
+  { case_id: 'PW-002', name: 'Kevin de Jong', gender: 'man', city: 'Amsterdam', total_debt: 1890.50, letters_received: 3, stage: 'herinnering', creditor: 'Ziggo', category: 'telecom', resolved: 0 },
+  { case_id: 'PW-003', name: 'Fatima Aziz', gender: 'vrouw', city: 'Utrecht', total_debt: 8920.00, letters_received: 12, stage: 'deurwaarder', creditor: 'Belastingdienst', category: 'overheid', resolved: 0 },
+  { case_id: 'PW-004', name: 'Pieter Bakker', gender: 'man', city: 'Rotterdam', total_debt: 650.00, letters_received: 2, stage: 'factuur', creditor: 'Eneco', category: 'energie', resolved: 1 },
+  { case_id: 'PW-005', name: 'Sandra Mol', gender: 'vrouw', city: 'Den Haag', total_debt: 3400.00, letters_received: 8, stage: 'incasso', creditor: 'Zilveren Kruis', category: 'zorgverzekering', resolved: 0 },
+  { case_id: 'PW-006', name: 'Ahmed Hassan', gender: 'man', city: 'Amsterdam', total_debt: 12500.00, letters_received: 15, stage: 'deurwaarder', creditor: 'DUO', category: 'overheid', resolved: 0 },
+  { case_id: 'PW-007', name: 'Lisa Smeets', gender: 'vrouw', city: 'Eindhoven', total_debt: 980.00, letters_received: 4, stage: 'aanmaning', creditor: 'T-Mobile', category: 'telecom', resolved: 1 },
+  { case_id: 'PW-008', name: 'Mohammed El-Fassi', gender: 'man', city: 'Rotterdam', total_debt: 5670.00, letters_received: 9, stage: 'incasso', creditor: 'Vattenfall', category: 'energie', resolved: 0 },
+  { case_id: 'PW-009', name: 'Naomi Willems', gender: 'vrouw', city: 'Tilburg', total_debt: 2100.00, letters_received: 5, stage: 'aanmaning', creditor: 'Essent', category: 'energie', resolved: 0 },
+  { case_id: 'PW-010', name: 'Daan Peters', gender: 'man', city: 'Den Haag', total_debt: 7800.00, letters_received: 11, stage: 'deurwaarder', creditor: 'CJIB', category: 'overheid', resolved: 0 },
+  { case_id: 'PW-011', name: 'Aisha Diallo', gender: 'vrouw', city: 'Amsterdam', total_debt: 1450.00, letters_received: 3, stage: 'herinnering', creditor: 'KPN', category: 'telecom', resolved: 0 },
+  { case_id: 'PW-012', name: 'Koen Verhoeven', gender: 'man', city: 'Utrecht', total_debt: 3200.00, letters_received: 6, stage: 'incasso', creditor: 'Achmea', category: 'zorgverzekering', resolved: 0 },
+  { case_id: 'PW-013', name: 'Emma van Dijk', gender: 'vrouw', city: 'Rotterdam', total_debt: 15800.00, letters_received: 18, stage: 'deurwaarder', creditor: 'Belastingdienst', category: 'overheid', resolved: 0 },
+  { case_id: 'PW-014', name: 'Jordi Mulder', gender: 'man', city: 'Groningen', total_debt: 420.00, letters_received: 1, stage: 'factuur', creditor: 'Vodafone', category: 'telecom', resolved: 1 },
+];
+
 const datasets: Record<string, { data: Row[]; total: number; dbName: string }> = {
   energy_customers: { data: energyCustomers, total: 912847, dbName: 'VANDEBRON_DWH.MARKETING.CUSTOMERS' },
   email_campaigns: { data: emailCampaigns, total: 2847, dbName: 'VANDEBRON_DWH.MARKETING.EMAIL_CAMPAIGNS' },
+  debt_cases: { data: debtCases, total: 148320, dbName: 'PAYWATCH_DWH.PUBLIC.DEBT_CASES' },
 };
 
 // ── Snowflake SQL parser ──
@@ -46,6 +65,7 @@ function tokenize(query: string): string {
 
 function detectDataset(q: string): string {
   if (q.includes('email_campaign') || q.includes('campaign')) return 'email_campaigns';
+  if (q.includes('debt') || q.includes('schuld') || q.includes('paywatch') || q.includes('letter') || q.includes('deurwaarder') || q.includes('incasso')) return 'debt_cases';
   return 'energy_customers';
 }
 
@@ -245,6 +265,9 @@ const presetQueries = [
   { label: '💰 Omzet campagnes', query: "SELECT campaign_name, revenue, clicked\nFROM email_campaigns\nWHERE revenue > 0\nORDER BY revenue DESC;" },
   { label: '🏙 Rotterdam segment', query: "SELECT name, email, energy_type, email_opt_in\nFROM energy_customers\nWHERE city = 'Rotterdam' AND email_opt_in = 1;" },
   { label: '📬 Email opt-outs', query: "SELECT name, city, status\nFROM energy_customers\nWHERE email_opt_in = 0;" },
+  { label: '💳 Schuld per stad', query: "SELECT city, COUNT(*) AS cases, SUM(total_debt) AS totaal_schuld, AVG(total_debt) AS gem_schuld\nFROM debt_cases\nGROUP BY city;" },
+  { label: '👫 Schuld man/vrouw', query: "SELECT gender, COUNT(*) AS aantal, SUM(total_debt) AS totaal, SUM(letters_received) AS brieven\nFROM debt_cases\nGROUP BY gender;" },
+  { label: '🚨 Deurwaarder cases', query: "SELECT name, city, gender, total_debt, letters_received, creditor\nFROM debt_cases\nWHERE stage = 'deurwaarder'\nORDER BY total_debt DESC;" },
 ];
 
 export function SQLQueryBuilder() {
@@ -316,10 +339,12 @@ export function SQLQueryBuilder() {
 
         {/* Database info */}
         <div className="flex items-center gap-3 text-[10px] text-foreground-subtle font-mono">
-          <span className="flex items-center gap-1"><Database className="w-3 h-3" /> MARKETING.CUSTOMERS (912k)</span>
+          <span className="flex items-center gap-1"><Database className="w-3 h-3" /> CUSTOMERS (912k)</span>
           <span>·</span>
-          <span>MARKETING.EMAIL_CAMPAIGNS (2.8k)</span>
-          <span className="ml-auto text-foreground-subtle/50">Snowflake • Warehouse: MARKETING_WH</span>
+          <span>EMAIL_CAMPAIGNS (2.8k)</span>
+          <span>·</span>
+          <span>DEBT_CASES (148k)</span>
+          <span className="ml-auto text-foreground-subtle/50">Snowflake</span>
         </div>
 
         {/* Results */}
