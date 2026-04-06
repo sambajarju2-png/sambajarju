@@ -10,6 +10,7 @@ export default defineConfig({
   title: 'Samba Jarju Portfolio',
   projectId: 'ncaxnx1f',
   dataset: 'production',
+  basePath: '/studio',
   plugins: [
     structureTool({
       structure: (S) =>
