@@ -11,7 +11,7 @@
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.19.0",
-    "@sparticuz/chromium-min": "^131.0.1",
+    "@sparticuz/chromium": "^131.0.1",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "colorthief": "^3.3.1",

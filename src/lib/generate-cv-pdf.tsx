@@ -1,7 +1,5 @@
-import chromium from '@sparticuz/chromium-min';
+import chromium from '@sparticuz/chromium';
 import puppeteerCore from 'puppeteer-core';
-
-const CHROMIUM_PACK = 'https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar';
 
 export interface GenerateCVOptions {
   companyDomain?: string;
@@ -182,43 +180,12 @@ let _cachedBrowser: Awaited<ReturnType<typeof puppeteerCore.launch>> | null = nu
 async function getBrowser() {
   if (_cachedBrowser) return _cachedBrowser;
 
-  const isVercel = !!process.env.VERCEL;
-
-  if (isVercel) {
-    const executablePath = await chromium.executablePath(CHROMIUM_PACK);
-    _cachedBrowser = await puppeteerCore.launch({
-      args: chromium.args,
-      executablePath,
-      headless: true,
-    });
-  } else {
-    // Local dev — use system Chrome
-    const possiblePaths = [
-      '/usr/bin/google-chrome',
-      '/usr/bin/chromium-browser',
-      '/usr/bin/chromium',
-      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    ];
-    let localPath = '';
-    for (const p of possiblePaths) {
-      try {
-        const { execSync } = await import('child_process');
-        execSync(`test -f "${p}"`);
-        localPath = p;
-        break;
-      } catch { /* try next */ }
-    }
-    // Fallback: try using chromium-min even locally
-    if (!localPath) {
-      const executablePath = await chromium.executablePath(CHROMIUM_PACK);
-      localPath = executablePath;
-    }
-    _cachedBrowser = await puppeteerCore.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: localPath,
-      headless: true,
-    });
-  }
+  const executablePath = await chromium.executablePath();
+  _cachedBrowser = await puppeteerCore.launch({
+    args: chromium.args,
+    executablePath,
+    headless: true,
+  });
 
   return _cachedBrowser;
 }
