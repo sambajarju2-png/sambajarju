@@ -24,7 +24,6 @@ function LandingContent() {
   useEffect(() => {
     if (!company) { setLoading(false); return; }
 
-    // Use existing personalize API (Color Thief + Claude Haiku + Logo.dev)
     fetch('/api/personalize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -38,13 +37,12 @@ function LandingContent() {
           secondaryColor: data.secondaryColor || '#EF476F',
           greeting: data.greeting || '',
           tagline: data.tagline || '',
-          logoUrl: data.logoUrl || '',
+          logoUrl: data.logo || '', // API returns "logo" not "logoUrl"
         });
         setLoading(false);
       })
       .catch(() => setLoading(false));
 
-    // Track page view
     fetch('/api/landing/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -72,9 +70,6 @@ function LandingContent() {
   const name = brand?.companyName || company;
   const primary = brand?.primaryColor || '#023047';
   const secondary = brand?.secondaryColor || '#EF476F';
-  const greeting = contactName ? `Hey ${contactName},` : 'Hey daar,';
-
-  // Generate a gradient from brand colors
   const heroGradient = `linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`;
 
   const skills = [
@@ -86,60 +81,77 @@ function LandingContent() {
 
   return (
     <>
-      {/* Hero — branded with Color Thief colors */}
+      {/* Hero */}
       <section className="relative overflow-hidden" style={{ background: heroGradient }}>
-        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 pt-32 pb-20">
-          {/* Logos */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 mb-8">
-            {brand?.logoUrl && (
-              <img
-                src={brand.logoUrl}
-                alt={name}
-                width={56} height={56}
-                style={{ borderRadius: 16, background: '#fff', padding: 6, objectFit: 'contain' }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-            )}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-32 pb-20">
+          <div className="grid md:grid-cols-[1fr,auto] gap-8 items-start">
+            {/* Left — text */}
             <div>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Speciaal voor</p>
-              <p style={{ color: '#fff', fontSize: 20, fontWeight: 800 }}>{name}</p>
+              <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                Speciaal voor {name}
+              </motion.p>
+
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-6" style={{ color: '#ffffff' }}>
+                {brand?.tagline || `Automatisering voor ${name}`}
+              </motion.h1>
+
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ color: 'rgba(255,255,255,0.8)', fontSize: 16, lineHeight: 1.7, maxWidth: 540, marginBottom: 12 }}>
+                {brand?.greeting || `Samba Jarju helpt ${name} om marketing te automatiseren en impact te maximaliseren.`}
+              </motion.p>
+
+              {contactName && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }} style={{ color: 'rgba(255,255,255,0.65)', fontSize: 14, lineHeight: 1.7, maxWidth: 540, marginBottom: 24 }}>
+                  Ik werk ook als freelancer bij Cleanprofs.nl waar ik Deployteq gebruik om geautomatiseerde email campagnes te bouwen.
+                </motion.p>
+              )}
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-3">
+                <a href="mailto:samba@sambajarju.nl" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 9999, background: '#fff', color: primary, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
+                  <Mail style={{ width: 16, height: 16 }} /> Contact opnemen <ArrowRight style={{ width: 14, height: 14 }} />
+                </a>
+                <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>
+                  <Briefcase style={{ width: 16, height: 16 }} /> Bekijk mijn werk
+                </a>
+              </motion.div>
+
+              {/* Samba badge */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 16, background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', maxWidth: 'fit-content' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EF476F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>SJ</div>
+                <div>
+                  <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>Samba Jarju</p>
+                  <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, margin: 0 }}>Email Marketeer & Marketing Automation Specialist</p>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-6" style={{ color: '#ffffff' }}>
-            {brand?.tagline || `Automatisering voor ${name}`}
-          </motion.h1>
-
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} style={{ color: 'rgba(255,255,255,0.8)', fontSize: 16, lineHeight: 1.7, maxWidth: 560, marginBottom: 32 }}>
-            {brand?.greeting || `Samba Jarju helpt ${name} om de betrokkenheid van klanten te vergroten en conversies te maximaliseren door geavanceerde email marketing en marketing automation in te zetten.`}
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="flex flex-wrap gap-3">
-            <a href="mailto:samba@sambajarju.nl" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 9999, background: '#fff', color: primary, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
-              <Mail style={{ width: 16, height: 16 }} /> Contact opnemen <ArrowRight style={{ width: 14, height: 14 }} />
-            </a>
-            <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>
-              <Briefcase style={{ width: 16, height: 16 }} /> Bekijk mijn werk
-            </a>
-          </motion.div>
-
-          {/* Samba badge */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 16, background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', maxWidth: 'fit-content' }}>
-            <div style={{ width: 40, height: 40, borderRadius: 12, background: '#EF476F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>SJ</div>
-            <div>
-              <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>Samba Jarju</p>
-              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, margin: 0 }}>Email Marketeer & Marketing Automation Specialist</p>
-            </div>
-          </motion.div>
+            {/* Right — company card with logo */}
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} style={{ minWidth: 220, padding: 24, borderRadius: 20, background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.2)', textAlign: 'center' }}>
+              {brand?.logoUrl && (
+                <img
+                  src={brand.logoUrl}
+                  alt={name}
+                  width={72} height={72}
+                  style={{ borderRadius: 16, background: '#fff', padding: 8, objectFit: 'contain', margin: '0 auto 16px', display: 'block' }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              )}
+              <p style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: '0 0 4px' }}>{name}</p>
+              {contactName && (
+                <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14, fontWeight: 500, margin: '0 0 12px' }}>Hey {contactName} 👋</p>
+              )}
+              <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.15)', margin: '12px 0' }} />
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, margin: 0 }}>Persoonlijk voorstel</p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Skills section */}
+      {/* Skills */}
       <section className="py-20 px-4 sm:px-6 bg-background">
         <div className="max-w-3xl mx-auto">
           {contactName && (
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-foreground-muted text-sm mb-2">
-              {greeting}
+              Hey {contactName},
             </motion.p>
           )}
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-2xl sm:text-3xl font-bold text-foreground mb-10">
@@ -148,15 +160,7 @@ function LandingContent() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             {skills.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="p-5 rounded-2xl bg-surface border border-border"
-                style={{ boxShadow: 'var(--card-shadow)' }}
-              >
+              <motion.div key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="p-5 rounded-2xl bg-surface border border-border" style={{ boxShadow: 'var(--card-shadow)' }}>
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: `${primary}15` }}>
                   <Icon className="w-5 h-5" style={{ color: primary }} />
                 </div>

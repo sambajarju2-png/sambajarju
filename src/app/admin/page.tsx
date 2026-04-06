@@ -118,6 +118,8 @@ export default function AdminPage() {
         <p style={{ marginTop: 12, fontSize: 12, color: '#8BA3B5' }}>
           Dit verstuurt een branded email met Color Thief kleuren en een link naar de persoonlijke landingspagina.
           <br />Preview: <a href={form.companyDomain ? `/landing?company=${form.companyDomain}&contactname=${form.contactFirstName}` : '#'} target="_blank" rel="noopener" style={{ color: '#EF476F' }}>Landing page</a>
+          {' · '}
+          <a href={form.companyDomain ? `/api/cv/generate?company=${form.companyDomain}&contactname=${form.contactFirstName}` : '#'} target="_blank" rel="noopener" style={{ color: '#EF476F' }}>Branded CV (PDF)</a>
         </p>
       </div>
 

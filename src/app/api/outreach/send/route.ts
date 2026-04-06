@@ -93,9 +93,12 @@ export async function POST(request: NextRequest) {
   <p style="font-size:15px;line-height:1.7;color:#333;margin:0 0 24px">
     Ik heb een persoonlijke pagina gemaakt over hoe ik ${company.name} kan helpen met email marketing en marketing automation. Neem gerust een kijkje:
   </p>
-  <table cellpadding="0" cellspacing="0"><tr><td style="background:${primary};border-radius:9999px;padding:14px 28px">
+  <table cellpadding="0" cellspacing="0" style="margin-bottom:16px"><tr><td style="background:${primary};border-radius:9999px;padding:14px 28px">
     <a href="${landingUrl}" style="color:#ffffff;text-decoration:none;font-weight:600;font-size:14px">Bekijk mijn voorstel →</a>
   </td></tr></table>
+  <p style="font-size:13px;color:#888;margin:0 0 0">
+    <a href="https://sambajarju.com/api/cv/generate?company=${companyDomain}&contactname=${contactFirstName}" style="color:${primary};text-decoration:underline">Download mijn CV (PDF)</a>
+  </p>
 </td></tr>
 <tr><td style="padding:24px 32px;border-top:1px solid #eee">
   <table cellpadding="0" cellspacing="0"><tr>
