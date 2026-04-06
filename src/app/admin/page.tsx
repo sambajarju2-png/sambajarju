@@ -1,118 +1,156 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
 
+interface Stats { companies: number; contacts: number; sent: number; opened: number; clicked: number; pageViews: number; recentOutreach: Record<string, unknown>[]; }
+
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [sending, setSending] = useState(false);
+  const [sendResult, setSendResult] = useState('');
+  const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '' });
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+    supabase.auth.getUser().then(({ data }) => { setUser(data.user); setLoading(false); });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
     return () => subscription.unsubscribe();
   }, []);
 
-  const signIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/admin` },
-    });
+  const fetchStats = useCallback(() => {
+    fetch('/api/admin/stats').then(r => r.json()).then(setStats).catch(() => {});
+  }, []);
+
+  useEffect(() => { if (user?.email === ADMIN_EMAIL) fetchStats(); }, [user, fetchStats]);
+
+  const signIn = () => supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/admin` } });
+  const signOut = () => { supabase.auth.signOut(); setUser(null); };
+
+  const handleSend = async () => {
+    if (!form.companyDomain || !form.contactEmail || !form.contactFirstName) return;
+    setSending(true); setSendResult('');
+    try {
+      const res = await fetch('/api/outreach/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+      const data = await res.json();
+      if (data.success) { setSendResult('✅ Email verzonden!'); setForm({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '' }); fetchStats(); }
+      else setSendResult(`❌ ${data.error || 'Fout bij verzenden'}`);
+    } catch { setSendResult('❌ Netwerkfout'); }
+    setSending(false);
   };
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-  };
+  if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><p style={{ color: '#8BA3B5' }}>Loading...</p></div>;
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: '#8BA3B5' }}>Loading...</p>
-      </div>
-    );
-  }
+  if (!user) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+      <div style={{ width: 48, height: 48, borderRadius: 12, background: '#EF476F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 18, marginBottom: 8 }}>SJ</div>
+      <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Samba Admin</h1>
+      <p style={{ color: '#8BA3B5', margin: 0 }}>Sign in to manage outreach</p>
+      <button onClick={signIn} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 8 }}>Sign in with Google</button>
+    </div>
+  );
 
-  // Not logged in
-  if (!user) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Samba Admin</h1>
-        <p style={{ color: '#8BA3B5' }}>Sign in to manage your outreach</p>
-        <button
-          onClick={signIn}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '12px 24px', borderRadius: 8,
-            border: '1px solid #E2E8F0', background: '#fff',
-            fontSize: 14, fontWeight: 600, cursor: 'pointer',
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-          Sign in with Google
-        </button>
-      </div>
-    );
-  }
+  if (user.email !== ADMIN_EMAIL) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700 }}>Niet geautoriseerd</h1>
+      <p style={{ color: '#8BA3B5' }}>{user.email}</p>
+      <button onClick={signOut} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer' }}>Sign out</button>
+    </div>
+  );
 
-  // Wrong account
-  if (user.email !== ADMIN_EMAIL) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Not Authorized</h1>
-        <p style={{ color: '#8BA3B5' }}>Signed in as {user.email}</p>
-        <button onClick={signOut} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer', fontSize: 14 }}>
-          Sign out
-        </button>
-      </div>
-    );
-  }
+  const s = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
+  const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 14, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' as const };
+  const labelStyle = { fontSize: 12, fontWeight: 600 as const, color: '#4A6B7F', marginBottom: 4, display: 'block' as const };
 
-  // Admin dashboard
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+    <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Samba ABM Dashboard</h1>
-          <p style={{ color: '#8BA3B5', margin: '4px 0 0', fontSize: 14 }}>{user.email}</p>
+          <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>ABM Dashboard</h1>
+          <p style={{ color: '#8BA3B5', margin: '4px 0 0', fontSize: 13 }}>{user.email}</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <a href="/" style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Portfolio</a>
-          <a href="/studio" style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Sanity</a>
-          <button onClick={signOut} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer', fontSize: 13 }}>Sign out</button>
+          <a href="/" style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Portfolio</a>
+          <a href="/studio" style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Sanity</a>
+          <button onClick={signOut} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer', fontSize: 13 }}>Uitloggen</button>
         </div>
       </div>
 
-      {/* Stats cards — will be wired to real data */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 32 }}>
         {[
-          { label: 'Companies', value: '—', color: '#023047' },
-          { label: 'Contacts', value: '—', color: '#023047' },
-          { label: 'Emails Sent', value: '—', color: '#EF476F' },
-          { label: 'Opened', value: '—', color: '#A7DADC' },
+          { label: 'Bedrijven', value: stats?.companies ?? '—' },
+          { label: 'Contacten', value: stats?.contacts ?? '—' },
+          { label: 'Verzonden', value: stats?.sent ?? '—', color: '#EF476F' },
+          { label: 'Geopend', value: stats?.opened ?? '—', color: '#3FCF8E' },
+          { label: 'Geklikt', value: stats?.clicked ?? '—', color: '#06B6D4' },
+          { label: 'Pagina views', value: stats?.pageViews ?? '—' },
         ].map(({ label, value, color }) => (
-          <div key={label} style={{ padding: 20, borderRadius: 12, background: '#fff', border: '1px solid #E2E8F0' }}>
-            <p style={{ fontSize: 12, color: '#8BA3B5', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
-            <p style={{ fontSize: 28, fontWeight: 700, margin: 0, color }}>{value}</p>
+          <div key={label} style={{ padding: 16, borderRadius: 12, background: '#fff', border: '1px solid #E2E8F0' }}>
+            <p style={{ fontSize: 11, color: '#8BA3B5', margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
+            <p style={{ fontSize: 24, fontWeight: 700, margin: 0, color: color || '#023047' }}>{value}</p>
           </div>
         ))}
       </div>
 
-      {/* Placeholder sections */}
-      <div style={{ padding: 40, borderRadius: 12, background: '#fff', border: '1px solid #E2E8F0', textAlign: 'center' }}>
-        <p style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>Outreach coming soon</p>
-        <p style={{ color: '#8BA3B5', fontSize: 14, margin: 0 }}>Add a company, generate a branded CV, and send your first outreach email.</p>
+      {/* Send outreach form */}
+      <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 24 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>📧 Nieuwe outreach versturen</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div><label style={labelStyle}>Bedrijf domein *</label><input style={inputStyle} placeholder="nike.com" value={form.companyDomain} onChange={e => s('companyDomain', e.target.value)} /></div>
+          <div><label style={labelStyle}>Email *</label><input style={inputStyle} placeholder="peter@nike.com" value={form.contactEmail} onChange={e => s('contactEmail', e.target.value)} /></div>
+          <div><label style={labelStyle}>Voornaam *</label><input style={inputStyle} placeholder="Peter" value={form.contactFirstName} onChange={e => s('contactFirstName', e.target.value)} /></div>
+          <div><label style={labelStyle}>Achternaam</label><input style={inputStyle} placeholder="de Vries" value={form.contactLastName} onChange={e => s('contactLastName', e.target.value)} /></div>
+          <div><label style={labelStyle}>Functie</label><input style={inputStyle} placeholder="Marketing Manager" value={form.contactRole} onChange={e => s('contactRole', e.target.value)} /></div>
+          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <button onClick={handleSend} disabled={sending || !form.companyDomain || !form.contactEmail || !form.contactFirstName} style={{ width: '100%', padding: '10px 20px', borderRadius: 8, border: 'none', background: sending ? '#8BA3B5' : '#EF476F', color: '#fff', fontWeight: 600, fontSize: 14, cursor: sending ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
+              {sending ? 'Verzenden...' : 'Verstuur outreach'}
+            </button>
+          </div>
+        </div>
+        {sendResult && <p style={{ marginTop: 12, fontSize: 14 }}>{sendResult}</p>}
+        <p style={{ marginTop: 12, fontSize: 12, color: '#8BA3B5' }}>
+          Dit verstuurt een branded email met Color Thief kleuren en een link naar de persoonlijke landingspagina.
+          <br />Preview: <a href={form.companyDomain ? `/landing?company=${form.companyDomain}&contactname=${form.contactFirstName}` : '#'} target="_blank" rel="noopener" style={{ color: '#EF476F' }}>Landing page</a>
+        </p>
       </div>
+
+      {/* Recent outreach */}
+      {stats?.recentOutreach && stats.recentOutreach.length > 0 && (
+        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0' }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Recente outreach</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #E2E8F0' }}>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Subject</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Status</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Verzonden</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.recentOutreach.map((log: Record<string, unknown>, i: number) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                    <td style={{ padding: '8px 12px', color: '#023047' }}>{String(log.subject || '—')}</td>
+                    <td style={{ padding: '8px 12px' }}>
+                      <span style={{ padding: '2px 8px', borderRadius: 9999, fontSize: 11, fontWeight: 600, background: log.status === 'opened' ? '#dcfce7' : log.status === 'clicked' ? '#dbeafe' : log.status === 'sent' ? '#fef9c3' : '#fee2e2', color: log.status === 'opened' ? '#166534' : log.status === 'clicked' ? '#1e40af' : log.status === 'sent' ? '#854d0e' : '#991b1b' }}>
+                        {String(log.status || 'sent')}
+                      </span>
+                    </td>
+                    <td style={{ padding: '8px 12px', color: '#8BA3B5' }}>{log.sent_at ? new Date(String(log.sent_at)).toLocaleDateString('nl-NL') : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
