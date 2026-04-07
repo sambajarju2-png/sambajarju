@@ -176,8 +176,8 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               {t('subtitle')}
             </motion.p>
 
-            {/* CTAs — using pure Tailwind classes (matches working /for page pattern) */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
+            {/* CTAs — NOT inside motion.div: iOS Safari fails to paint text inside GPU-composited layers */}
+            <div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
@@ -193,7 +193,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               >
                 <span suppressHydrationWarning>{t('cta_secondary')}</span>
               </button>
-            </motion.div>
+            </div>
 
             {/* Badges */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }} className="flex gap-2 overflow-x-auto pb-1 lg:hidden mb-4">
