@@ -12,7 +12,7 @@ export async function getHeroSettings() {
       companies
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
   if (!data) return null;
   return {
@@ -29,7 +29,7 @@ export async function getAbout() {
       highlights
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
   if (!data) return null;
   return {
@@ -48,7 +48,7 @@ export async function getExperiences() {
       description_nl, description_en, active, icon, order
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
 }
 
@@ -60,7 +60,7 @@ export async function getProjects() {
       problem_nl, problem_en, solution_nl, solution_en, order
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
 }
 
@@ -70,7 +70,7 @@ export async function getTestimonials() {
       name, role, company, quote_nl, quote_en, order
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
 }
 
@@ -80,6 +80,6 @@ export async function getFAQs() {
       question_nl, question_en, answer_nl, answer_en, order
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 30 } }
   );
 }

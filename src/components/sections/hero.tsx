@@ -186,45 +186,15 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  padding: '14px 28px',
-                  borderRadius: 9999,
-                  border: 'none',
-                  backgroundColor: '#EF476F',
-                  color: '#ffffff',
-                  WebkitTextFillColor: '#ffffff',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                }}
+                className="hero-cta-primary"
               >
                 {t('cta_primary')}
-                <ArrowRight style={{ width: 16, height: 16, color: '#ffffff' }} />
+                <ArrowRight style={{ width: 16, height: 16 }} />
               </button>
               <button
                 type="button"
                 onClick={() => scrollTo('projects')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  padding: '14px 28px',
-                  borderRadius: 9999,
-                  border: '1px solid rgba(255,255,255,0.25)',
-                  backgroundColor: 'transparent',
-                  color: '#ffffff',
-                  WebkitTextFillColor: '#ffffff',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                }}
+                className="hero-cta-secondary"
               >
                 {t('cta_secondary')}
               </button>
