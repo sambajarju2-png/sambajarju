@@ -108,7 +108,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
   const companies = ['ESET', 'Exact', 'NPO 3', 'Vandebron', 'Visma', 'Odido', 'Mollie'];
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden">
+    <section ref={containerRef} className="relative overflow-x-hidden">
       {/* Background — no bottom gradient, clean edge */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0" style={{ background: 'var(--hero-gradient)' }} />
@@ -177,11 +177,11 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
             </motion.p>
 
             {/* CTAs — using pure Tailwind classes (matches working /for page pattern) */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }} className="sm:flex-row sm:items-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#EF476F] text-white text-sm font-semibold transition-all hover:opacity-90 appearance-none w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#EF476F] border-0 text-white text-sm font-semibold transition-all hover:opacity-90 appearance-none w-full sm:w-auto"
               >
                 <span suppressHydrationWarning>{t('cta_primary')}</span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
@@ -204,7 +204,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               ].map(({ icon: Icon, label }, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
                   <Icon style={{ width: 12, height: 12, color: '#A7DADC' }} />
-                  <span style={{ fontSize: 11, fontWeight: 600, color: '#ffffff', WebkitTextFillColor: '#ffffff', whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: '#ffffff', whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
             </motion.div>
