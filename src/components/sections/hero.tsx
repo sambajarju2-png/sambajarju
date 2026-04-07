@@ -176,27 +176,22 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               {t('subtitle')}
             </motion.p>
 
-            {/*
-              NUCLEAR FIX: Using <button> instead of <a>.
-              Every <a> tag attempt has failed on mobile Safari.
-              <button> elements don't inherit anchor-specific browser resets.
-              ALL styling via inline style — zero Tailwind color classes.
-            */}
+            {/* CTAs — using pure Tailwind classes (matches working /for page pattern) */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }} className="sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
-                className="hero-cta-primary"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#EF476F] text-white text-sm font-semibold transition-all hover:opacity-90 appearance-none w-full sm:w-auto"
               >
-                {t('cta_primary')}
-                <ArrowRight style={{ width: 16, height: 16 }} />
+                <span suppressHydrationWarning>{t('cta_primary')}</span>
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
               <button
                 type="button"
                 onClick={() => scrollTo('projects')}
-                className="hero-cta-secondary"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-white/20 bg-transparent text-white text-sm font-medium transition-all hover:bg-white/10 appearance-none w-full sm:w-auto"
               >
-                {t('cta_secondary')}
+                <span suppressHydrationWarning>{t('cta_secondary')}</span>
               </button>
             </motion.div>
 
