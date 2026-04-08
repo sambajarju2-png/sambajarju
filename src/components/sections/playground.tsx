@@ -1,13 +1,12 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { Workflow, Calculator, FlaskConical, Target, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export function Playground() {
   const t = useTranslations('playground');
-  const locale = useLocale();
 
   const demos = [
     { icon: FlaskConical, title: 'A/B Test Arena', desc: 'Pick the winning subject line. Test your marketing instincts against real campaign data.', color: 'from-violet-500/10 to-purple-500/10', border: 'hover:border-violet-300 dark:hover:border-violet-700' },
@@ -36,7 +35,7 @@ export function Playground() {
           {demos.map(({ icon: Icon, title, desc, color, border }) => (
             <StaggerItem key={title}>
               <Link
-                href={`/${locale}/playground`}
+                href="/playground"
                 className={`group block rounded-2xl border border-border bg-surface p-5 sm:p-6 transition-all duration-300 hover:shadow-md ${border}`}
               >
                 <div className={`w-10 sm:w-12 h-10 sm:h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-3 sm:mb-4`}>
@@ -56,7 +55,7 @@ export function Playground() {
         <Reveal delay={0.3}>
           <div className="mt-6 text-center">
             <Link
-              href={`/${locale}/playground`}
+              href="/playground"
               className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
             >
               View all 8 demos

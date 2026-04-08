@@ -33,7 +33,7 @@ function TestContent() {
       const res = await fetch(`/api/brand-test?domain=${encodeURIComponent(domain)}`);
       const data = await res.json();
       setResults(data.results || []);
-      window.history.replaceState({}, '', `/${locale}/test?company=${domain}`);
+      window.history.replaceState({}, '', `/test?company=${domain}`);
     } catch {
       setResults([]);
     } finally {
@@ -50,7 +50,7 @@ function TestContent() {
   return (
     <div className="min-h-screen pt-20 sm:pt-24 pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <Link href={`/${locale}`} className="inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors mb-6">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
 

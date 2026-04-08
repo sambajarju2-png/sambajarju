@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LanguageToggle } from '@/components/ui/language-toggle';
 import { CommandMenu } from '@/components/ui/command-menu';
@@ -12,9 +12,8 @@ import { OverlayMenu, HamburgerIcon } from '@/components/ui/overlay-menu';
 
 export function Header() {
   const t = useTranslations('nav');
-  const locale = useLocale();
   const pathname = usePathname();
-  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
@@ -25,7 +24,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const base = isHome ? '' : `/${locale}`;
+  const base = isHome ? '' : '/';
   const links = [
     { href: `${base}#about`, label: t('about') },
     { href: `${base}#projects`, label: t('projects') },

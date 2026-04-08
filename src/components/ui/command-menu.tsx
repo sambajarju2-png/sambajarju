@@ -35,7 +35,7 @@ export function CommandMenu() {
     setIsOpen(false);
     // If on playground page, go back to home first
     if (pathname.includes('/playground')) {
-      router.push(`/${locale}#${id}`);
+      router.push(`/#${id}`);
     } else {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -43,10 +43,8 @@ export function CommandMenu() {
 
   const switchLocale = () => {
     const newLocale = locale === 'nl' ? 'en' : 'nl';
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    router.push(segments.join('/'));
-    setIsOpen(false);
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
+    window.location.reload();
   };
 
   const items: CommandItem[] = useMemo(() => [
@@ -55,7 +53,7 @@ export function CommandMenu() {
     { id: 'experience', label: 'Experience / Ervaring', sublabel: 'Vandebron, Silverflow, etc.', icon: Briefcase, action: () => scrollTo('experience'), keywords: ['experience', 'ervaring', 'vandebron', 'werk', 'work', 'cv'], category: 'Navigate' },
     { id: 'tools', label: 'Tools / Arsenaal', sublabel: 'Salesforce, HubSpot, Next.js', icon: Wrench, action: () => scrollTo('tools'), keywords: ['tools', 'stack', 'salesforce', 'hubspot', 'skills'], category: 'Navigate' },
     { id: 'contact', label: 'Contact', sublabel: 'Get in touch', icon: MessageCircle, action: () => scrollTo('contact'), keywords: ['contact', 'email', 'phone', 'bellen'], category: 'Navigate' },
-    { id: 'playground', label: 'Playground / Speeltuin', sublabel: 'Interactive demos', icon: Gamepad2, action: () => { router.push(`/${locale}/playground`); setIsOpen(false); }, keywords: ['playground', 'speeltuin', 'demo', 'interactive', 'sql', 'roi'], category: 'Navigate' },
+    { id: 'playground', label: 'Playground / Speeltuin', sublabel: 'Interactive demos', icon: Gamepad2, action: () => { router.push(`/playground`); setIsOpen(false); }, keywords: ['playground', 'speeltuin', 'demo', 'interactive', 'sql', 'roi'], category: 'Navigate' },
     { id: 'email-samba', label: 'Email Samba', sublabel: 'samba@sambajarju.nl', icon: Mail, action: () => { window.open('mailto:samba@sambajarju.nl'); setIsOpen(false); }, keywords: ['email', 'mail', 'samba'], category: 'Actions' },
     { id: 'call-samba', label: 'Call Samba', sublabel: '+31 6 87975656', icon: Phone, action: () => { window.open('tel:+31687975656'); setIsOpen(false); }, keywords: ['call', 'bel', 'phone', 'telefoon'], category: 'Actions' },
     { id: 'linkedin', label: 'LinkedIn', sublabel: 'linkedin.com/in/sambajarju', icon: ExternalLink, action: () => { window.open('https://www.linkedin.com/in/sambajarju/', '_blank'); setIsOpen(false); }, keywords: ['linkedin', 'social'], category: 'Actions' },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { Languages } from 'lucide-react';
 
 export function LanguageToggle() {
@@ -11,15 +11,13 @@ export function LanguageToggle() {
 
   const switchLocale = () => {
     const newLocale = locale === 'nl' ? 'en' : 'nl';
-    const segments = pathname.split('/');
-    segments[1] = newLocale;
-    router.push(segments.join('/'));
+    router.replace(pathname, { locale: newLocale });
   };
 
   return (
     <button
       onClick={switchLocale}
-      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border border-border bg-surface hover:bg-surface-hover transition-all duration-200 text-foreground"
+      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border border-border bg-surface hover:bg-surface-hover transition-all duration-200 text-foreground cursor-pointer"
       aria-label={`Switch to ${locale === 'nl' ? 'English' : 'Nederlands'}`}
     >
       <Languages className="w-3.5 h-3.5" />

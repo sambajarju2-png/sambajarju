@@ -52,18 +52,6 @@ export async function getExperiences() {
   );
 }
 
-export async function getProjects() {
-  return client.fetch(
-    `*[_type == "project"] | order(order asc){
-      title, slug, description_nl, description_en,
-      image, featured, techStack, url,
-      problem_nl, problem_en, solution_nl, solution_en, order
-    }`,
-    {},
-    { next: { revalidate: 30 } }
-  );
-}
-
 export async function getTestimonials() {
   return client.fetch(
     `*[_type == "testimonial"] | order(order asc){

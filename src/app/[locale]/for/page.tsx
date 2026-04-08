@@ -112,7 +112,7 @@ function PersonalizedContent() {
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       setBrandData(data);
-      window.history.replaceState({}, '', `/${locale}/for?company=${data.domain}`);
+      window.history.replaceState({}, '', `/for?company=${data.domain}`);
     } catch {
       setError('Kon bedrijfsgegevens niet ophalen. Controleer het domein.');
     } finally {
@@ -161,7 +161,7 @@ function PersonalizedContent() {
               <div className="absolute top-1/3 right-1/4 w-64 h-64 rounded-full blur-[120px] opacity-30" style={{ background: brandData.secondaryColor || 'white' }} />
 
               <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-12 sm:pb-16">
-                <Link href={`/${locale}`} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/90 transition-colors mb-8">
+                <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/90 transition-colors mb-8">
                   <ArrowLeft className="w-4 h-4" /> sambajarju.nl
                 </Link>
 
@@ -193,7 +193,7 @@ function PersonalizedContent() {
                   <a href={`mailto:samba@sambajarju.nl?subject=Samenwerking ${brandData.companyName}`} className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-sm font-semibold transition-all hover:shadow-lg w-full sm:w-auto" style={{ color: brandData.primaryColor }}>
                     <Mail className="w-4 h-4" /> Contact opnemen <ArrowRight className="w-4 h-4" />
                   </a>
-                  <Link href={`/${locale}/playground`} className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-all w-full sm:w-auto">
+                  <Link href="/playground" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-all w-full sm:w-auto">
                     <Briefcase className="w-4 h-4" /> Bekijk mijn werk
                   </Link>
                 </motion.div>
@@ -210,7 +210,7 @@ function PersonalizedContent() {
           ) : !loading ? (
             <div className="pt-20 sm:pt-24" style={{ background: 'var(--hero-gradient)' }}>
               <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-12">
-                <Link href={`/${locale}`} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/90 transition-colors mb-6">
+                <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/90 transition-colors mb-6">
                   <ArrowLeft className="w-4 h-4" /> sambajarju.nl
                 </Link>
                 <div className="flex items-center gap-2 text-sm font-semibold text-teal uppercase tracking-wider mb-2">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ArrowLeft, FlaskConical, Target, Terminal } from 'lucide-react';
 import { ABTestArena } from '@/components/playground/ab-test-arena';
@@ -22,13 +22,12 @@ const components: Record<string, React.ReactNode> = {
 
 export default function PlaygroundPage() {
   const t = useTranslations('playground_page');
-  const locale = useLocale();
 
   return (
     <div className="min-h-screen pt-20 sm:pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12">
         <Link
-          href={`/${locale}`}
+          href="/"
           className="inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground transition-colors mb-4 sm:mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
