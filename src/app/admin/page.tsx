@@ -10,6 +10,8 @@ interface Stats { companies: number; contacts: number; sent: number; opened: num
 
 interface CsvRow { companyDomain: string; firstName: string; lastName: string; email: string; role: string; language: 'nl' | 'en'; }
 
+interface ContactSubmission { id: string; name: string; email: string; subject: string; message: string; read: boolean; created_at: string; }
+
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -17,10 +19,11 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState('');
   const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '', language: 'nl' as 'nl' | 'en' });
-  const [tab, setTab] = useState<'single' | 'bulk'>('single');
+  const [tab, setTab] = useState<'single' | 'bulk' | 'contact'>('single');
   const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
   const [bulkStatus, setBulkStatus] = useState('');
   const [bulkSending, setBulkSending] = useState(false);
+  const [contactSubs, setContactSubs] = useState<ContactSubmission[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -33,7 +36,22 @@ export default function AdminPage() {
     fetch('/api/admin/stats').then(r => r.json()).then(setStats).catch(() => {});
   }, []);
 
-  useEffect(() => { if (user?.email === ADMIN_EMAIL) fetchStats(); }, [user, fetchStats]);
+  useEffect(() => { if (user?.email === ADMIN_EMAIL) { fetchStats(); fetchContacts(); } }, [user, fetchStats]);
+
+  const fetchContacts = useCallback(async () => {
+    const { data } = await supabase.from('contact_submissions').select('*').order('created_at', { ascending: false }).limit(50);
+    if (data) setContactSubs(data as ContactSubmission[]);
+  }, [supabase]);
+
+  const markRead = async (id: string) => {
+    await supabase.from('contact_submissions').update({ read: true }).eq('id', id);
+    setContactSubs(prev => prev.map(c => c.id === id ? { ...c, read: true } : c));
+  };
+
+  const deleteContact = async (id: string) => {
+    await supabase.from('contact_submissions').delete().eq('id', id);
+    setContactSubs(prev => prev.filter(c => c.id !== id));
+  };
 
   const signIn = () => supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/admin` } });
   const signOut = () => { supabase.auth.signOut(); setUser(null); };
@@ -156,6 +174,9 @@ export default function AdminPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
         <button onClick={() => setTab('single')} style={pillBtn(tab === 'single')}>📧 Enkel</button>
         <button onClick={() => setTab('bulk')} style={pillBtn(tab === 'bulk')}>📋 Bulk (CSV)</button>
+        <button onClick={() => { setTab('contact'); fetchContacts(); }} style={pillBtn(tab === 'contact')}>
+          📩 Contact ({contactSubs.filter(c => !c.read).length})
+        </button>
       </div>
 
       {/* SINGLE SEND */}
@@ -239,6 +260,41 @@ export default function AdminPage() {
             </>
           )}
           {bulkStatus && <p style={{ marginTop: 12, fontSize: 14 }}>{bulkStatus}</p>}
+        </div>
+      )}
+
+      {/* Recent outreach */}
+
+      {/* CONTACT SUBMISSIONS */}
+      {tab === 'contact' && (
+        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 24 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Contactformulier berichten</h2>
+          {contactSubs.length === 0 ? (
+            <p style={{ color: '#8BA3B5', fontSize: 14 }}>Nog geen berichten ontvangen.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {contactSubs.map((sub) => (
+                <div key={sub.id} style={{ padding: 16, borderRadius: 12, background: sub.read ? '#f8fafc' : '#fefce8', border: `1px solid ${sub.read ? '#E2E8F0' : '#fde047'}`, position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
+                    <div>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#023047' }}>{sub.name}</span>
+                      <span style={{ fontSize: 13, color: '#8BA3B5', marginLeft: 8 }}>&lt;{sub.email}&gt;</span>
+                    </div>
+                    <span style={{ fontSize: 11, color: '#8BA3B5' }}>{new Date(sub.created_at).toLocaleString('nl-NL')}</span>
+                  </div>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: '#4A6B7F', margin: '0 0 6px' }}>{sub.subject}</p>
+                  <p style={{ fontSize: 13, color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>{sub.message}</p>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                    <a href={`mailto:${sub.email}?subject=Re: ${sub.subject}`} style={{ padding: '6px 12px', borderRadius: 8, background: '#EF476F', color: '#fff', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Beantwoorden</a>
+                    {!sub.read && (
+                      <button onClick={() => markRead(sub.id)} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Markeer gelezen</button>
+                    )}
+                    <button onClick={() => { if (confirm('Weet je het zeker?')) deleteContact(sub.id); }} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #fecaca', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#dc2626' }}>Verwijderen</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
