@@ -15,12 +15,12 @@ const PHOTO_URL = process.env.CV_PHOTO_URL || 'https://znktohqimzhwoujxzkds.supa
 
 const content = {
   nl: {
-    role: 'Email Marketeer',
+    role: 'Data Marketeer',
     roleDetail: 'Marketing Automation Specialist',
     tagline: 'Creativiteit ontmoet strategie',
     madeFor: 'Gemaakt voor',
     personalCv: 'Persoonlijk CV',
-    greeting: (name: string) => `Hey ${name} — hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.`,
+    greeting: (name: string) => `Hey ${name} – hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.`,
     expertise: 'Expertise',
     tools: 'Tools',
     languages: 'Talen',
@@ -33,24 +33,24 @@ const content = {
     skills: ['Email Marketing', 'Marketing Automation', 'SQL / AMPScript', 'Data Analytics', 'SEO & CRO', 'Sales Automation'],
     softSkillsList: ['Ambitieus', 'Hands-on', 'Proactief', 'Empathisch', 'Teamspeler', 'Data-driven'],
     jobs: [
-      { company: 'Vandebron', date: 'Apr 2025 – heden', role: 'Email Marketeer', desc: 'SQL queries schrijven en documenteren voor data-driven campagnes. Complexe AMPScript email campagnes bouwen in Salesforce Marketing Cloud. Projectmanager voor 500.000+ emails per maand.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
-      { company: 'Cleanprofs.nl', date: '2025 – heden', role: 'Freelance Deployteq Expert', desc: 'Marketing automation campagnes opzetten in Deployteq. Geautomatiseerde email flows, segmentatie en data-integraties.', tags: ['Deployteq', 'Automation', 'Segmentatie'] },
-      { company: 'Cordital', date: 'Jan 2023 – Nov 2024', role: 'Freelance Marketeer', desc: 'SEO-strategie, marketing automations via Zoho en AMP interactieve e-mails voor hogere engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
-      { company: 'Guardey', date: 'Feb 2023 – Okt 2023', role: 'Content Marketing', desc: 'Contentstrategie voor IT Partners. Technische SEO, copywriting voor website en social media.', tags: ['Content', 'IT Security', 'SEO'] },
-      { company: 'Silverflow', date: 'Feb 2022 – Okt 2022', role: 'Sales & Marketing Stage', desc: 'Pre-sales research B2B payments. Salespipeline met Pipedrive. Contentmarketingplan met trendanalyse.', tags: ['B2B', 'Pipedrive', 'Payments'] },
-      { company: 'Kes Visum', date: '2020 – 2025', role: 'Marketing Lead', desc: 'Team van 4 aangestuurd. 4,4% conversie via social/display ads. 80+ LinkedIn leads per maand.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
+      { company: 'Vandebron', date: 'Apr 2025 tot heden', role: 'Data Marketeer', desc: 'SQL queries schrijven en documenteren voor data-driven campagnes. Complexe AMPScript email campagnes bouwen in Salesforce Marketing Cloud. Projectmanager voor 500.000+ emails per maand.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
+      { company: 'Cleanprofs.nl', date: '2025 tot heden', role: 'Freelance Deployteq Expert', desc: 'Marketing automation campagnes opzetten in Deployteq. Geautomatiseerde email flows, segmentatie en data-integraties.', tags: ['Deployteq', 'Automation', 'Segmentatie'] },
+      { company: 'Cordital', date: 'Jan 2023 tot nov 2024', role: 'Freelance Marketeer', desc: 'SEO-strategie, marketing automations via Zoho en AMP interactieve e-mails voor hogere engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
+      { company: 'Guardey', date: 'Feb 2023 tot okt 2023', role: 'Content Marketing', desc: 'Contentstrategie voor IT Partners. Technische SEO, copywriting voor website en social media.', tags: ['Content', 'IT Security', 'SEO'] },
+      { company: 'Silverflow', date: 'Feb 2022 tot okt 2022', role: 'Sales & Marketing Stage', desc: 'Pre-sales research B2B payments. Salespipeline met Pipedrive. Contentmarketingplan met trendanalyse.', tags: ['B2B', 'Pipedrive', 'Payments'] },
+      { company: 'Kes Visum', date: '2020 tot 2025', role: 'Marketing Lead', desc: 'Team van 4 aangestuurd. 4,4% conversie via social/display ads. 80+ LinkedIn leads per maand.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
     ],
     eduSchool: 'Hogeschool Rotterdam',
-    eduDegree: 'Entrepreneurship — Bachelor of Arts · 2021 – 2025',
+    eduDegree: 'Entrepreneurship – Bachelor of Arts · 2021 tot 2025',
     eduHighlight: '🏆 Start-up prijs van het jaar (Fashionbot)',
   },
   en: {
-    role: 'Email Marketer',
+    role: 'Data Marketer',
     roleDetail: 'Marketing Automation Specialist',
     tagline: 'Where creativity meets strategy',
     madeFor: 'Made for',
     personalCv: 'Personal CV',
-    greeting: (name: string) => `Hey ${name} — here's my CV. Besides my work at Vandebron, I freelance at Cleanprofs.nl where I use Deployteq for automated email campaigns.`,
+    greeting: (name: string) => `Hey ${name} – here's my CV. Besides my work at Vandebron, I freelance at Cleanprofs.nl where I use Deployteq for automated email campaigns.`,
     expertise: 'Expertise',
     tools: 'Tools',
     languages: 'Languages',
@@ -63,15 +63,15 @@ const content = {
     skills: ['Email Marketing', 'Marketing Automation', 'SQL / AMPScript', 'Data Analytics', 'SEO & CRO', 'Sales Automation'],
     softSkillsList: ['Ambitious', 'Hands-on', 'Proactive', 'Empathic', 'Team player', 'Data-driven'],
     jobs: [
-      { company: 'Vandebron', date: 'Apr 2025 – present', role: 'Email Marketer', desc: 'Writing and documenting SQL queries for data-driven campaigns. Building complex AMPScript email campaigns in Salesforce Marketing Cloud. Project managing 500,000+ emails per month.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
-      { company: 'Cleanprofs.nl', date: '2025 – present', role: 'Freelance Deployteq Expert', desc: 'Setting up marketing automation campaigns in Deployteq. Building automated email flows, segmentation and data integrations.', tags: ['Deployteq', 'Automation', 'Segmentation'] },
-      { company: 'Cordital', date: 'Jan 2023 – Nov 2024', role: 'Freelance Marketer', desc: 'SEO strategy, marketing automations via Zoho, and AMP interactive emails for higher engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
-      { company: 'Guardey', date: 'Feb 2023 – Oct 2023', role: 'Content Marketing', desc: 'Content strategy for IT Partners. Technical SEO, copywriting for website and social media.', tags: ['Content', 'IT Security', 'SEO'] },
-      { company: 'Silverflow', date: 'Feb 2022 – Oct 2022', role: 'Sales & Marketing Intern', desc: 'Pre-sales research for B2B payments clients. Built sales pipeline with Pipedrive. Developed content marketing plan with trend analysis.', tags: ['B2B', 'Pipedrive', 'Payments'] },
-      { company: 'Kes Visum', date: '2020 – 2025', role: 'Marketing Lead', desc: 'Led team of 4 marketers. Achieved 4.4% conversion via social/display ads. Generated 80+ LinkedIn leads per month.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
+      { company: 'Vandebron', date: 'Apr 2025 to present', role: 'Data Marketer', desc: 'Writing and documenting SQL queries for data-driven campaigns. Building complex AMPScript email campaigns in Salesforce Marketing Cloud. Project managing 500,000+ emails per month.', tags: ['SQL', 'AMPScript', 'SFMC', '500k+ emails/mo'] },
+      { company: 'Cleanprofs.nl', date: '2025 to present', role: 'Freelance Deployteq Expert', desc: 'Setting up marketing automation campaigns in Deployteq. Building automated email flows, segmentation and data integrations.', tags: ['Deployteq', 'Automation', 'Segmentation'] },
+      { company: 'Cordital', date: 'Jan 2023 tot nov 2024', role: 'Freelance Marketer', desc: 'SEO strategy, marketing automations via Zoho, and AMP interactive emails for higher engagement.', tags: ['SEO', 'Zoho', 'AMP Email'] },
+      { company: 'Guardey', date: 'Feb 2023 to Oct 2023', role: 'Content Marketing', desc: 'Content strategy for IT Partners. Technical SEO, copywriting for website and social media.', tags: ['Content', 'IT Security', 'SEO'] },
+      { company: 'Silverflow', date: 'Feb 2022 to Oct 2022', role: 'Sales & Marketing Intern', desc: 'Pre-sales research for B2B payments clients. Built sales pipeline with Pipedrive. Developed content marketing plan with trend analysis.', tags: ['B2B', 'Pipedrive', 'Payments'] },
+      { company: 'Kes Visum', date: '2020 tot 2025', role: 'Marketing Lead', desc: 'Led team of 4 marketers. Achieved 4.4% conversion via social/display ads. Generated 80+ LinkedIn leads per month.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
     ],
     eduSchool: 'Rotterdam University of Applied Sciences',
-    eduDegree: 'Entrepreneurship — Bachelor of Arts · 2021 – 2025',
+    eduDegree: 'Entrepreneurship – Bachelor of Arts · 2021 tot 2025',
     eduHighlight: '🏆 Startup Award of the Year (Fashionbot)',
   },
 };
@@ -255,13 +255,13 @@ function buildCVHtml(opts: GenerateCVOptions): string {
     <div class="left-section">
       <div class="l-title">${t.tools}</div>
       <div class="tg-label">EMAIL & MARKETING</div>
-      <div class="tg-wrap">${['SFMC','Deployteq','HubSpot','Resend'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-wrap">${['SFMC','Deployteq','HubSpot','Mailchimp','Resend','Mailgun'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
       <div class="tg-label">ANALYTICS</div>
-      <div class="tg-wrap">${['GA4','SEMRush','Hotjar','VWO'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
-      <div class="tg-label">DEVELOPMENT</div>
-      <div class="tg-wrap">${['Next.js','React','TypeScript','Tailwind','Supabase'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-wrap">${['GA4','SEMRush','Hotjar','VWO','Snowflake'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-label">WEB & CMS</div>
+      <div class="tg-wrap">${['WordPress','Shopify','Sanity CMS','Supabase'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
       <div class="tg-label">CRM & AUTOMATION</div>
-      <div class="tg-wrap">${['Salesforce','Apollo','Pipedrive','Zapier','Make'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
+      <div class="tg-wrap">${['Salesforce','Apollo','Pipedrive','Zoho','Zapier','Make','n8n'].map(t => `<span class="tg">${t}</span>`).join('')}</div>
     </div>
 
     <div class="left-section">
@@ -279,7 +279,7 @@ function buildCVHtml(opts: GenerateCVOptions): string {
   <div class="right">
     ${companyName ? `<div class="company-bar"><div class="cb-left">${logoUrl ? `<div class="cb-logo"><img src="${logoUrl}" /></div>` : ''}<div><div class="cb-label">${t.madeFor}</div><div class="cb-name">${companyName}</div></div></div><div class="cb-badge">${t.personalCv}</div></div>` : ''}
 
-    ${contactName ? `<div class="greeting-bar"><strong>${contactName}</strong> — ${t.greeting(contactName).replace(`Hey ${contactName} — `, '')}</div>` : ''}
+    ${contactName ? `<div class="greeting-bar"><strong>${contactName}</strong> – ${t.greeting(contactName).replace(`Hey ${contactName} – `, '')}</div>` : ''}
 
     <div class="r-body">
       <div class="r-title">${t.experience}</div>
