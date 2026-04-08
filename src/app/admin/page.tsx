@@ -356,7 +356,7 @@ export default function AdminPage() {
       )}
 
       {/* Recent outreach */}
-      {stats?.recentOutreach && stats.recentOutreach.length > 0 && (
+      {tab !== 'analytics' && stats?.recentOutreach && stats.recentOutreach.length > 0 && (
         <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 16 }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Recente outreach</h2>
           <div style={{ overflowX: 'auto' }}>
@@ -517,7 +517,7 @@ export default function AdminPage() {
       )}
 
       {/* Inbox */}
-      {stats?.inboxReplies && stats.inboxReplies.length > 0 && (
+      {tab !== 'analytics' && stats?.inboxReplies && stats.inboxReplies.length > 0 && (
         <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0' }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>📬 Inbox</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
