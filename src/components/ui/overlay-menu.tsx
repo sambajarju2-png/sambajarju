@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Phone, Linkedin, ArrowUpRight } from 'lucide-react';
+import { X, Mail, Phone, LinkedinIcon, ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 
 const menuItems = [
@@ -308,7 +308,7 @@ export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
                   className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
                   style={{ backgroundColor: 'rgba(2, 48, 71, 0.1)', color: '#023047' }}
                 >
-                  <Linkedin className="w-4 h-4" />
+                  <LinkedinIcon className="w-4 h-4" />
                 </a>
               </div>
             </motion.div>
