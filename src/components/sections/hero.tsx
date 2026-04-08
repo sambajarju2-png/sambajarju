@@ -139,7 +139,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               <animateMotion dur={`${tool.dur}s`} repeatCount="indefinite" path={arcPaths[tool.arc]} begin={tool.begin} />
               <circle r="22" fill={`#${tool.color}`} opacity="0.08" />
               <circle r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5" />
-              <image href={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} x="-10" y="-10" width="20" height="20" opacity="0.7" />
+              <image href={`https://cdn.simpleicons.org/${tool.slug}/EF476F`} x="-10" y="-10" width="20" height="20" opacity="0.7" />
             </g>
           ))}
         </svg>

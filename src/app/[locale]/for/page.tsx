@@ -199,7 +199,7 @@ function PersonalizedContent() {
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-10 pt-6 border-t border-white/10 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold">SJ</div>
+                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><svg className="h-3.5" viewBox="36 56 120 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M132 136H36V120H132C134.25 120 136.125 119.25 137.625 117.75C139.208 116.167 140 114.25 140 112C140 109.75 139.208 107.875 137.625 106.375C136.125 104.792 134.25 104 132 104H100C93.3333 104 87.6667 101.667 83 97C78.3333 92.3333 76 86.6667 76 80C76 73.3333 78.3333 67.6667 83 63C87.6667 58.3333 93.3333 56 100 56H148V72H100C97.75 72 95.8333 72.7917 94.25 74.375C92.75 75.875 92 77.75 92 80C92 82.25 92.75 84.1667 94.25 85.75C95.8333 87.25 97.75 88 100 88H132C138.667 88 144.333 90.3333 149 95C153.667 99.6667 156 105.333 156 112C156 118.667 153.667 124.333 149 129C144.333 133.667 138.667 136 132 136Z" fill="white"/></svg></div>
                   <div>
                     <p className="text-white text-sm font-semibold">Samba Jarju</p>
                     <p className="text-white/50 text-xs">Email Marketeer & Marketing Automation Specialist</p>
