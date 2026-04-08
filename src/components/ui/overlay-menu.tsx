@@ -16,8 +16,8 @@ const menuItems = [
 ];
 
 const menuImages: Record<string, string> = {
-  PROJECTS: '/menu-photo-1.jpg',
-  MAATSCHAPPELIJK: '/samba-gambia.jpg',
+  PROJECTS: '/samba-gambia.jpg',
+  MAATSCHAPPELIJK: '/maatschappelijk.jpg',
   'ABM TOOLING': '/menu-photo-2.jpg',
   PLAYGROUND: '/menu-photo-3.jpg',
   CONTACT: '/samba-casual.jpg',

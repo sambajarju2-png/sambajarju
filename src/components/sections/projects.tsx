@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { motion } from 'framer-motion';
-import { ExternalLink, Lightbulb, Wrench, GraduationCap, AlertTriangle, Globe, Gift, Eye } from 'lucide-react';
+import { ExternalLink, TrendingUp, Wrench, GraduationCap, AlertTriangle, Globe, Gift, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 export function Projects() {
@@ -17,9 +17,9 @@ export function Projects() {
   ];
 
   const otherProjects = [
-    { key: 'workwings', icon: Globe, url: 'https://workwings.nl', color: 'from-blue-500/20 to-cyan-500/20' },
-    { key: 'mariama', icon: Gift, url: 'https://mariama.nl', color: 'from-pink-500/20 to-rose-500/20' },
-    { key: 'gluurder', icon: Eye, url: '#', color: 'from-emerald-500/20 to-teal-500/20' },
+    { key: 'workwings', icon: Globe, url: 'https://workwings.nl', color: 'from-blue-500/20 to-cyan-500/20', comingSoon: true },
+    { key: 'mariama', icon: Gift, url: 'https://mariama.nl', color: 'from-pink-500/20 to-rose-500/20', comingSoon: true },
+    { key: 'cleanprofs', icon: Sparkles, url: 'https://cleanprofs.nl', color: 'from-emerald-500/20 to-teal-500/20', comingSoon: false },
   ];
 
   return (
@@ -47,7 +47,7 @@ export function Projects() {
                 <div className="absolute inset-0 dot-pattern opacity-30" />
                 <div className="relative z-10 text-center space-y-3 p-8">
                   <div className="w-16 h-16 rounded-2xl bg-accent/10 mx-auto flex items-center justify-center">
-                    <Lightbulb className="w-8 h-8 text-accent" />
+                    <TrendingUp className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-bold text-foreground">{t('paywatch.title')}</h3>
                   <p className="text-sm text-foreground-subtle max-w-xs mx-auto">{t('paywatch.description')}</p>
@@ -119,14 +119,19 @@ export function Projects() {
 
         {/* Other projects */}
         <StaggerContainer className="grid md:grid-cols-3 gap-6 mt-8">
-          {otherProjects.map(({ key, icon: Icon, url, color }) => (
+          {otherProjects.map(({ key, icon: Icon, url, color, comingSoon }) => (
             <StaggerItem key={key}>
               <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block rounded-2xl border border-border bg-surface p-6 hover:border-border-hover transition-all hover:shadow-md"
+                href={comingSoon ? undefined : url}
+                target={comingSoon ? undefined : '_blank'}
+                rel={comingSoon ? undefined : 'noopener noreferrer'}
+                className={`group block rounded-2xl border border-border bg-surface p-6 transition-all relative overflow-hidden ${comingSoon ? 'cursor-default' : 'hover:border-border-hover hover:shadow-md'}`}
               >
+                {comingSoon && (
+                  <div className="absolute inset-0 backdrop-blur-[2px] bg-surface/60 z-10 flex items-center justify-center">
+                    <span className="px-4 py-2 rounded-full text-sm font-semibold bg-accent/10 text-accent border border-accent/20">Coming soon</span>
+                  </div>
+                )}
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4`}>
                   <Icon className="w-5 h-5 text-foreground" />
                 </div>

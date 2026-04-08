@@ -12,8 +12,8 @@
     "subtitle": "Ik gebruik data-driven strategieën om marketing te automatiseren en impact te maximaliseren.",
     "cta_primary": "Laten we praten",
     "cta_secondary": "Bekijk projecten",
-    "badge_role": "Email Marketeer",
-    "badge_salary": "€3.800–4.500",
+    "badge_role": "Data Marketeer",
+    "badge_salary": "Freelance",
     "badge_team": "Team player",
     "visited": "Website bezocht door"
   },
@@ -50,16 +50,16 @@
       "title": "Mariama.nl",
       "description": "Persoonlijke verjaardagssite — een creatief cadeau gebouwd met liefde en code."
     },
-    "gluurder": {
-      "title": "B2B Gluurder",
-      "description": "WordPress plugin voor B2B bezoeker-identificatie via Apollo.io en Hunter.io API's."
+    "cleanprofs": {
+      "title": "Cleanprofs.nl",
+      "description": "Freelance marketing automation via Deployteq voor een professioneel schoonmaakbedrijf."
     },
     "view_project": "Bekijk project",
     "case_study": "Case study"
   },
   "tools": {
     "label": "Tool stack",
-    "title": "Mijn arsenaal",
+    "title": "Mijn toolstack",
     "subtitle": "Tools en technologieën waar ik dagelijks mee werk.",
     "categories": {
       "email": "Email & Marketing",

@@ -78,14 +78,14 @@ export default function MaatschappelijkPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-16" style={{ backgroundColor: '#f8fafb' }}>
+      <section className="py-16" className="bg-background-alt">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 className="rounded-2xl p-8 text-center"
-                style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+                className="bg-surface border border-border"
                 custom={i}
                 variants={fadeUp}
                 initial="hidden"
@@ -95,8 +95,8 @@ export default function MaatschappelijkPage() {
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{ backgroundColor: '#EF476F1a', color: '#EF476F' }}>
                   {stat.icon}
                 </div>
-                <div className="text-4xl font-black mb-2" style={{ color: '#023047' }}>{stat.value}</div>
-                <div className="text-sm" style={{ color: '#6b7280' }}>{stat.label}</div>
+                <div className="text-4xl font-black mb-2" className="text-foreground">{stat.value}</div>
+                <div className="text-sm" className="text-foreground-subtle">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -119,14 +119,14 @@ export default function MaatschappelijkPage() {
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#EF476F1a', color: '#EF476F' }}>
                   {section.icon}
                 </div>
-                <h2 className="text-3xl md:text-4xl font-black tracking-tight" style={{ color: '#023047' }}>
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight" className="text-foreground">
                   {section.title}
                 </h2>
               </div>
               <div className="h-[2px] w-16 rounded-full mb-8" style={{ backgroundColor: '#EF476F' }} />
               <div className="space-y-6">
                 {section.content.map((p, j) => (
-                  <p key={j} className="text-lg leading-relaxed" style={{ color: '#374151' }}>{p}</p>
+                  <p key={j} className="text-lg leading-relaxed" className="text-foreground-muted">{p}</p>
                 ))}
               </div>
 
