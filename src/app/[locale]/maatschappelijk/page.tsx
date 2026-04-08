@@ -84,8 +84,7 @@ export default function MaatschappelijkPage() {
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
-                className="rounded-2xl p-8 text-center"
-                className="bg-surface border border-border"
+                className="rounded-2xl p-8 text-center bg-surface border border-border"
                 custom={i}
                 variants={fadeUp}
                 initial="hidden"
