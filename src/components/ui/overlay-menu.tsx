@@ -171,11 +171,10 @@ export function HamburgerIcon({ onClick, className }: { onClick: () => void; cla
     <button
       onClick={onClick}
       className={`relative w-10 h-10 rounded-xl flex flex-col items-center justify-center gap-[5px] transition-all duration-200 cursor-pointer group ${className || ''}`}
-      style={{ color: 'var(--foreground)' }}
       aria-label="Open menu"
     >
       <span className="block w-5 h-[2px] rounded-full bg-current transition-all duration-200 group-hover:w-4" />
-      <span className="block w-3.5 h-[2px] rounded-full transition-all duration-200 group-hover:w-5" style={{ backgroundColor: '#EF476F' }} />
+      <span className="block w-3.5 h-[2px] rounded-full transition-all duration-200 group-hover:w-5 bg-[#EF476F]" />
       <span className="block w-5 h-[2px] rounded-full bg-current transition-all duration-200 group-hover:w-3" />
     </button>
   );

@@ -59,39 +59,41 @@ const tools: Tool[] = [
 ];
 
 function ToolIcon({ tool, size = 40 }: { tool: Tool; size?: number }) {
-  if (tool.slug) {
-    // Use brand color in light mode, white in dark mode for visibility
-    const darkColor = tool.color.replace('#', '');
-    const lightSafe = ['ffffff', 'FFE01B', '000000'].includes(darkColor) ? '023047' : darkColor;
-    return (
-      <>
-        <img
-          src={`https://cdn.simpleicons.org/${tool.slug}/${lightSafe}`}
-          alt={tool.name}
-          width={size}
-          height={size}
-          className="dark:hidden"
-          loading="lazy"
-        />
-        <img
-          src={`https://cdn.simpleicons.org/${tool.slug}/ffffff`}
-          alt={tool.name}
-          width={size}
-          height={size}
-          className="hidden dark:block opacity-80"
-          loading="lazy"
-        />
-      </>
-    );
-  }
   const initials = tool.name.split(' ').map(w => w[0]).join('').slice(0, 2);
-  return (
+  const fallback = (
     <div
       className="rounded-lg flex items-center justify-center font-bold text-white"
       style={{ width: size, height: size, backgroundColor: tool.color, fontSize: size * 0.35 }}
     >
       {initials}
     </div>
+  );
+
+  if (!tool.slug) return fallback;
+
+  const darkColor = tool.color.replace('#', '');
+  const lightSafe = ['ffffff', 'FFE01B', '000000'].includes(darkColor) ? '023047' : darkColor;
+  return (
+    <>
+      <img
+        src={`https://cdn.simpleicons.org/${tool.slug}/${lightSafe}`}
+        alt={tool.name}
+        width={size}
+        height={size}
+        className="dark:hidden"
+        loading="lazy"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden'); }}
+      />
+      <img
+        src={`https://cdn.simpleicons.org/${tool.slug}/ffffff`}
+        alt={tool.name}
+        width={size}
+        height={size}
+        className="hidden dark:block opacity-80"
+        loading="lazy"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+      />
+    </>
   );
 }
 
