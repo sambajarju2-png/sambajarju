@@ -1,16 +1,20 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LanguageToggle } from '@/components/ui/language-toggle';
 import { CommandMenu } from '@/components/ui/command-menu';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OverlayMenu, HamburgerIcon } from '@/components/ui/overlay-menu';
 
 export function Header() {
   const t = useTranslations('nav');
+  const locale = useLocale();
+  const pathname = usePathname();
+  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
@@ -21,12 +25,13 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const base = isHome ? '' : `/${locale}`;
   const links = [
-    { href: '#about', label: t('about') },
-    { href: '#projects', label: t('projects') },
-    { href: '#experience', label: t('experience') },
-    { href: '#tools', label: t('tools') },
-    { href: '#contact', label: t('contact') },
+    { href: `${base}#about`, label: t('about') },
+    { href: `${base}#projects`, label: t('projects') },
+    { href: `${base}#experience`, label: t('experience') },
+    { href: `${base}#tools`, label: t('tools') },
+    { href: `${base}#contact`, label: t('contact') },
   ];
 
   return (

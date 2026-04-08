@@ -83,3 +83,18 @@ export async function getFAQs() {
     { next: { revalidate: 30 } }
   );
 }
+
+export async function getMaatschappelijk() {
+  return client.fetch(
+    `*[_type == "maatschappelijk"][0]{
+      title, subtitle,
+      photos[]{
+        caption, alt,
+        asset->{_id, url, metadata{dimensions}}
+      },
+      sections[]{title, content}
+    }`,
+    {},
+    { next: { revalidate: 30 } }
+  );
+}

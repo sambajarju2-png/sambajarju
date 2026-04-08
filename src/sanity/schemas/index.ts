@@ -5,5 +5,6 @@ import { experience } from './experience';
 import { testimonial } from './testimonial';
 import { faq } from './faq';
 import { tool } from './tool';
+import { maatschappelijk } from './maatschappelijk';
 
-export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool];
+export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk];
