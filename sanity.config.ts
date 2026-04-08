@@ -30,6 +30,10 @@ export default defineConfig({
               .title('🤝 Maatschappelijk Betrokken')
               .schemaType('maatschappelijk')
               .child(S.documentTypeList('maatschappelijk').title('Maatschappelijk')),
+            S.listItem()
+              .title('🎯 ABM Outreach Case Study')
+              .schemaType('abmOutreach')
+              .child(S.documentTypeList('abmOutreach').title('ABM Outreach')),
             S.divider(),
             // Collections
             S.listItem()

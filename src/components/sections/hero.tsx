@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, Briefcase, Euro, Users, Sparkles, X } from 'lucide-react';
+import Image from 'next/image';
 import { useRef, useEffect, useState, memo } from 'react';
 
 /* ── Magnetic Filing ── */
@@ -241,7 +242,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
             <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
               <div style={{ position: 'absolute', inset: 0, borderRadius: 24, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)', overflow: 'hidden' }}>
                 {heroData?.photoUrl ? (
-                  <img src={heroData.photoUrl} alt="Samba Jarju" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Image src={heroData.photoUrl} alt="Samba Jarju" fill style={{ objectFit: 'cover' }} priority sizes="(max-width: 1024px) 0px, 400px" />
                 ) : (
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{ textAlign: 'center' }}>

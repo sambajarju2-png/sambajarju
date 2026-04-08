@@ -139,3 +139,22 @@ export async function getBlogPostBySlug(slug: string) {
     { next: { revalidate: 30 } }
   );
 }
+
+export async function getAbmOutreach() {
+  return client.fetch(
+    `*[_type == "abmOutreach"][0]{
+      title_nl, title_en, subtitle_nl, subtitle_en,
+      steps[]{
+        title_nl, title_en, description_nl, description_en, tool,
+        screenshot{caption, asset->{_id, url}}
+      },
+      gallery[]{
+        caption, alt,
+        asset->{_id, url, metadata{dimensions}}
+      },
+      techStack
+    }`,
+    {},
+    { next: { revalidate: 30 } }
+  );
+}

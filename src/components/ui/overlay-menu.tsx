@@ -11,7 +11,7 @@ const menuItems = [
   { label: 'PROJECTS', href: '/projects' },
   { label: 'BLOG', href: '/blog' },
   { label: 'MAATSCHAPPELIJK', href: '/maatschappelijk' },
-  { label: 'ABM TOOLING', href: '/for' },
+  { label: 'ABM OUTREACH', href: '/abm-outreach' },
   { label: 'PLAYGROUND', href: '/playground' },
   { label: 'CONTACT', href: '/contact' },
 ];
@@ -20,7 +20,7 @@ const menuImages: Record<string, string> = {
   PROJECTS: '/samba-gambia.jpg',
   BLOG: '/samba-casual.jpg',
   MAATSCHAPPELIJK: '/maatschappelijk.jpg',
-  'ABM TOOLING': '/menu-photo-2.jpg',
+  'ABM OUTREACH': '/menu-photo-2.jpg',
   PLAYGROUND: '/menu-photo-3.jpg',
   CONTACT: '/menu-photo-1.jpg',
 };

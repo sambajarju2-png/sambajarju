@@ -7,5 +7,6 @@ import { faq } from './faq';
 import { tool } from './tool';
 import { maatschappelijk } from './maatschappelijk';
 import { blogPost } from './blog-post';
+import { abmOutreach } from './abm-outreach';
 
-export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk, blogPost];
+export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk, blogPost, abmOutreach];

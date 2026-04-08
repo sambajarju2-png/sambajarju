@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { ArrowRight, Zap, Users, Target, Heart } from 'lucide-react';
 
@@ -33,12 +34,12 @@ export function About({ aboutData }: { aboutData?: AboutData | null }) {
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className={`aspect-square rounded-2xl overflow-hidden border border-border bg-background-alt flex items-center justify-center ${
+                  className={`aspect-square rounded-2xl overflow-hidden border border-border bg-background-alt flex items-center justify-center relative ${
                     i === 0 ? 'rounded-br-none' : i === 1 ? 'rounded-bl-none' : i === 2 ? 'rounded-tr-none' : 'rounded-tl-none'
                   }`}
                 >
                   {photoUrls[i] ? (
-                    <img src={photoUrls[i]!} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                    <Image src={photoUrls[i]!} alt={`Samba Jarju photo ${i + 1}`} fill className="object-cover" sizes="(max-width: 768px) 50vw, 200px" loading="lazy" />
                   ) : (
                     <span className="text-foreground-subtle text-xs">Photo {i + 1}</span>
                   )}

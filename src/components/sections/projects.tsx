@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { motion } from 'framer-motion';
-import { ExternalLink, TrendingUp, Wrench, GraduationCap, AlertTriangle, Globe, Gift, Sparkles } from 'lucide-react';
+import { ExternalLink, TrendingUp, Wrench, GraduationCap, AlertTriangle, Globe, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 export function Projects() {
@@ -18,7 +18,6 @@ export function Projects() {
 
   const otherProjects = [
     { key: 'workwings', icon: Globe, url: 'https://workwings.nl', color: 'from-blue-500/20 to-cyan-500/20', comingSoon: true },
-    { key: 'mariama', icon: Gift, url: 'https://mariama.nl', color: 'from-pink-500/20 to-rose-500/20', comingSoon: true },
     { key: 'cleanprofs', icon: Sparkles, url: 'https://cleanprofs.nl', color: 'from-emerald-500/20 to-teal-500/20', comingSoon: false },
   ];
 
