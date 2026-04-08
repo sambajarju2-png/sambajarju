@@ -41,7 +41,7 @@ const content = {
       { company: 'Kes Visum', date: '2020 tot 2025', role: 'Marketing Lead', desc: 'Team van 4 aangestuurd. 4,4% conversie via social/display ads. 80+ LinkedIn leads per maand.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
     ],
     eduSchool: 'Hogeschool Rotterdam',
-    eduDegree: 'Entrepreneurship – Bachelor of Arts · 2021 tot 2025',
+    eduDegree: 'Entrepreneurship, Bachelor of Arts · 2021 tot 2025',
     eduHighlight: '🏆 Start-up prijs van het jaar (Fashionbot)',
   },
   en: {
@@ -71,7 +71,7 @@ const content = {
       { company: 'Kes Visum', date: '2020 tot 2025', role: 'Marketing Lead', desc: 'Led team of 4 marketers. Achieved 4.4% conversion via social/display ads. Generated 80+ LinkedIn leads per month.', tags: ['Team Lead', '4.4% CVR', '80+ leads/mo'] },
     ],
     eduSchool: 'Rotterdam University of Applied Sciences',
-    eduDegree: 'Entrepreneurship – Bachelor of Arts · 2021 tot 2025',
+    eduDegree: 'Entrepreneurship, Bachelor of Arts · 2021 tot 2025',
     eduHighlight: '🏆 Startup Award of the Year (Fashionbot)',
   },
 };
