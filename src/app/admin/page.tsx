@@ -3,10 +3,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import AnalyticsDashboard from '@/components/admin/analytics-dashboard';
+import OutreachTab from '@/components/admin/outreach-tab';
+import InboxTab from '@/components/admin/inbox-tab';
 import type { User } from '@supabase/supabase-js';
 import {
   Building2, Users, Send, MailOpen, MousePointerClick, MessageSquareReply, Eye,
-  Mail, FileSpreadsheet, Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard
+  Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
@@ -24,7 +26,7 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState('');
   const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '', language: 'nl' as 'nl' | 'en' });
-  const [tab, setTab] = useState<'single' | 'bulk' | 'contact' | 'analytics'>('single');
+  const [tab, setTab] = useState<'outreach' | 'inbox' | 'analytics'>('outreach');
   const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
   const [bulkStatus, setBulkStatus] = useState('');
   const [bulkSending, setBulkSending] = useState(false);
@@ -53,23 +55,16 @@ export default function AdminPage() {
     setContactSubs(prev => prev.map(c => c.id === id ? { ...c, read: true } : c));
   };
 
-  const [replyTo, setReplyTo] = useState<string | null>(null);
-  const [replyMsg, setReplyMsg] = useState('');
-  const [replySending, setReplySending] = useState(false);
-
-  const sendReply = async (sub: ContactSubmission) => {
-    if (!replyMsg.trim()) return;
-    setReplySending(true);
+  const sendReplyToContact = async (sub: ContactSubmission, message: string) => {
     try {
       const res = await fetch('/api/admin/reply', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submissionId: sub.id, toEmail: sub.email, toName: sub.name, subject: `Re: ${sub.subject}`, message: replyMsg }),
+        body: JSON.stringify({ submissionId: sub.id, toEmail: sub.email, toName: sub.name, subject: `Re: ${sub.subject}`, message }),
       });
       const data = await res.json();
-      if (data.success) { setReplyTo(null); setReplyMsg(''); setContactSubs(prev => prev.map(c => c.id === sub.id ? { ...c, read: true } : c)); }
+      if (data.success) { setContactSubs(prev => prev.map(c => c.id === sub.id ? { ...c, read: true } : c)); }
       else alert(data.error || 'Fout bij verzenden');
     } catch { alert('Netwerkfout'); }
-    setReplySending(false);
   };
 
   const deleteContact = async (id: string) => {
@@ -157,10 +152,6 @@ export default function AdminPage() {
     </div>
   );
 
-  const s = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
-  const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 14, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' as const };
-  const labelStyle = { fontSize: 12, fontWeight: 600 as const, color: '#4A6B7F', marginBottom: 4, display: 'block' as const };
-  const pillBtn = (active: boolean) => ({ padding: '8px 16px', borderRadius: 99, border: 'none', background: active ? '#023047' : '#f1f5f9', color: active ? '#fff' : '#64748b', fontWeight: 600 as const, fontSize: 13, cursor: 'pointer' as const, fontFamily: 'inherit' });
 
   const statItems = [
     { label: 'Bedrijven', value: stats?.companies ?? '—', icon: Building2 },
@@ -173,9 +164,8 @@ export default function AdminPage() {
   ];
 
   const tabItems = [
-    { id: 'single' as const, label: 'Enkel', icon: Mail, action: () => setTab('single') },
-    { id: 'bulk' as const, label: 'Bulk', icon: FileSpreadsheet, action: () => setTab('bulk') },
-    { id: 'contact' as const, label: `Contact (${contactSubs.filter(c => !c.read).length})`, icon: Inbox, action: () => { setTab('contact'); fetchContacts(); } },
+    { id: 'outreach' as const, label: 'Outreach', icon: Send, action: () => setTab('outreach') },
+    { id: 'inbox' as const, label: `Inbox (${contactSubs.filter(c => !c.read).length})`, icon: Inbox, action: () => { setTab('inbox'); fetchContacts(); } },
     { id: 'analytics' as const, label: 'Analytics', icon: BarChart3, action: () => setTab('analytics') },
   ];
 
@@ -233,197 +223,33 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* SINGLE SEND */}
-      {tab === 'single' && (
-        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Nieuwe outreach versturen</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div><label style={labelStyle}>Bedrijf domein *</label><input style={inputStyle} placeholder="nike.com" value={form.companyDomain} onChange={e => s('companyDomain', e.target.value)} /></div>
-            <div><label style={labelStyle}>Email *</label><input style={inputStyle} placeholder="peter@nike.com" value={form.contactEmail} onChange={e => s('contactEmail', e.target.value)} /></div>
-            <div><label style={labelStyle}>Voornaam *</label><input style={inputStyle} placeholder="Peter" value={form.contactFirstName} onChange={e => s('contactFirstName', e.target.value)} /></div>
-            <div><label style={labelStyle}>Achternaam</label><input style={inputStyle} placeholder="de Vries" value={form.contactLastName} onChange={e => s('contactLastName', e.target.value)} /></div>
-            <div><label style={labelStyle}>Functie</label><input style={inputStyle} placeholder="Marketing Manager" value={form.contactRole} onChange={e => s('contactRole', e.target.value)} /></div>
-            <div>
-              <label style={labelStyle}>Taal</label>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button onClick={() => s('language', 'nl')} style={{ ...pillBtn(form.language === 'nl'), flex: 1, padding: '10px 0' }}>🇳🇱 NL</button>
-                <button onClick={() => s('language', 'en')} style={{ ...pillBtn(form.language === 'en'), flex: 1, padding: '10px 0' }}>🇬🇧 EN</button>
-              </div>
-            </div>
-          </div>
-          <button onClick={handleSend} disabled={sending || !form.companyDomain || !form.contactEmail || !form.contactFirstName} style={{ width: '100%', padding: '12px 20px', borderRadius: 10, border: 'none', background: sending ? '#8BA3B5' : '#EF476F', color: '#fff', fontWeight: 600, fontSize: 14, cursor: sending ? 'not-allowed' : 'pointer', fontFamily: 'inherit', marginTop: 12 }}>
-            {sending ? 'Verzenden...' : 'Verstuur outreach'}
-          </button>
-          {sendResult && <p style={{ marginTop: 12, fontSize: 14 }}>{sendResult}</p>}
-          <p style={{ marginTop: 10, fontSize: 12, color: '#8BA3B5' }}>
-            Preview: <a href={form.companyDomain ? `/${form.language === 'en' ? 'en/' : ''}landing?company=${form.companyDomain}&contactname=${form.contactFirstName}` : '#'} target="_blank" rel="noopener" style={{ color: '#EF476F' }}>Landing</a>
-            {' · '}
-            <a href={form.companyDomain ? `/api/cv/generate?company=${form.companyDomain}&contactname=${form.contactFirstName}&lang=${form.language}` : '#'} target="_blank" rel="noopener" style={{ color: '#EF476F' }}>CV (PDF)</a>
-          </p>
-        </div>
+      {tab === 'outreach' && (
+        <OutreachTab
+          form={form}
+          setForm={setForm}
+          sending={sending}
+          sendResult={sendResult}
+          handleSend={handleSend}
+          csvRows={csvRows}
+          bulkStatus={bulkStatus}
+          bulkSending={bulkSending}
+          handleCsvUpload={handleCsvUpload}
+          handleBulk={handleBulk}
+          recentOutreach={(stats?.recentOutreach || []) as Record<string, unknown>[]}
+        />
       )}
 
-      {/* BULK CSV */}
-      {tab === 'bulk' && (
-        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>Bulk import via CSV</h2>
-          <p style={{ fontSize: 13, color: '#8BA3B5', margin: '0 0 16px' }}>
-            Kolommen: <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>domain, firstname, lastname, email, role, language</code>
-            <br/>Language = <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>nl</code> of <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>en</code> (bepaalt taal email + CV + landing page)
-          </p>
-
-          <input type="file" accept=".csv,.tsv,.txt" onChange={handleCsvUpload} style={{ marginBottom: 12 }} />
-
-          {csvRows.length > 0 && (
-            <>
-              <div style={{ overflowX: 'auto', maxHeight: 250, marginBottom: 12, border: '1px solid #E2E8F0', borderRadius: 10 }}>
-                <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: '#f8fafc', position: 'sticky', top: 0 }}>
-                      {['Domain', 'Naam', 'Email', 'Functie', 'Taal'].map(h => (
-                        <th key={h} style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 600, color: '#4A6B7F', fontSize: 11, borderBottom: '1px solid #E2E8F0' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {csvRows.map((row, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                        <td style={{ padding: '6px 10px' }}>{row.companyDomain}</td>
-                        <td style={{ padding: '6px 10px' }}>{row.firstName} {row.lastName}</td>
-                        <td style={{ padding: '6px 10px', color: '#EF476F' }}>{row.email}</td>
-                        <td style={{ padding: '6px 10px', color: '#8BA3B5' }}>{row.role}</td>
-                        <td style={{ padding: '6px 10px' }}>
-                          <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: row.language === 'en' ? '#dbeafe' : '#fef3c7', color: row.language === 'en' ? '#1e40af' : '#854d0e' }}>
-                            {row.language === 'en' ? '🇬🇧 EN' : '🇳🇱 NL'}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => handleBulk('import')} disabled={bulkSending} style={{ flex: 1, padding: '12px', borderRadius: 10, border: '1px solid #E2E8F0', background: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  Alleen importeren ({csvRows.length})
-                </button>
-                <button onClick={() => handleBulk('send')} disabled={bulkSending} style={{ flex: 1, padding: '12px', borderRadius: 10, border: 'none', background: bulkSending ? '#8BA3B5' : '#EF476F', color: '#fff', fontWeight: 600, fontSize: 14, cursor: bulkSending ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
-                  {bulkSending ? 'Bezig...' : `Import + Verstuur (${csvRows.length})`}
-                </button>
-              </div>
-            </>
-          )}
-          {bulkStatus && <p style={{ marginTop: 12, fontSize: 14 }}>{bulkStatus}</p>}
-        </div>
+      {tab === 'inbox' && (
+        <InboxTab
+          contactSubs={contactSubs}
+          inboxReplies={(stats?.inboxReplies || []) as Record<string, unknown>[]}
+          markRead={markRead}
+          deleteContact={deleteContact}
+          sendReply={sendReplyToContact}
+        />
       )}
 
-      {/* Recent outreach */}
-
-      {/* CONTACT SUBMISSIONS */}
-      {tab === 'contact' && (
-        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Contactformulier berichten</h2>
-          {contactSubs.length === 0 ? (
-            <p style={{ color: '#8BA3B5', fontSize: 14 }}>Nog geen berichten ontvangen.</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {contactSubs.map((sub) => (
-                <div key={sub.id} style={{ padding: 16, borderRadius: 12, background: sub.read ? '#f8fafc' : '#fefce8', border: `1px solid ${sub.read ? '#E2E8F0' : '#fde047'}`, position: 'relative' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
-                    <div>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#023047' }}>{sub.name}</span>
-                      <span style={{ fontSize: 13, color: '#8BA3B5', marginLeft: 8 }}>&lt;{sub.email}&gt;</span>
-                    </div>
-                    <span style={{ fontSize: 11, color: '#8BA3B5' }}>{new Date(sub.created_at).toLocaleString('nl-NL')}</span>
-                  </div>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: '#4A6B7F', margin: '0 0 6px' }}>{sub.subject}</p>
-                  <p style={{ fontSize: 13, color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>{sub.message}</p>
-                  <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-                    <button onClick={() => { setReplyTo(replyTo === sub.id ? null : sub.id); setReplyMsg(''); }} style={{ padding: '6px 12px', borderRadius: 8, background: replyTo === sub.id ? '#023047' : '#EF476F', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', border: 'none' }}>
-                      {replyTo === sub.id ? 'Annuleren' : 'Beantwoorden'}
-                    </button>
-                    {!sub.read && (
-                      <button onClick={() => markRead(sub.id)} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Markeer gelezen</button>
-                    )}
-                    <button onClick={() => { if (confirm('Weet je het zeker?')) deleteContact(sub.id); }} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #fecaca', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#dc2626' }}>Verwijderen</button>
-                  </div>
-                  {replyTo === sub.id && (
-                    <div style={{ marginTop: 12, padding: 12, borderRadius: 10, background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-                      <textarea
-                        value={replyMsg}
-                        onChange={(e) => setReplyMsg(e.target.value)}
-                        placeholder={`Typ je antwoord aan ${sub.name}...`}
-                        rows={4}
-                        style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
-                      />
-                      <button
-                        onClick={() => sendReply(sub)}
-                        disabled={replySending || !replyMsg.trim()}
-                        style={{ marginTop: 8, padding: '8px 16px', borderRadius: 8, border: 'none', background: replySending ? '#8BA3B5' : '#EF476F', color: '#fff', fontSize: 13, fontWeight: 600, cursor: replySending ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}
-                      >
-                        {replySending ? 'Verzenden...' : '📨 Verstuur via Mailgun'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Recent outreach */}
-      {tab !== 'analytics' && stats?.recentOutreach && stats.recentOutreach.length > 0 && (
-        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', marginBottom: 16 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Recente outreach</h2>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #E2E8F0' }}>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Subject</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Status</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontWeight: 600, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' }}>Verzonden</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.recentOutreach.map((log: Record<string, unknown>, i: number) => (
-                  <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                    <td style={{ padding: '8px 12px', color: '#023047' }}>{String(log.subject || '—')}</td>
-                    <td style={{ padding: '8px 12px' }}>
-                      <span style={{ padding: '2px 8px', borderRadius: 9999, fontSize: 11, fontWeight: 600, background: log.status === 'opened' ? '#dcfce7' : log.status === 'clicked' ? '#dbeafe' : log.status === 'sent' ? '#fef9c3' : '#fee2e2', color: log.status === 'opened' ? '#166534' : log.status === 'clicked' ? '#1e40af' : log.status === 'sent' ? '#854d0e' : '#991b1b' }}>
-                        {String(log.status || 'sent')}
-                      </span>
-                    </td>
-                    <td style={{ padding: '8px 12px', color: '#8BA3B5' }}>{log.sent_at ? new Date(String(log.sent_at)).toLocaleDateString('nl-NL') : '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* ANALYTICS */}
       {tab === 'analytics' && <AnalyticsDashboard />}
-
-      {/* Inbox */}
-      {tab !== 'analytics' && stats?.inboxReplies && stats.inboxReplies.length > 0 && (
-        <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Inbox</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {stats.inboxReplies.map((msg: Record<string, unknown>, i: number) => (
-              <div key={i} style={{ padding: 16, borderRadius: 12, background: '#f8fafc', border: '1px solid #E2E8F0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#023047' }}>{String(msg.from_email || '')}</span>
-                  <span style={{ fontSize: 11, color: '#8BA3B5' }}>{msg.received_at ? new Date(String(msg.received_at)).toLocaleString('nl-NL') : ''}</span>
-                </div>
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#4A6B7F', margin: '0 0 6px' }}>{String(msg.subject || '')}</p>
-                <p style={{ fontSize: 13, color: '#555', margin: 0, whiteSpace: 'pre-wrap', maxHeight: 120, overflow: 'hidden' }}>{String(msg.body_plain || '').slice(0, 500)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
