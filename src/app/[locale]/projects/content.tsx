@@ -22,6 +22,7 @@ interface SanityProject {
   role?: string;
   techStack?: string[];
   url?: string;
+  pageUrl?: string;
 }
 
 const fallbackProjects: SanityProject[] = [
@@ -76,7 +77,7 @@ export function ProjectsContent({ sanityProjects }: { sanityProjects: SanityProj
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, i) => (
               <motion.div key={project.slug.current} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="group">
-                <Link href={project.comingSoon ? '#' : ((project as any).pageUrl || `/projects/${project.slug.current}`)} className={`block no-underline ${project.comingSoon ? 'cursor-default' : ''}`}>
+                <Link href={project.comingSoon ? '#' : (project.pageUrl || `/projects/${project.slug.current}`)} className={`block no-underline ${project.comingSoon ? 'cursor-default' : ''}`}>
                   <div className="rounded-2xl overflow-hidden transition-all duration-300 bg-surface border border-border relative" style={{ boxShadow: project.comingSoon ? 'none' : undefined }}>
                     {project.comingSoon && (
                       <div className="absolute inset-0 z-10 backdrop-blur-[3px] bg-surface/70 flex items-center justify-center">
