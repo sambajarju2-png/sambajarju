@@ -105,8 +105,21 @@ function LandingContent() {
 
   if (!company) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-foreground-muted text-sm">Use: /landing?company=nike.com&contactname=Peter</p>
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'linear-gradient(135deg, #023047 0%, #034067 100%)' }}>
+        <div className="text-center max-w-lg">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: '#EF476F', color: '#fff', fontWeight: 700, fontSize: 24 }}>SJ</div>
+          <h1 className="text-2xl font-bold mb-4" style={{ color: '#ffffff' }}>
+            {locale === 'nl' ? 'Deze pagina is persoonlijk voor jou gemaakt' : 'This page was created personally for you'}
+          </h1>
+          <p className="mb-8" style={{ color: '#A7DADC' }}>
+            {locale === 'nl'
+              ? 'Je hebt een gepersonaliseerde link nodig om deze pagina te bekijken. Benieuwd hoe het werkt? Test het hieronder met je bedrijfsnaam.'
+              : 'You need a personalized link to view this page. Curious how it works? Test it below with your company name.'}
+          </p>
+          <Link href="/for" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-transform hover:scale-105" style={{ backgroundColor: '#EF476F' }}>
+            {locale === 'nl' ? 'Test het met je bedrijf' : 'Try it with your company'} <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     );
   }

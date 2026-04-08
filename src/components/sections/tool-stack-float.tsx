@@ -21,41 +21,41 @@ const tools: Tool[] = [
   // Email & Marketing
   { name: 'Salesforce MC', slug: null, color: '#00A1E0', category: 'Email & Marketing', categoryIcon: Mail, description: 'Primary platform at Vandebron. Building complex journeys, writing SQL queries, managing 500k+ emails/month.', experience: 'Daily use', url: 'https://www.salesforce.com/marketing-cloud/' },
   { name: 'Deployteq', slug: null, color: '#0066FF', category: 'Email & Marketing', categoryIcon: Mail, description: 'Marketing automation platform used at Cleanprofs.nl. Building email flows and customer communication.', experience: 'Daily use', url: 'https://www.deployteq.com/' },
-  { name: 'HubSpot', slug: 'hubspot', color: '#FF7A59', category: 'Email & Marketing', categoryIcon: Mail, description: 'Used for CRM and marketing automation at Kes Visum. Set up lead scoring and nurture flows.', experience: '3+ years' },
+  { name: 'HubSpot', slug: 'hubspot', color: '#FF7A59', category: 'Email & Marketing', categoryIcon: Mail, description: 'CRM and marketing automation at Kes Visum. Lead scoring and nurture flows.', experience: '3+ years' },
   { name: 'Mailchimp', slug: 'mailchimp', color: '#FFE01B', category: 'Email & Marketing', categoryIcon: Mail, description: 'Email campaigns for smaller clients during freelance work at Cordital.', experience: '2+ years' },
+  { name: 'Klaviyo', slug: null, color: '#000000', category: 'Email & Marketing', categoryIcon: Mail, description: 'E-commerce email marketing and automation platform.', experience: '1+ year' },
+  { name: 'Active Campaign', slug: null, color: '#356AE6', category: 'Email & Marketing', categoryIcon: Mail, description: 'Email marketing automation and CRM.', experience: '1+ year' },
   { name: 'Resend', slug: 'resend', color: '#000000', category: 'Email & Marketing', categoryIcon: Mail, description: 'Transactional email for PayWatch.app. Clean API, great developer experience.', experience: '1+ year' },
-  { name: 'Mailgun', slug: 'mailgun', color: '#F06B66', category: 'Email & Marketing', categoryIcon: Mail, description: 'Transactional email delivery. Used for PayWatch email infrastructure.', experience: '1+ year' },
+  { name: 'Mailgun', slug: 'mailgun', color: '#F06B66', category: 'Email & Marketing', categoryIcon: Mail, description: 'Email delivery for ABM outreach system on sambajarju.com.', experience: '1+ year' },
 
   // Analytics & CRO
-  { name: 'Google Analytics', slug: 'googleanalytics', color: '#E37400', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Tracking and analyzing marketing performance across all projects. GA4 setup and event tracking.', experience: '4+ years' },
-  { name: 'Hotjar', slug: 'hotjar', color: '#FF3C00', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Heatmaps and session recordings. Used to optimize my own portfolio and client websites.', experience: '3+ years' },
-  { name: 'SEMRush', slug: 'semrush', color: '#FF642D', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'SEO research, keyword tracking, and competitor analysis. Used extensively at Guardey and Kes Visum.', experience: '3+ years' },
+  { name: 'Google Analytics', slug: 'googleanalytics', color: '#E37400', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Tracking and analyzing marketing performance. GA4 setup and event tracking.', experience: '4+ years' },
+  { name: 'Hotjar', slug: 'hotjar', color: '#FF3C00', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Heatmaps and session recordings for optimization.', experience: '3+ years' },
+  { name: 'SEMRush', slug: 'semrush', color: '#FF642D', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'SEO research, keyword tracking, and competitor analysis.', experience: '3+ years' },
   { name: 'VWO', slug: null, color: '#4A90D9', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'A/B testing platform. Run experiments on landing pages and email CTAs.', experience: '2+ years' },
+  { name: 'Snowflake', slug: 'snowflake', color: '#29B5E8', category: 'Analytics & CRO', categoryIcon: BarChart3, description: 'Cloud data warehouse. SQL queries for marketing analytics and segmentation.', experience: '1+ year' },
 
   // CRM & Sales
-  { name: 'Salesforce', slug: null, color: '#00A1E0', category: 'CRM & Sales', categoryIcon: Database, description: 'CRM for managing the sales pipeline and customer data at Vandebron.', experience: '2+ years' },
+  { name: 'Salesforce', slug: null, color: '#00A1E0', category: 'CRM & Sales', categoryIcon: Database, description: 'CRM for managing the sales pipeline and customer data.', experience: '2+ years' },
+  { name: 'Pipedrive', slug: null, color: '#1A1A1A', category: 'CRM & Sales', categoryIcon: Database, description: 'Sales pipeline management at Silverflow. Deal tracking and reporting.', experience: '2+ years' },
   { name: 'Zoho', slug: 'zoho', color: '#E42527', category: 'CRM & Sales', categoryIcon: Database, description: 'Built automations and CRM flows for Cordital partners.', experience: '2+ years' },
-  { name: 'Apollo.io', slug: null, color: '#6366F1', category: 'CRM & Sales', categoryIcon: Database, description: 'B2B lead enrichment and outreach. Built the B2B Gluurder WordPress plugin with their API.', experience: '2+ years' },
+  { name: 'Apollo.io', slug: null, color: '#6366F1', category: 'CRM & Sales', categoryIcon: Database, description: 'B2B lead enrichment and outreach. Built the B2B Gluurder plugin with their API.', experience: '2+ years' },
 
-  // Development
-  { name: 'Next.js', slug: 'nextdotjs', color: '#000000', category: 'Development', categoryIcon: Code2, description: 'My go-to framework. Built PayWatch.app, this portfolio, and Workwings.nl with it.', experience: '2+ years', url: 'https://nextjs.org' },
-  { name: 'React', slug: 'react', color: '#61DAFB', category: 'Development', categoryIcon: Code2, description: 'Core UI library for all my web projects. Server components, hooks, the works.', experience: '2+ years' },
-  { name: 'TypeScript', slug: 'typescript', color: '#3178C6', category: 'Development', categoryIcon: Code2, description: 'Type safety in all my projects. Makes refactoring fearless.', experience: '2+ years' },
-  { name: 'Tailwind CSS', slug: 'tailwindcss', color: '#06B6D4', category: 'Development', categoryIcon: Code2, description: 'Styling everything. Fast, consistent, and this entire portfolio is built with it.', experience: '2+ years' },
-  { name: 'Supabase', slug: 'supabase', color: '#3FCF8E', category: 'Development', categoryIcon: Code2, description: 'Backend for PayWatch.app — auth, database, row-level security, real-time.', experience: '1+ year', url: 'https://supabase.com' },
-  { name: 'Sanity CMS', slug: 'sanity', color: '#F03E2F', category: 'Development', categoryIcon: Code2, description: 'Headless CMS for PayWatch.app. GROQ queries, structured content.', experience: '1+ year', url: 'https://www.sanity.io' },
-  { name: 'Vercel', slug: 'vercel', color: '#000000', category: 'Development', categoryIcon: Code2, description: 'Deployment platform for all my Next.js projects. Auto-deploy on git push.', experience: '2+ years', url: 'https://vercel.com' },
-  { name: 'PostgreSQL', slug: 'postgresql', color: '#4169E1', category: 'Development', categoryIcon: Code2, description: 'Database via Supabase. Writing complex queries for PayWatch.', experience: '1+ year' },
-  { name: 'WordPress', slug: 'wordpress', color: '#21759B', category: 'Development', categoryIcon: Code2, description: 'Built multiple client sites and the B2B Gluurder plugin.', experience: '4+ years' },
+  // Web & CMS
+  { name: 'WordPress', slug: 'wordpress', color: '#21759B', category: 'Web & CMS', categoryIcon: Code2, description: 'Built multiple client sites and the B2B Gluurder plugin.', experience: '4+ years' },
+  { name: 'Shopify', slug: 'shopify', color: '#7AB55C', category: 'Web & CMS', categoryIcon: Code2, description: 'E-commerce platform. Store setup and optimization.', experience: '2+ years' },
+  { name: 'Sanity CMS', slug: 'sanity', color: '#F03E2F', category: 'Web & CMS', categoryIcon: Code2, description: 'Headless CMS for PayWatch.app and this portfolio.', experience: '1+ year', url: 'https://www.sanity.io' },
+  { name: 'Supabase', slug: 'supabase', color: '#3FCF8E', category: 'Web & CMS', categoryIcon: Code2, description: 'Backend for PayWatch.app. Auth, database, real-time.', experience: '1+ year', url: 'https://supabase.com' },
 
   // Automation
-  { name: 'Zapier', slug: 'zapier', color: '#FF4F00', category: 'Automation', categoryIcon: Workflow, description: 'Connecting tools and automating workflows. Used across all marketing roles.', experience: '3+ years' },
-  { name: 'Make', slug: 'make', color: '#6D00CC', category: 'Automation', categoryIcon: Workflow, description: 'Complex multi-step automations. More flexible than Zapier for advanced flows.', experience: '2+ years' },
+  { name: 'Zapier', slug: 'zapier', color: '#FF4F00', category: 'Automation', categoryIcon: Workflow, description: 'Connecting tools and automating workflows.', experience: '3+ years' },
+  { name: 'Make', slug: 'make', color: '#6D00CC', category: 'Automation', categoryIcon: Workflow, description: 'Complex multi-step automations. More flexible for advanced flows.', experience: '2+ years' },
+  { name: 'n8n', slug: 'n8n', color: '#EA4B71', category: 'Automation', categoryIcon: Workflow, description: 'Self-hosted workflow automation.', experience: '1+ year' },
 
   // Design & AI
-  { name: 'Figma', slug: 'figma', color: '#F24E1E', category: 'Design & AI', categoryIcon: Palette, description: 'UI design and prototyping. Designed PayWatch.app mockups before building.', experience: '2+ years', url: 'https://www.figma.com' },
-  { name: 'Claude AI', slug: 'anthropic', color: '#D97757', category: 'Design & AI', categoryIcon: Zap, description: 'AI pair programming and content generation. Claude Haiku powers PayWatch.app invoice extraction.', experience: '1+ year' },
-  { name: 'Gemini AI', slug: 'googlegemini', color: '#8E75B2', category: 'Design & AI', categoryIcon: Zap, description: 'PDF parsing and data extraction in PayWatch.app. Multimodal capabilities.', experience: '1+ year' },
+  { name: 'Figma', slug: 'figma', color: '#F24E1E', category: 'Design & AI', categoryIcon: Palette, description: 'UI design and prototyping before building.', experience: '2+ years', url: 'https://www.figma.com' },
+  { name: 'Canva', slug: null, color: '#00C4CC', category: 'Design & AI', categoryIcon: Palette, description: 'Quick visual design for social media and presentations.', experience: '3+ years' },
+  { name: 'Claude AI', slug: 'anthropic', color: '#D97757', category: 'Design & AI', categoryIcon: Zap, description: 'AI pair programming and content generation. Powers PayWatch invoice extraction.', experience: '1+ year' },
 ];
 
 function ToolIcon({ tool, size = 40 }: { tool: Tool; size?: number }) {

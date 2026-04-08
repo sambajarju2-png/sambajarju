@@ -61,8 +61,7 @@ const arcPaths = {
 
 const allTools = [
   { slug: 'resend', color: 'ffffff' }, { slug: 'supabase', color: '3FCF8E' },
-  { slug: 'salesforce', color: '00A1E0' }, { slug: 'semrush', color: 'FF642D' },
-  { slug: 'klaviyo', color: '000000' }, { slug: 'mailchimp', color: 'FFE01B' },
+  { slug: 'semrush', color: 'FF642D' }, { slug: 'mailchimp', color: 'FFE01B' },
   { slug: 'googleanalytics', color: 'E37400' }, { slug: 'hotjar', color: 'FF3C00' },
   { slug: 'hubspot', color: 'FF7A59' }, { slug: 'zoho', color: 'C8202B' },
   { slug: 'wordpress', color: '21759B' }, { slug: 'shopify', color: '7AB55C' },
@@ -70,7 +69,6 @@ const allTools = [
   { slug: 'zapier', color: 'FF4F00' }, { slug: 'sanity', color: 'F03E2F' },
   { slug: 'make', color: '6D00CC' }, { slug: 'mailgun', color: 'F06B66' },
   { slug: 'snowflake', color: '29B5E8' }, { slug: 'n8n', color: 'EA4B71' },
-  { slug: 'pipedrive', color: '1A1A1A' },
 ];
 
 const FILING_COLS = 28;
