@@ -43,6 +43,19 @@ export function PostHogPageView() {
         company,
         contact_name: contactname || undefined,
       });
+
+      // Also store in Supabase for retargeting
+      fetch('/api/track/abm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company,
+          contact_name: contactname || null,
+          page: pathname,
+          referrer: document.referrer || null,
+          session_id: posthog.get_session_id?.() || null,
+        }),
+      }).catch(() => {});
     }
 
     posthog.capture('$pageview', {
