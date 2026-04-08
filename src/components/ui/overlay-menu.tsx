@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 const menuItems = [
   { label: 'PROJECTS', href: '/projects' },
+  { label: 'BLOG', href: '/blog' },
   { label: 'MAATSCHAPPELIJK', href: '/maatschappelijk' },
   { label: 'ABM TOOLING', href: '/for' },
   { label: 'PLAYGROUND', href: '/playground' },
@@ -17,10 +18,11 @@ const menuItems = [
 
 const menuImages: Record<string, string> = {
   PROJECTS: '/samba-gambia.jpg',
+  BLOG: '/samba-casual.jpg',
   MAATSCHAPPELIJK: '/maatschappelijk.jpg',
   'ABM TOOLING': '/menu-photo-2.jpg',
   PLAYGROUND: '/menu-photo-3.jpg',
-  CONTACT: '/samba-casual.jpg',
+  CONTACT: '/menu-photo-1.jpg',
 };
 
 const staggerContainer = {

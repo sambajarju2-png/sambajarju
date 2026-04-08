@@ -98,3 +98,56 @@ export async function getMaatschappelijk() {
     { next: { revalidate: 30 } }
   );
 }
+
+export async function getProjects() {
+  return client.fetch(
+    `*[_type == "project"] | order(order asc){
+      title, slug, subtitle_nl, subtitle_en, description_nl, description_en,
+      image{asset->{_id, url}}, featured, comingSoon, color, year, role,
+      techStack, url, order
+    }`,
+    {},
+    { next: { revalidate: 30 } }
+  );
+}
+
+export async function getProjectBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "project" && slug.current == $slug][0]{
+      title, slug, subtitle_nl, subtitle_en, description_nl, description_en,
+      image{asset->{_id, url}},
+      screenshots[]{caption, asset->{_id, url}},
+      featured, comingSoon, color, year, role, techStack, url,
+      problem_nl, problem_en, solution_nl, solution_en,
+      results_nl, results_en
+    }`,
+    { slug },
+    { next: { revalidate: 30 } }
+  );
+}
+
+export async function getBlogPosts() {
+  return client.fetch(
+    `*[_type == "blogPost"] | order(publishedAt desc){
+      title_nl, title_en, slug, excerpt_nl, excerpt_en,
+      coverImage{asset->{_id, url}},
+      category, tags, publishedAt, featured
+    }`,
+    {},
+    { next: { revalidate: 30 } }
+  );
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "blogPost" && slug.current == $slug][0]{
+      title_nl, title_en, slug, excerpt_nl, excerpt_en,
+      body_nl, body_en,
+      coverImage{asset->{_id, url}},
+      category, tags, publishedAt,
+      seoTitle, seoDescription
+    }`,
+    { slug },
+    { next: { revalidate: 30 } }
+  );
+}

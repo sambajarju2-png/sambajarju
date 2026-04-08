@@ -6,5 +6,6 @@ import { testimonial } from './testimonial';
 import { faq } from './faq';
 import { tool } from './tool';
 import { maatschappelijk } from './maatschappelijk';
+import { blogPost } from './blog-post';
 
-export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk];
+export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk, blogPost];

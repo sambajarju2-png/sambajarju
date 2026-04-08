@@ -25,7 +25,7 @@
     "title": "Who am I, actually?",
     "subtitle": "Here I show with a wink why I'm the marketeer you're looking for.",
     "p1": "As a marketeer I believe in one thing: goodbye repetitive tasks, hello automation! Why do manually what can be done smarter and faster? With my experience in CRM systems, social media marketing, automation and email marketing, I help businesses grow without getting stuck in time-consuming processes.",
-    "p2": "My work style? I'm a hands-on go-getter who thinks along with entrepreneurs and doesn't believe in a standard 9-to-5 mentality. I love efficiency, but I'm also a team player with humor — because let's be honest, marketing is serious enough without a laugh now and then.",
+    "p2": "My work style? I'm a hands-on go-getter who thinks along with entrepreneurs and doesn't believe in a standard 9-to-5 mentality. I love efficiency, but I'm also a team player with humor. Because let's be honest, marketing is serious enough without a laugh now and then.",
     "p3": "I've worked with tools like HubSpot, Pipedrive, Google Analytics, SEMrush, ActiveCampaign, Zapier and much more. So yes, I'm quite technical and love diving into data to optimize marketing processes.",
     "p4": "Besides marketing and automation, I'm also committed to something bigger. With my initiative Baraka4Gambia I help the most disadvantaged people in Gambia by collecting clothing and raising money for food packages.",
     "cta": "Let's grab coffee?"
@@ -48,7 +48,7 @@
     },
     "mariama": {
       "title": "Mariama.nl",
-      "description": "Personal birthday celebration site — a creative gift built with love and code."
+      "description": "Personal birthday celebration site, a creative gift built with love and code."
     },
     "cleanprofs": {
       "title": "Cleanprofs.nl",
@@ -77,37 +77,37 @@
     "vandebron": {
       "company": "Vandebron",
       "role": "Email Marketeer",
-      "period": "Apr 2025 – present",
+      "period": "Apr 2025 to present",
       "description": "Writing SQL queries, building complex AMPScript email campaigns, and managing projects sending 500k+ emails per month."
     },
     "cordital": {
       "company": "Cordital",
       "role": "Freelance Marketeer",
-      "period": "Jan 2023 – Nov 2024",
+      "period": "Jan 2023 to Nov 2024",
       "description": "All-round marketing activities for Cordital partners including SEO, Zoho automations, and building AMP interactive emails."
     },
     "guardey": {
       "company": "Guardey",
       "role": "Content Marketing",
-      "period": "Feb 2023 – Oct 2023",
+      "period": "Feb 2023 to Oct 2023",
       "description": "Managed content strategy for IT Partners, optimized SEO, and built community to increase brand visibility."
     },
     "silverflow": {
       "company": "Silverflow",
       "role": "Sales & Marketing Intern",
-      "period": "Feb 2022 – Oct 2022",
+      "period": "Feb 2022 to Oct 2022",
       "description": "Restructured the marketing department, managed the sales pipeline with Pipedrive, and developed a content marketing plan."
     },
     "kesvisum": {
       "company": "Kes Visum",
       "role": "Marketing Lead",
-      "period": "2020 – 2025",
+      "period": "2020 to 2025",
       "description": "Led a growing marketing team of 4, achieved 4.4% conversion rate, and generated 80+ B2B leads per month via LinkedIn outreach."
     },
     "cleanprofs": {
       "company": "Cleanprofs.nl",
       "role": "Freelance Deployteq Expert",
-      "period": "2025 – present",
+      "period": "2025 to present",
       "description": "Building email automations and customer communication flows in Deployteq for the Netherlands's leading bin cleaning service."
     }
   },
@@ -115,12 +115,12 @@
     "label": "Testimonials",
     "title": "What others say",
     "nigel": {
-      "quote": "Samba showed thorough knowledge of marketing technologies. He was hands-on, motivated, creative, and more than that — fun to work with at a personal level.",
+      "quote": "Samba showed thorough knowledge of marketing technologies. He was hands-on, motivated, creative, and more than that. Fun to work with at a personal level.",
       "name": "Nigel",
       "role": "CMO @ Silverflow"
     },
     "keith": {
-      "quote": "Samba grew from junior to marketing lead within one year. He's no standard 9-to-5 person — he thinks along with the entrepreneur and always gives 110%.",
+      "quote": "Samba grew from junior to marketing lead within one year. He's no standard 9-to-5 person. He thinks along with the entrepreneur and always gives 110%.",
       "name": "Keith",
       "role": "Owner @ Kesvisum"
     },
@@ -130,7 +130,7 @@
       "role": "Founder @ Cordital"
     },
     "stan": {
-      "quote": "Samba is full of positive energy. Extremely skilled with the latest marketing tools — a fantastic addition to any B2C/B2B marketing team.",
+      "quote": "Samba is full of positive energy. Extremely skilled with the latest marketing tools. A fantastic addition to any B2C/B2B marketing team.",
       "name": "Stan",
       "role": "S.A. @ Silverflow"
     }
@@ -156,9 +156,9 @@
     "q4": "How much do you expect to earn?",
     "a4": "My salary indication is between €3,800 and €4,500 gross per month, depending on the responsibilities. I'm always open to discussion.",
     "q5": "Do you prefer office or remote?",
-    "a5": "I'm flexible! I prefer hybrid — office for teamwork and collaboration, remote for maximum focus and productivity.",
+    "a5": "I'm flexible! I prefer hybrid. Office for teamwork and collaboration, remote for maximum focus and productivity.",
     "q6": "Why did you choose marketing?",
-    "a6": "It started during my finals when I launched my own webshop. Everything around marketing I had to figure out myself — and I loved it. Since then I've grown into automation, lead generation, and CRM systems.",
+    "a6": "It started during my finals when I launched my own webshop. Everything around marketing I had to figure out myself. And I loved it. Since then I've grown into automation, lead generation, and CRM systems.",
     "q7": "Where were you born?",
     "a7": "I was born in Gambia and moved to the Netherlands when I was 9. My background shaped me into a hard worker with an international perspective.",
     "q8": "How do you handle feedback?",
@@ -167,7 +167,7 @@
   "contact": {
     "label": "Get in touch",
     "title": "Ready to chat?",
-    "subtitle": "Whether it's about a project, a position, or just a good coffee — I'd love to hear from you.",
+    "subtitle": "Whether it's about a project, a position, or just a good coffee. I'd love to hear from you.",
     "cta_phone": "Call me",
     "cta_email": "Send email",
     "cta_linkedin": "LinkedIn"
@@ -180,7 +180,7 @@
   },
   "playground_page": {
     "title": "Playground",
-    "subtitle": "I built these to show how I think — not just talk about it. Each demo is a piece of what I actually do at Vandebron.",
+    "subtitle": "I built these to show how I think. Not just talk about it. Each demo is a piece of what I actually do at Samba Energy.",
     "flow_title": "Email Automation Flow",
     "flow_subtitle": "This is how I design subscriber journeys. Trigger → nurture → convert. Watch the simulation run through both paths.",
     "roi_title": "Automation ROI Calculator",
@@ -192,7 +192,7 @@
     "roi_money_saved": "Money saved / month",
     "roi_emails_auto": "Emails automated / month",
     "sql_title": "SQL Query Builder",
-    "sql_subtitle": "I write queries like these daily at Vandebron for 500k+ emails/month. Try the presets or write your own — the results might surprise you.",
+    "sql_subtitle": "I write queries like these daily at Samba Energy for marketing campaigns. Try the presets or write your own. The results might surprise you.",
     "sql_goal": "Marketing goal",
     "sql_code": "Technical solution",
     "dashboard_title": "Campaign Dashboard",
