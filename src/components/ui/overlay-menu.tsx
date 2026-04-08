@@ -51,7 +51,7 @@ const imageVariants = {
     opacity: 1,
     scale: 1,
     rotate: 0,
-    transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+    transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] },
   },
   exit: {
     opacity: 0,
@@ -96,7 +96,7 @@ export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
           initial="closed"
           animate="open"
           exit="closed"
-          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] }}
         >
           {/* Background — pink gradient matching photos */}
           <div
@@ -230,7 +230,7 @@ export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
                   className="col-span-5 relative flex items-center justify-center"
                   initial={{ opacity: 0, x: 60 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  transition={{ duration: 0.6, delay: 0.3, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] }}
                 >
                   <div
                     className="relative w-full overflow-hidden"
