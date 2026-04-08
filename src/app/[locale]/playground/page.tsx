@@ -2,37 +2,22 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Workflow, Calculator, Database, BarChart3, Terminal, Code2, FlaskConical, TrendingDown, Target } from 'lucide-react';
-import { EmailFlowV2 } from '@/components/playground/email-flow-v2';
-import { ROICalculator } from '@/components/playground/roi-calculator';
-import { SQLShowcase } from '@/components/playground/sql-showcase';
-import { SQLQueryBuilder } from '@/components/playground/sql-query-builder';
-import { CampaignDashboard } from '@/components/playground/campaign-dashboard';
+import { ArrowLeft, FlaskConical, Target, Terminal } from 'lucide-react';
 import { ABTestArena } from '@/components/playground/ab-test-arena';
-import { FunnelSimulator } from '@/components/playground/funnel-simulator';
 import { SubjectLineAnalyzer } from '@/components/playground/subject-analyzer';
+import { SQLQueryBuilder } from '@/components/playground/sql-query-builder';
 import Link from 'next/link';
 
 const sections = [
   { id: 'ab-test', num: '01', icon: FlaskConical, titleKey: 'ab_title' as const, subtitleKey: 'ab_subtitle' as const },
   { id: 'analyzer', num: '02', icon: Target, titleKey: 'analyzer_title' as const, subtitleKey: 'analyzer_subtitle' as const },
-  { id: 'flow', num: '03', icon: Workflow, titleKey: 'flow_title' as const, subtitleKey: 'flow_subtitle' as const },
-  { id: 'funnel', num: '04', icon: TrendingDown, titleKey: 'funnel_title' as const, subtitleKey: 'funnel_subtitle' as const },
-  { id: 'roi', num: '05', icon: Calculator, titleKey: 'roi_title' as const, subtitleKey: 'roi_subtitle' as const },
-  { id: 'sql-builder', num: '06', icon: Terminal, titleKey: 'sql_title' as const, subtitleKey: 'sql_subtitle' as const },
-  { id: 'sql-showcase', num: '07', icon: Code2, titleKey: 'sql_showcase_title' as const, subtitleKey: 'sql_showcase_subtitle' as const },
-  { id: 'dashboard', num: '08', icon: BarChart3, titleKey: 'dashboard_title' as const, subtitleKey: 'dashboard_subtitle' as const },
+  { id: 'sql-builder', num: '03', icon: Terminal, titleKey: 'sql_title' as const, subtitleKey: 'sql_subtitle' as const },
 ];
 
 const components: Record<string, React.ReactNode> = {
   'ab-test': <ABTestArena />,
   'analyzer': <SubjectLineAnalyzer />,
-  'flow': <EmailFlowV2 />,
-  'funnel': <FunnelSimulator />,
-  'roi': <ROICalculator />,
   'sql-builder': <SQLQueryBuilder />,
-  'sql-showcase': <SQLShowcase />,
-  'dashboard': <CampaignDashboard />,
 };
 
 export default function PlaygroundPage() {
