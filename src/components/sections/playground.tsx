@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
-import { Workflow, Calculator, FlaskConical, Target, ArrowRight } from 'lucide-react';
+import { FlaskConical, Target, Terminal, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export function Playground() {
@@ -11,8 +11,7 @@ export function Playground() {
   const demos = [
     { icon: FlaskConical, title: 'A/B Test Arena', desc: 'Pick the winning subject line. Test your marketing instincts against real campaign data.', color: 'from-violet-500/10 to-purple-500/10', border: 'hover:border-violet-300 dark:hover:border-violet-700' },
     { icon: Target, title: 'Subject Line Analyzer', desc: 'AI-powered analysis of any email subject line. Get instant scores and improvement tips.', color: 'from-pink-500/10 to-rose-500/10', border: 'hover:border-pink-300 dark:hover:border-pink-700' },
-    { icon: Workflow, title: 'Email Automation Flow', desc: 'Watch a subscriber journey from signup to conversion with animated emails flowing through the pipeline.', color: 'from-blue-500/10 to-cyan-500/10', border: 'hover:border-blue-300 dark:hover:border-blue-700' },
-    { icon: Calculator, title: 'Funnel Simulator', desc: 'Adjust conversion rates at every funnel stage and see how small improvements compound into revenue.', color: 'from-emerald-500/10 to-teal-500/10', border: 'hover:border-emerald-300 dark:hover:border-emerald-700' },
+    { icon: Terminal, title: 'SQL Query Builder', desc: 'Write and run Snowflake SQL queries against energy customer data. 100 rows, real syntax.', color: 'from-blue-500/10 to-cyan-500/10', border: 'hover:border-blue-300 dark:hover:border-blue-700' },
   ];
 
   return (
@@ -58,7 +57,7 @@ export function Playground() {
               href="/playground"
               className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
             >
-              View all 8 demos
+              View all demos
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

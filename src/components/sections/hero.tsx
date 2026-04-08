@@ -35,23 +35,23 @@ const Filing = memo(function Filing({ mouseX, mouseY }: { mouseX: ReturnType<typ
 
 const orbitTools = [
   { slug: 'resend', color: 'ffffff', name: 'Resend', usage: 'Transactional email for PayWatch.app.', arc: 1 as const, dur: 35, begin: '0s' },
-  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch — auth, Postgres, RLS, real-time.', arc: 1 as const, dur: 35, begin: '-7s' },
-  { slug: 'salesforce', color: '00A1E0', name: 'Salesforce', usage: 'Marketing Cloud at Vandebron — 500k+ emails/month.', arc: 2 as const, dur: 30, begin: '0s' },
+  { slug: 'supabase', color: '3FCF8E', name: 'Supabase', usage: 'Backend for PayWatch.', arc: 1 as const, dur: 35, begin: '-7s' },
+  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum.', arc: 2 as const, dur: 30, begin: '0s' },
   { slug: 'semrush', color: 'FF642D', name: 'SEMRush', usage: 'SEO research and competitive analysis.', arc: 1 as const, dur: 35, begin: '-14s' },
-  { slug: 'klaviyo', color: '000000', name: 'Klaviyo', usage: 'E-commerce email marketing and automation.', arc: 2 as const, dur: 30, begin: '-4s' },
   { slug: 'mailchimp', color: 'FFE01B', name: 'Mailchimp', usage: 'Email campaigns and audience management.', arc: 1 as const, dur: 35, begin: '-21s' },
   { slug: 'googleanalytics', color: 'E37400', name: 'Google Analytics', usage: 'GA4 setup and event tracking.', arc: 2 as const, dur: 30, begin: '-8s' },
   { slug: 'hotjar', color: 'FF3C00', name: 'Hotjar', usage: 'Heatmaps and session recordings for CRO.', arc: 1 as const, dur: 35, begin: '-28s' },
-  { slug: 'hubspot', color: 'FF7A59', name: 'HubSpot', usage: 'CRM and marketing automation at Kes Visum.', arc: 2 as const, dur: 30, begin: '-12s' },
   { slug: 'zoho', color: 'C8202B', name: 'Zoho', usage: 'CRM and business applications.', arc: 1 as const, dur: 35, begin: '-32s' },
   { slug: 'wordpress', color: '21759B', name: 'WordPress', usage: 'CMS for client websites and plugins.', arc: 2 as const, dur: 30, begin: '-16s' },
   { slug: 'shopify', color: '7AB55C', name: 'Shopify', usage: 'E-commerce platform.', arc: 1 as const, dur: 35, begin: '-4s' },
   { slug: 'figma', color: 'F24E1E', name: 'Figma', usage: 'UI design and prototyping.', arc: 2 as const, dur: 30, begin: '-22s' },
   { slug: 'anthropic', color: 'D97757', name: 'Claude AI', usage: 'AI assistant for coding, content, and automation.', arc: 1 as const, dur: 35, begin: '-18s' },
   { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows.', arc: 2 as const, dur: 30, begin: '-26s' },
-  { slug: 'apolloio', color: 'E86C34', name: 'Apollo.io', usage: 'Sales intelligence and outreach.', arc: 1 as const, dur: 35, begin: '-25s' },
   { slug: 'mailgun', color: 'F06B66', name: 'Mailgun', usage: 'Email delivery for outreach system.', arc: 2 as const, dur: 30, begin: '-20s' },
   { slug: 'snowflake', color: '29B5E8', name: 'Snowflake', usage: 'Cloud data warehouse for marketing analytics.', arc: 1 as const, dur: 35, begin: '-10s' },
+  { slug: 'n8n', color: 'EA4B71', name: 'n8n', usage: 'Workflow automation.', arc: 2 as const, dur: 30, begin: '-4s' },
+  { slug: 'sanity', color: 'F03E2F', name: 'Sanity CMS', usage: 'Headless CMS for content management.', arc: 1 as const, dur: 35, begin: '-12s' },
+  { slug: 'make', color: '6D00CC', name: 'Make', usage: 'Visual automation platform.', arc: 2 as const, dur: 30, begin: '-15s' },
 ];
 
 const arcPaths = {
@@ -60,16 +60,17 @@ const arcPaths = {
 };
 
 const allTools = [
-  { slug: 'react', color: '61DAFB' }, { slug: 'nextdotjs', color: 'ffffff' },
-  { slug: 'hubspot', color: 'FF7A59' }, { slug: 'supabase', color: '3FCF8E' },
-  { slug: 'figma', color: 'F24E1E' }, { slug: 'tailwindcss', color: '06B6D4' },
-  { slug: 'zapier', color: 'FF4F00' }, { slug: 'googleanalytics', color: 'E37400' },
-  { slug: 'salesforce', color: '00A1E0' }, { slug: 'resend', color: 'ffffff' },
-  { slug: 'semrush', color: 'FF642D' }, { slug: 'hotjar', color: 'FF3C00' },
-  { slug: 'typescript', color: '3178C6' }, { slug: 'postgresql', color: '4169E1' },
-  { slug: 'sanity', color: 'F03E2F' }, { slug: 'vercel', color: 'ffffff' },
-  { slug: 'make', color: '6D00CC' }, { slug: 'wordpress', color: '21759B' },
-  { slug: 'anthropic', color: 'D97757' }, { slug: 'googlegemini', color: '8E75B2' },
+  { slug: 'resend', color: 'ffffff' }, { slug: 'supabase', color: '3FCF8E' },
+  { slug: 'salesforce', color: '00A1E0' }, { slug: 'semrush', color: 'FF642D' },
+  { slug: 'klaviyo', color: '000000' }, { slug: 'mailchimp', color: 'FFE01B' },
+  { slug: 'googleanalytics', color: 'E37400' }, { slug: 'hotjar', color: 'FF3C00' },
+  { slug: 'hubspot', color: 'FF7A59' }, { slug: 'zoho', color: 'C8202B' },
+  { slug: 'wordpress', color: '21759B' }, { slug: 'shopify', color: '7AB55C' },
+  { slug: 'figma', color: 'F24E1E' }, { slug: 'anthropic', color: 'D97757' },
+  { slug: 'zapier', color: 'FF4F00' }, { slug: 'sanity', color: 'F03E2F' },
+  { slug: 'make', color: '6D00CC' }, { slug: 'mailgun', color: 'F06B66' },
+  { slug: 'snowflake', color: '29B5E8' }, { slug: 'n8n', color: 'EA4B71' },
+  { slug: 'pipedrive', color: '1A1A1A' },
 ];
 
 const FILING_COLS = 28;
