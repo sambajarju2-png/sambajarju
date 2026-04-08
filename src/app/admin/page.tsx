@@ -19,11 +19,14 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState('');
   const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '', language: 'nl' as 'nl' | 'en' });
-  const [tab, setTab] = useState<'single' | 'bulk' | 'contact'>('single');
+  const [tab, setTab] = useState<'single' | 'bulk' | 'contact' | 'analytics'>('single');
   const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
   const [bulkStatus, setBulkStatus] = useState('');
   const [bulkSending, setBulkSending] = useState(false);
   const [contactSubs, setContactSubs] = useState<ContactSubmission[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [analytics, setAnalytics] = useState<Record<string, any> | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -47,6 +50,15 @@ export default function AdminPage() {
     await supabase.from('contact_submissions').update({ read: true }).eq('id', id);
     setContactSubs(prev => prev.map(c => c.id === id ? { ...c, read: true } : c));
   };
+
+  const fetchAnalytics = useCallback(async () => {
+    setAnalyticsLoading(true);
+    try {
+      const res = await fetch('/api/analytics');
+      if (res.ok) setAnalytics(await res.json());
+    } catch (e) { console.error('Analytics fetch error:', e); }
+    setAnalyticsLoading(false);
+  }, []);
 
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [replyMsg, setReplyMsg] = useState('');
@@ -156,6 +168,11 @@ export default function AdminPage() {
   const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 14, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' as const };
   const labelStyle = { fontSize: 12, fontWeight: 600 as const, color: '#4A6B7F', marginBottom: 4, display: 'block' as const };
   const pillBtn = (active: boolean) => ({ padding: '8px 16px', borderRadius: 99, border: 'none', background: active ? '#023047' : '#f1f5f9', color: active ? '#fff' : '#64748b', fontWeight: 600 as const, fontSize: 13, cursor: 'pointer' as const, fontFamily: 'inherit' });
+  const metricCard = { padding: 20, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0', textAlign: 'center' as const };
+  const cardStyle = { padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0' };
+  const sectionTitle = { fontSize: 15, fontWeight: 700 as const, margin: '0 0 16px', color: '#023047' };
+  const thStyle = { textAlign: 'left' as const, padding: '8px 12px', fontWeight: 600 as const, color: '#4A6B7F', fontSize: 11, textTransform: 'uppercase' as const };
+  const tdStyle = { padding: '8px 12px', color: '#023047' };
 
   return (
     <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
@@ -196,6 +213,7 @@ export default function AdminPage() {
         <button onClick={() => { setTab('contact'); fetchContacts(); }} style={pillBtn(tab === 'contact')}>
           📩 Contact ({contactSubs.filter(c => !c.read).length})
         </button>
+        <button onClick={() => { setTab('analytics'); if (!analytics) fetchAnalytics(); }} style={pillBtn(tab === 'analytics')}>📊 Analytics</button>
       </div>
 
       {/* SINGLE SEND */}
@@ -365,6 +383,136 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* ANALYTICS */}
+      {tab === 'analytics' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {analyticsLoading && <p style={{ textAlign: 'center', color: '#8BA3B5' }}>Loading analytics...</p>}
+          {analytics?.error && <p style={{ textAlign: 'center', color: '#EF476F' }}>{analytics.error}. Add POSTHOG_PERSONAL_API_KEY to Vercel env vars.</p>}
+          {analytics && !analytics.error && (
+            <>
+              {/* Summary cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+                <div style={metricCard}>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: '#023047' }}>{analytics.uniqueVisitors}</div>
+                  <div style={{ fontSize: 12, color: '#8BA3B5', fontWeight: 600 }}>Unique visitors (30d)</div>
+                </div>
+                <div style={metricCard}>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: '#023047' }}>{analytics.pageviews?.reduce((s: number, r: number[]) => s + (r[0] || 0), 0)}</div>
+                  <div style={{ fontSize: 12, color: '#8BA3B5', fontWeight: 600 }}>Total pageviews (30d)</div>
+                </div>
+                <div style={metricCard}>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: '#EF476F' }}>{analytics.abmVisitors?.length || 0}</div>
+                  <div style={{ fontSize: 12, color: '#8BA3B5', fontWeight: 600 }}>ABM visits (30d)</div>
+                </div>
+              </div>
+
+              {/* Pageview chart - simple bar chart */}
+              {analytics.pageviews?.length > 0 && (
+                <div style={cardStyle}>
+                  <h3 style={sectionTitle}>📈 Daily Pageviews (30d)</h3>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 120 }}>
+                    {analytics.pageviews.map((row: [number, string], i: number) => {
+                      const max = Math.max(...analytics.pageviews.map((r: [number]) => r[0]));
+                      const h = max > 0 ? (row[0] / max) * 100 : 0;
+                      return (
+                        <div key={i} title={`${row[1]}: ${row[0]} views`} style={{ flex: 1, minWidth: 4, background: '#023047', borderRadius: '3px 3px 0 0', height: `${Math.max(h, 3)}%`, opacity: 0.8, cursor: 'pointer' }} />
+                      );
+                    })}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                    <span style={{ fontSize: 10, color: '#8BA3B5' }}>{analytics.pageviews[0]?.[1]}</span>
+                    <span style={{ fontSize: 10, color: '#8BA3B5' }}>{analytics.pageviews[analytics.pageviews.length - 1]?.[1]}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Top pages */}
+              {analytics.topPages?.length > 0 && (
+                <div style={cardStyle}>
+                  <h3 style={sectionTitle}>🔝 Top Pages</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {analytics.topPages.slice(0, 15).map((row: [string, number], i: number) => {
+                      const max = analytics.topPages[0]?.[1] || 1;
+                      const pct = (row[1] / max) * 100;
+                      const path = row[0]?.replace('https://sambajarju.com', '') || '/';
+                      return (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <div style={{ flex: 1, position: 'relative', height: 28, borderRadius: 6, background: '#f1f5f9', overflow: 'hidden' }}>
+                            <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${pct}%`, background: 'linear-gradient(90deg, #023047, #0a4d6b)', borderRadius: 6, opacity: 0.15 }} />
+                            <span style={{ position: 'relative', padding: '0 8px', lineHeight: '28px', fontSize: 12, fontWeight: 500, color: '#023047' }}>{path || '/'}</span>
+                          </div>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#023047', minWidth: 40, textAlign: 'right' }}>{row[1]}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ABM visitors */}
+              {analytics.abmVisitors?.length > 0 && (
+                <div style={cardStyle}>
+                  <h3 style={sectionTitle}>🎯 ABM Visitors</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid #E2E8F0' }}>
+                          <th style={thStyle}>Company</th>
+                          <th style={thStyle}>Contact</th>
+                          <th style={thStyle}>Page</th>
+                          <th style={thStyle}>When</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {analytics.abmVisitors.map((row: [string, string, string, string], i: number) => (
+                          <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                            <td style={tdStyle}><span style={{ background: '#EF476F', color: '#fff', padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600 }}>{row[0]}</span></td>
+                            <td style={tdStyle}>{row[1] || '—'}</td>
+                            <td style={tdStyle}>{row[2]?.replace('https://sambajarju.com', '') || '/'}</td>
+                            <td style={{ ...tdStyle, color: '#8BA3B5' }}>{row[3] ? new Date(row[3]).toLocaleString('nl-NL') : ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Recent sessions */}
+              {analytics.recentSessions?.length > 0 && (
+                <div style={cardStyle}>
+                  <h3 style={sectionTitle}>👤 Recent Sessions (7d)</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid #E2E8F0' }}>
+                          <th style={thStyle}>Visitor</th>
+                          <th style={thStyle}>Pages</th>
+                          <th style={thStyle}>Referrer</th>
+                          <th style={thStyle}>Last seen</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {analytics.recentSessions.map((row: [string, string, string, number, string], i: number) => (
+                          <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                            <td style={tdStyle}><span style={{ fontFamily: 'monospace', fontSize: 11 }}>{row[0]?.slice(0, 16)}...</span></td>
+                            <td style={{ ...tdStyle, fontWeight: 700 }}>{row[3]}</td>
+                            <td style={tdStyle}>{row[4] ? new URL(row[4]).hostname : '(direct)'}</td>
+                            <td style={{ ...tdStyle, color: '#8BA3B5' }}>{row[2] ? new Date(row[2]).toLocaleString('nl-NL') : ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              <button onClick={fetchAnalytics} style={{ ...pillBtn(false), alignSelf: 'center' }}>🔄 Refresh</button>
+            </>
+          )}
         </div>
       )}
 

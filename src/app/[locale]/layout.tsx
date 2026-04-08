@@ -7,6 +7,8 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ChatBot } from "@/components/ui/chatbot";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { PostHogProvider, PostHogPageView } from "@/components/providers/posthog-provider";
+import { Suspense } from "react";
 
 const geistSans = localFont({
   src: "../../../public/fonts/GeistVF.woff2",
@@ -114,15 +116,18 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            <ScrollProgress />
-            <Header />
-            <main>{children}</main>
-            <Footer />
-            <ChatBot />
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <PostHogProvider>
+          <Suspense fallback={null}><PostHogPageView /></Suspense>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <ScrollProgress />
+              <Header />
+              <main>{children}</main>
+              <Footer />
+              <ChatBot />
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
