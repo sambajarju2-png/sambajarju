@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -20,7 +22,18 @@ export async function GET() {
   ]);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ leads: leads || [], scheduledActions: actions || [] });
+
+  // Add Logo.dev URLs server-side
+  const logoToken = process.env.LOGO_DEV_TOKEN;
+  const enrichedLeads = (leads || []).map((lead: any) => {
+    const domain = lead.companies?.domain?.toLowerCase().replace(/^https?:\/\//, '');
+    if (domain && logoToken) {
+      lead.companies = { ...lead.companies, logo_dev_url: `https://img.logo.dev/${domain}?token=${logoToken}&size=128&format=png` };
+    }
+    return lead;
+  });
+
+  return NextResponse.json({ leads: enrichedLeads, scheduledActions: actions || [] });
 }
 
 export async function PATCH(req: Request) {

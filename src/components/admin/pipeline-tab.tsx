@@ -27,11 +27,11 @@ const STAGES = [
   { id: 'lost', label: 'Lost', icon: XCircle, color: '#dc2626' },
 ];
 
-function LogoImg({ domain, size = 20 }: { domain: string; size?: number }) {
+function LogoImg({ company, size = 20 }: { company: any; size?: number }) {
   const [err, setErr] = useState(false);
-  const clean = domain?.replace(/^https?:\/\//, '').toLowerCase();
-  if (!clean || err) return <div style={{ width: size, height: size }} className="rounded bg-[#f1f5f9] flex items-center justify-center"><Building2 size={size * 0.6} className="text-[#8BA3B5]" /></div>;
-  return <img src={`https://logo.clearbit.com/${clean}`} alt="" width={size} height={size} className="rounded" onError={() => setErr(true)} />;
+  const url = company?.logo_dev_url;
+  if (!url || err) return <div style={{ width: size, height: size }} className="rounded bg-[#f1f5f9] flex items-center justify-center"><Building2 size={size * 0.6} className="text-[#8BA3B5]" /></div>;
+  return <img src={url} alt="" width={size} height={size} className="rounded object-contain" onError={() => setErr(true)} />;
 }
 
 export default function PipelineTab() {
@@ -166,7 +166,7 @@ export default function PipelineTab() {
                       </div>
                       {co && (
                         <div className="flex items-center gap-1.5 mb-1">
-                          <LogoImg domain={co.domain} size={14} />
+                          <LogoImg company={co} size={14} />
                           <span className="text-[10px] text-[#4A6B7F] truncate">{co.name || co.domain}</span>
                         </div>
                       )}
@@ -197,7 +197,7 @@ export default function PipelineTab() {
               {/* Company */}
               {selected.companies && (
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#f8fafc] border border-[#f4f7fa]">
-                  <LogoImg domain={selected.companies.domain} size={40} />
+                  <LogoImg company={selected.companies} size={40} />
                   <div>
                     <p className="text-sm font-bold text-[#023047]">{selected.companies.name || selected.companies.domain}</p>
                     <p className="text-[11px] text-[#8BA3B5]">{selected.companies.domain}</p>
