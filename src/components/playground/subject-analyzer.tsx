@@ -37,8 +37,20 @@ Subject line: "${subject}"`,
         }),
       });
 
-      if (!res.ok) throw new Error('API error');
+      if (!res.ok) {
+        if (res.status === 429) {
+          setError('Je hebt de limiet bereikt (10 analyses per dag). Kom morgen terug om het opnieuw te proberen!');
+          setIsLoading(false);
+          return;
+        }
+        throw new Error('API error');
+      }
       const data = await res.json();
+      if (data.rateLimited) {
+        setError('Je hebt de limiet bereikt (10 analyses per dag). Kom morgen terug om het opnieuw te proberen!');
+        setIsLoading(false);
+        return;
+      }
       const reply = data.reply || '';
 
       // Parse score and feedback

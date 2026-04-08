@@ -60,18 +60,30 @@ const tools: Tool[] = [
 
 function ToolIcon({ tool, size = 40 }: { tool: Tool; size?: number }) {
   if (tool.slug) {
+    // Use brand color in light mode, white in dark mode for visibility
+    const darkColor = tool.color.replace('#', '');
+    const lightSafe = ['ffffff', 'FFE01B', '000000'].includes(darkColor) ? '023047' : darkColor;
     return (
-      <img
-        src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color.replace('#', '')}`}
-        alt={tool.name}
-        width={size}
-        height={size}
-        className="dark:brightness-0 dark:invert dark:opacity-80"
-        loading="lazy"
-      />
+      <>
+        <img
+          src={`https://cdn.simpleicons.org/${tool.slug}/${lightSafe}`}
+          alt={tool.name}
+          width={size}
+          height={size}
+          className="dark:hidden"
+          loading="lazy"
+        />
+        <img
+          src={`https://cdn.simpleicons.org/${tool.slug}/ffffff`}
+          alt={tool.name}
+          width={size}
+          height={size}
+          className="hidden dark:block opacity-80"
+          loading="lazy"
+        />
+      </>
     );
   }
-  // Fallback: colored circle with initials
   const initials = tool.name.split(' ').map(w => w[0]).join('').slice(0, 2);
   return (
     <div

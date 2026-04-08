@@ -1,31 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/rate-limit';
 
-// In-memory rate limiter (resets on deploy — good enough for portfolio)
-const rateLimits = new Map<string, { count: number; resetAt: number }>();
-const MAX_MESSAGES_PER_DAY = 20;
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function getRateLimitKey(request: NextRequest): string {
+function getIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
-  return ip;
-}
-
-function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const entry = rateLimits.get(key);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimits.set(key, { count: 1, resetAt: now + DAY_MS });
-    return { allowed: true, remaining: MAX_MESSAGES_PER_DAY - 1 };
-  }
-
-  if (entry.count >= MAX_MESSAGES_PER_DAY) {
-    return { allowed: false, remaining: 0 };
-  }
-
-  entry.count++;
-  return { allowed: true, remaining: MAX_MESSAGES_PER_DAY - entry.count };
+  return forwarded?.split(',')[0]?.trim() || 'unknown';
 }
 
 // Input sanitization
@@ -102,12 +80,12 @@ VEILIGHEIDSREGELS (NIET OVERTREDEN):
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const key = getRateLimitKey(request);
-    const { allowed, remaining } = checkRateLimit(key);
+    const ip = getIP(request);
+    const { allowed, remaining } = await checkRateLimit(ip, 'chat');
 
     if (!allowed) {
       return NextResponse.json({
-        reply: 'Je hebt het maximale aantal berichten voor vandaag bereikt. Kom morgen gerust terug! Of stuur me direct een mail op samba@sambajarju.nl.',
+        reply: 'Je hebt het maximale aantal berichten voor vandaag bereikt (10 per dag). Kom morgen gerust terug! Of stuur me direct een mail op samba@sambajarju.nl.',
         rateLimited: true,
         remaining: 0,
       });

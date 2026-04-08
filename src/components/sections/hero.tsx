@@ -218,7 +218,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               <div className="flex gap-3 animate-marquee" style={{ width: 'max-content' }}>
                 {[...allTools, ...allTools].map((tool, i) => (
                   <div key={`${tool.slug}-${i}`} onClick={() => scrollTo('tools')} style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' }}>
-                    <img src={`https://cdn.simpleicons.org/${tool.slug}/${tool.color}`} alt="" width={13} height={13} style={{ opacity: 0.4 }} loading="lazy" />
+                    <img src={`https://cdn.simpleicons.org/${tool.slug}/EF476F`} alt="" width={13} height={13} style={{ opacity: 0.5 }} loading="lazy" />
                   </div>
                 ))}
               </div>
