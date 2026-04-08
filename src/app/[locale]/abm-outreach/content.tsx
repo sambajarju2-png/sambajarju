@@ -227,10 +227,10 @@ export function AbmOutreachContent({ sanityData }: { sanityData: SanityData | nu
                     </p>
 
                     {/* Screenshot placeholder */}
-                    {step.screenshot?.asset?.url ? (
+                    {((step as any).screenshot)?.asset?.url ? (
                       <div className="mt-4 rounded-xl overflow-hidden border border-border">
-                        <Image src={urlFor(step.screenshot.asset).width(800).height(450).url()} alt={step.screenshot.caption || ''} width={800} height={450} className="w-full h-auto" />
-                        {step.screenshot.caption && <p className="text-xs text-foreground-subtle p-2 text-center">{step.screenshot.caption}</p>}
+                        <Image src={urlFor(((step as any).screenshot).asset).width(800).height(450).url()} alt={((step as any).screenshot).caption || ''} width={800} height={450} className="w-full h-auto" />
+                        {((step as any).screenshot).caption && <p className="text-xs text-foreground-subtle p-2 text-center">{((step as any).screenshot).caption}</p>}
                       </div>
                     ) : (
                       <div className="mt-4 rounded-xl border-2 border-dashed border-border bg-background-alt p-8 text-center">

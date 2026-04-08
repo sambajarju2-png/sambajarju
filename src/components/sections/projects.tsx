@@ -153,7 +153,6 @@ export function Projects() {
             </StaggerItem>
             );
           })}
-          ))}
         </StaggerContainer>
       </div>
     </section>
