@@ -199,7 +199,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
             </motion.div>
 
             {/* Badges */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }} className="flex gap-2 overflow-x-auto pb-1 lg:hidden mb-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }} className="flex gap-2 overflow-x-auto pb-1 lg:hidden mb-4 -mx-6 px-6" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
               {[
                 { icon: Briefcase, label: t('badge_role') },
                 { icon: Euro, label: t('badge_salary') },

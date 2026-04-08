@@ -11,7 +11,7 @@ export interface GenerateCVOptions {
   language?: 'nl' | 'en';
 }
 
-const PHOTO_URL = process.env.CV_PHOTO_URL || 'https://znktohqimzhwoujxzkds.supabase.co/storage/v1/object/public/Profile%20pic/Zonder%20titel%20(400%20x%20400%20px).png';
+const PHOTO_URL = process.env.CV_PHOTO_URL || 'https://znktohqimzhwoujxzkds.supabase.co/storage/v1/object/public/Profile%20pic/Samba.png';
 
 const content = {
   nl: {
@@ -20,7 +20,7 @@ const content = {
     tagline: 'Creativiteit ontmoet strategie',
     madeFor: 'Gemaakt voor',
     personalCv: 'Persoonlijk CV',
-    greeting: (name: string) => `Hey ${name} – hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.`,
+    greeting: (name: string) => `Hey ${name}, hierbij mijn CV. Naast mijn werk bij Vandebron werk ik als freelancer bij Cleanprofs.nl, waar ik Deployteq gebruik voor geautomatiseerde email campagnes.`,
     expertise: 'Expertise',
     tools: 'Tools',
     languages: 'Talen',
@@ -50,7 +50,7 @@ const content = {
     tagline: 'Where creativity meets strategy',
     madeFor: 'Made for',
     personalCv: 'Personal CV',
-    greeting: (name: string) => `Hey ${name} – here's my CV. Besides my work at Vandebron, I freelance at Cleanprofs.nl where I use Deployteq for automated email campaigns.`,
+    greeting: (name: string) => `Hey ${name}, here is my CV. Besides my work at Vandebron, I freelance at Cleanprofs.nl where I use Deployteq for automated email campaigns.`,
     expertise: 'Expertise',
     tools: 'Tools',
     languages: 'Languages',
@@ -78,6 +78,7 @@ const content = {
 
 function buildCVHtml(opts: GenerateCVOptions): string {
   const {
+    companyDomain = '',
     companyName = '',
     contactName = '',
     primary = '#023047',
@@ -277,9 +278,9 @@ function buildCVHtml(opts: GenerateCVOptions): string {
   </div>
 
   <div class="right">
-    ${companyName ? `<div class="company-bar"><div class="cb-left">${logoUrl ? `<div class="cb-logo"><img src="${logoUrl}" /></div>` : ''}<div><div class="cb-label">${t.madeFor}</div><div class="cb-name">${companyName}</div></div></div><div class="cb-badge">${t.personalCv}</div></div>` : ''}
+    ${companyName ? `<div class="company-bar"><div class="cb-left">${logoUrl ? `<div class="cb-logo"><img src="${logoUrl}" /></div>` : ''}<div><div class="cb-label">${t.madeFor}</div><div class="cb-name">${companyName}</div></div></div><div style="display:flex;align-items:center;gap:10px;">${companyDomain && contactName ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&bgcolor=FFFFFF&color=023047&data=${encodeURIComponent(`https://sambajarju.com/landing?company=${companyDomain}&contactname=${contactName}`)}" width="44" height="44" style="border-radius:4px;" />` : ''}<div class="cb-badge">${t.personalCv}</div></div></div>` : ''}
 
-    ${contactName ? `<div class="greeting-bar"><strong>${contactName}</strong> – ${t.greeting(contactName).replace(`Hey ${contactName} – `, '')}</div>` : ''}
+    ${contactName ? `<div class="greeting-bar"><strong>${contactName}</strong>, ${t.greeting(contactName).replace(`Hey ${contactName}, `, '')}</div>` : ''}
 
     <div class="r-body">
       <div class="r-title">${t.experience}</div>
