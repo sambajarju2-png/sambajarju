@@ -184,7 +184,7 @@
   },
   "playground_page": {
     "title": "Speeltuin",
-    "subtitle": "Ik heb deze gebouwd om te laten zien hoe ik denk. Niet alleen erover praten. Elke demo is een stukje van wat ik dagelijks doe bij Samba Energy.",
+    "subtitle": "Ik heb deze gebouwd om te laten zien hoe ik denk. Elke demo laat zien wat ik dagelijks doe als data marketeer.",
     "flow_title": "Email Automation Flow",
     "flow_subtitle": "Zo ontwerp ik subscriber journeys. Trigger → nurture → convert. Bekijk de simulatie door beide paden.",
     "roi_title": "Automation ROI Calculator",
@@ -196,7 +196,7 @@
     "roi_money_saved": "Geld bespaard / maand",
     "roi_emails_auto": "Emails geautomatiseerd / maand",
     "sql_title": "SQL Query Builder",
-    "sql_subtitle": "Dit soort queries schrijf ik dagelijks bij Samba Energy voor 500k+ emails/maand. Probeer de presets of schrijf je eigen query.",
+    "sql_subtitle": "Dit soort queries schrijf ik dagelijks voor marketing campagnes. Probeer de presets of schrijf je eigen query.",
     "sql_goal": "Marketingdoel",
     "sql_code": "Technische oplossing",
     "dashboard_title": "Campagne Dashboard",

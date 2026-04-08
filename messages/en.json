@@ -63,7 +63,7 @@
   },
   "tools": {
     "label": "Tool stack",
-    "title": "My arsenal",
+    "title": "My toolstack",
     "subtitle": "Tools and technologies I work with daily.",
     "categories": {
       "email": "Email & Marketing",
@@ -184,7 +184,7 @@
   },
   "playground_page": {
     "title": "Playground",
-    "subtitle": "I built these to show how I think. Not just talk about it. Each demo is a piece of what I actually do at Samba Energy.",
+    "subtitle": "I built these to show how I think. Each demo reflects what I do day to day as a data marketeer.",
     "flow_title": "Email Automation Flow",
     "flow_subtitle": "This is how I design subscriber journeys. Trigger → nurture → convert. Watch the simulation run through both paths.",
     "roi_title": "Automation ROI Calculator",
@@ -196,7 +196,7 @@
     "roi_money_saved": "Money saved / month",
     "roi_emails_auto": "Emails automated / month",
     "sql_title": "SQL Query Builder",
-    "sql_subtitle": "I write queries like these daily at Samba Energy for marketing campaigns. Try the presets or write your own. The results might surprise you.",
+    "sql_subtitle": "I write queries like these daily for marketing campaigns. Try the presets or write your own.",
     "sql_goal": "Marketing goal",
     "sql_code": "Technical solution",
     "dashboard_title": "Campaign Dashboard",
