@@ -5,10 +5,11 @@ import { createClient } from '@/lib/supabase/client';
 import AnalyticsDashboard from '@/components/admin/analytics-dashboard';
 import OutreachTab from '@/components/admin/outreach-tab';
 import InboxTab from '@/components/admin/inbox-tab';
+import PipelineTab from '@/components/admin/pipeline-tab';
 import type { User } from '@supabase/supabase-js';
 import {
   Building2, Users, Send, MailOpen, MousePointerClick, MessageSquareReply, Eye,
-  Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard
+  Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard, Columns3
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
@@ -26,7 +27,7 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState('');
   const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '', language: 'nl' as 'nl' | 'en' });
-  const [tab, setTab] = useState<'outreach' | 'inbox' | 'analytics'>('outreach');
+  const [tab, setTab] = useState<'outreach' | 'inbox' | 'pipeline' | 'analytics'>('outreach');
   const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
   const [bulkStatus, setBulkStatus] = useState('');
   const [bulkSending, setBulkSending] = useState(false);
@@ -165,6 +166,7 @@ export default function AdminPage() {
 
   const tabItems = [
     { id: 'outreach' as const, label: 'Outreach', icon: Send, action: () => setTab('outreach') },
+    { id: 'pipeline' as const, label: 'Pipeline', icon: Columns3, action: () => setTab('pipeline') },
     { id: 'inbox' as const, label: `Inbox (${contactSubs.filter(c => !c.read).length})`, icon: Inbox, action: () => { setTab('inbox'); fetchContacts(); } },
     { id: 'analytics' as const, label: 'Analytics', icon: BarChart3, action: () => setTab('analytics') },
   ];
@@ -238,6 +240,8 @@ export default function AdminPage() {
           recentOutreach={(stats?.recentOutreach || []) as Record<string, unknown>[]}
         />
       )}
+
+      {tab === 'pipeline' && <PipelineTab />}
 
       {tab === 'inbox' && (
         <InboxTab
