@@ -9,12 +9,13 @@ import PipelineTab from '@/components/admin/pipeline-tab';
 import type { User } from '@supabase/supabase-js';
 import {
   Building2, Users, Send, MailOpen, MousePointerClick, MessageSquareReply, Eye,
-  Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard, Columns3
+  Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard, Columns3,
+  Flame, AlertTriangle, ChevronRight
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
 
-interface Stats { companies: number; contacts: number; sent: number; opened: number; clicked: number; replied: number; pageViews: number; recentOutreach: Record<string, unknown>[]; inboxReplies: Record<string, unknown>[]; }
+interface Stats { companies: number; contacts: number; sent: number; opened: number; clicked: number; replied: number; pageViews: number; recentOutreach: Record<string, unknown>[]; inboxReplies: Record<string, unknown>[]; focus?: { type: string; priority: number; label: string; detail: string; leadId?: string }[]; }
 
 interface CsvRow { companyDomain: string; firstName: string; lastName: string; email: string; role: string; language: 'nl' | 'en'; }
 
@@ -209,6 +210,45 @@ export default function AdminPage() {
           </div>
         ))}
       </div>
+
+      {/* Daily Focus */}
+      {stats?.focus && stats.focus.length > 0 && (
+        <div className="mb-5 bg-white rounded-2xl border border-[#E8EDF2] overflow-hidden">
+          <div className="px-4 py-3 border-b border-[#f4f7fa] flex items-center gap-2">
+            <Flame size={14} className="text-[#EF476F]" />
+            <span className="text-xs font-bold text-[#023047]">Today&apos;s Focus</span>
+            <span className="text-[10px] text-[#8BA3B5] bg-[#f1f5f9] px-1.5 py-0.5 rounded-full font-semibold">{stats.focus.length}</span>
+          </div>
+          <div className="divide-y divide-[#f4f7fa]">
+            {stats.focus.map((item, i) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                hot: <Flame size={13} className="text-[#EF476F]" />,
+                stale: <AlertTriangle size={13} className="text-[#f59e0b]" />,
+                linkedin: <Send size={13} className="text-[#0A66C2]" />,
+                inbox: <Inbox size={13} className="text-[#8B5CF6]" />,
+              };
+              return (
+                <button
+                  key={i}
+                  onClick={() => {
+                    if (item.type === 'inbox') { setTab('inbox'); fetchContacts(); }
+                    else if (item.type === 'hot' || item.type === 'stale') setTab('pipeline');
+                    else if (item.type === 'linkedin') setTab('pipeline');
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#fafbfc] transition cursor-pointer border-none bg-transparent"
+                >
+                  {iconMap[item.type] || <ChevronRight size={13} className="text-[#8BA3B5]" />}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-[#023047] truncate">{item.label}</p>
+                    <p className="text-[10px] text-[#8BA3B5] truncate">{item.detail}</p>
+                  </div>
+                  <ChevronRight size={12} className="text-[#8BA3B5] flex-shrink-0" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1.5 mb-4 flex-wrap">

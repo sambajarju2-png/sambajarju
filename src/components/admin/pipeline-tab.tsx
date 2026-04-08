@@ -93,6 +93,14 @@ export default function PipelineTab() {
     return hrs < 24 ? `${hrs}h` : `${Math.floor(hrs / 24)}d`;
   };
 
+  const momentum = (lead: any) => {
+    const daysSince = (Date.now() - new Date(lead.pipeline_updated_at).getTime()) / 86400000;
+    if (daysSince < 1) return { label: 'Surging', color: 'text-[#16a34a]', bg: 'bg-emerald-50' };
+    if (daysSince < 3) return { label: 'Active', color: 'text-[#06B6D4]', bg: 'bg-cyan-50' };
+    if (daysSince < 7) return { label: 'Stale', color: 'text-[#f59e0b]', bg: 'bg-amber-50' };
+    return { label: 'Cold', color: 'text-[#dc2626]', bg: 'bg-red-50' };
+  };
+
   if (loading) return <div className="flex items-center justify-center py-16 text-[#8BA3B5] text-sm"><Loader2 size={16} className="animate-spin mr-2" /> Loading pipeline...</div>;
 
   const grouped: Record<string, any[]> = {};
@@ -194,9 +202,9 @@ export default function PipelineTab() {
                           <span className="text-[10px] text-[#4A6B7F] truncate">{co.name || co.domain}</span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center justify-between mt-1.5">
                         <span className="text-[9px] text-[#8BA3B5]">{lead.role || ''}</span>
-                        <span className="text-[9px] text-[#8BA3B5]">{timeAgo(lead.pipeline_updated_at)}</span>
+                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${momentum(lead).bg} ${momentum(lead).color}`}>{momentum(lead).label}</span>
                       </div>
                     </button>
                   );
@@ -272,14 +280,38 @@ export default function PipelineTab() {
                 )}
               </div>
 
-              {/* Current stage */}
+              {/* Current stage + signal */}
               <div>
                 <p className="text-[11px] font-semibold text-[#8BA3B5] uppercase tracking-wide mb-2">Stage</p>
-                {(() => {
-                  const st = STAGES.find(s => s.id === selected.pipeline_stage);
-                  const Icon = st?.icon || Users;
-                  return <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white" style={{ background: st?.color || '#8BA3B5' }}><Icon size={13} /> {st?.label}</span>;
-                })()}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {(() => {
+                    const st = STAGES.find(s => s.id === selected.pipeline_stage);
+                    const Icon = st?.icon || Users;
+                    return <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white" style={{ background: st?.color || '#8BA3B5' }}><Icon size={13} /> {st?.label}</span>;
+                  })()}
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${momentum(selected).bg} ${momentum(selected).color}`}>{momentum(selected).label}</span>
+                </div>
+                {/* Why explanation */}
+                <div className="mt-2 p-2.5 rounded-lg bg-[#f8fafc] border border-[#f4f7fa]">
+                  <p className="text-[10px] text-[#4A6B7F] leading-relaxed">
+                    {(() => {
+                      const m = momentum(selected);
+                      const daysSince = Math.floor((Date.now() - new Date(selected.pipeline_updated_at).getTime()) / 86400000);
+                      const reasons: string[] = [];
+                      if (selected.pipeline_stage === 'clicked') reasons.push('clicked your email CTA');
+                      if (selected.pipeline_stage === 'opened') reasons.push('opened your email');
+                      if (selected.pipeline_stage === 'visited') reasons.push('visited your website');
+                      if (selected.pipeline_stage === 'replied') reasons.push('replied to your outreach');
+                      if (selected.pipeline_stage === 'contacted') reasons.push('was contacted via outreach');
+                      if (m.label === 'Surging') reasons.push('activity in the last 24h');
+                      if (m.label === 'Cold') reasons.push(`no activity for ${daysSince}+ days — consider re-engagement`);
+                      if (m.label === 'Stale') reasons.push(`last activity ${daysSince}d ago — follow up soon`);
+                      return reasons.length > 0
+                        ? `${selected.first_name} ${reasons.join(', ')}.`
+                        : `In ${selected.pipeline_stage} stage for ${daysSince} days.`;
+                    })()}
+                  </p>
+                </div>
               </div>
 
               {/* Move to */}
