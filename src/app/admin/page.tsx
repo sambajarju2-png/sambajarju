@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { AnalyticsDashboard } from '@/components/admin/analytics-dashboard';
+import AnalyticsDashboard from '@/components/admin/analytics-dashboard';
 import type { User } from '@supabase/supabase-js';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
