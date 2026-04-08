@@ -7,11 +7,13 @@ import { CommandMenu } from '@/components/ui/command-menu';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { OverlayMenu } from '@/components/ui/overlay-menu';
 
 export function Header() {
   const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -65,6 +67,14 @@ export function Header() {
           <CommandMenu />
           <ThemeToggle />
           <LanguageToggle />
+          {/* Desktop overlay menu trigger */}
+          <button
+            onClick={() => setOverlayOpen(true)}
+            className="hidden lg:flex p-2 rounded-lg hover:bg-surface-hover transition-colors text-foreground cursor-pointer"
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-2 rounded-lg hover:bg-surface-hover transition-colors text-foreground"
@@ -99,6 +109,9 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Desktop full-screen overlay menu */}
+      <OverlayMenu isOpen={overlayOpen} onClose={() => setOverlayOpen(false)} />
     </header>
   );
 }
