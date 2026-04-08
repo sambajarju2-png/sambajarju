@@ -62,21 +62,19 @@ function RenderBody({ blocks }: { blocks: Block[] }) {
           return t;
         }).join('') || '';
 
-        const Tag = block.style === 'h2' ? 'h2' : block.style === 'h3' ? 'h3' : block.style === 'h4' ? 'h4' : block.style === 'blockquote' ? 'blockquote' : 'p';
-        const cls = Tag === 'h2' ? 'text-2xl font-bold text-foreground mt-10 mb-4'
-          : Tag === 'h3' ? 'text-xl font-bold text-foreground mt-8 mb-3'
-          : Tag === 'h4' ? 'text-lg font-semibold text-foreground mt-6 mb-2'
-          : Tag === 'blockquote' ? 'border-l-4 border-accent pl-4 italic text-foreground-muted my-6'
-          : 'mb-4 leading-relaxed';
+        const key = block._key || i;
 
         if (block.listItem === 'bullet') {
-          return <li key={block._key || i} className="ml-6 list-disc mb-2 text-foreground-muted" dangerouslySetInnerHTML={{ __html: text }} />;
+          return <li key={key} className="ml-6 list-disc mb-2 text-foreground-muted" dangerouslySetInnerHTML={{ __html: text }} />;
         }
         if (block.listItem === 'number') {
-          return <li key={block._key || i} className="ml-6 list-decimal mb-2 text-foreground-muted" dangerouslySetInnerHTML={{ __html: text }} />;
+          return <li key={key} className="ml-6 list-decimal mb-2 text-foreground-muted" dangerouslySetInnerHTML={{ __html: text }} />;
         }
-
-        return <Tag key={block._key || i} className={cls} dangerouslySetInnerHTML={{ __html: text }} />;
+        if (block.style === 'h2') return <h2 key={key} className="text-2xl font-bold text-foreground mt-10 mb-4" dangerouslySetInnerHTML={{ __html: text }} />;
+        if (block.style === 'h3') return <h3 key={key} className="text-xl font-bold text-foreground mt-8 mb-3" dangerouslySetInnerHTML={{ __html: text }} />;
+        if (block.style === 'h4') return <h4 key={key} className="text-lg font-semibold text-foreground mt-6 mb-2" dangerouslySetInnerHTML={{ __html: text }} />;
+        if (block.style === 'blockquote') return <blockquote key={key} className="border-l-4 border-accent pl-4 italic text-foreground-muted my-6" dangerouslySetInnerHTML={{ __html: text }} />;
+        return <p key={key} className="mb-4 leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />;
       })}
     </div>
   );
