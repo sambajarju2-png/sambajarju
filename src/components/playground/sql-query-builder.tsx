@@ -81,11 +81,11 @@ function executeSQL(query: string, dataset: DatasetKey): { rows: Row[]; error: s
   const columns = Object.keys(data[0] || {});
 
   // Parse SELECT columns
-  const selectPart = q.match(/SELECT\s+(.*?)\s+FROM/is)?.[1]?.trim() || '*';
+  const selectPart = q.match(/SELECT\s+([\s\S]*?)\s+FROM/i)?.[1]?.trim() || '*';
   const isSelectAll = selectPart === '*';
 
   // Parse WHERE
-  const whereMatch = q.match(/WHERE\s+(.*?)(?:\s+GROUP\s+BY|\s+ORDER\s+BY|\s+LIMIT|$)/is);
+  const whereMatch = q.match(/WHERE\s+([\s\S]*?)(?:\s+GROUP\s+BY|\s+ORDER\s+BY|\s+LIMIT|$)/i);
   if (whereMatch) {
     const whereClauses = whereMatch[1];
     try {

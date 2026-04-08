@@ -51,6 +51,7 @@ const orbitTools = [
   { slug: 'zapier', color: 'FF4F00', name: 'Zapier', usage: 'Connecting tools and automating workflows.', arc: 2 as const, dur: 30, begin: '-26s' },
   { slug: 'apolloio', color: 'E86C34', name: 'Apollo.io', usage: 'Sales intelligence and outreach.', arc: 1 as const, dur: 35, begin: '-25s' },
   { slug: 'mailgun', color: 'F06B66', name: 'Mailgun', usage: 'Email delivery for outreach system.', arc: 2 as const, dur: 30, begin: '-20s' },
+  { slug: 'snowflake', color: '29B5E8', name: 'Snowflake', usage: 'Cloud data warehouse for marketing analytics.', arc: 1 as const, dur: 35, begin: '-10s' },
 ];
 
 const arcPaths = {
