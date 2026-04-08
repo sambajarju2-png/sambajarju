@@ -15,17 +15,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing company or page' }, { status: 400 });
     }
 
-    // Look up contact email from outreach_contacts
+    // Look up contact email via companies + contacts join
     let contact_email = null;
     if (contact_name) {
-      const { data } = await supabase
-        .from('outreach_contacts')
-        .select('email')
-        .eq('company_domain', company)
-        .ilike('first_name', contact_name)
+      const { data: companyRow } = await supabase
+        .from('companies')
+        .select('id')
+        .ilike('domain', company)
         .limit(1)
         .single();
-      if (data?.email) contact_email = data.email;
+
+      if (companyRow?.id) {
+        const { data: contactRow } = await supabase
+          .from('contacts')
+          .select('email')
+          .eq('company_id', companyRow.id)
+          .ilike('first_name', contact_name)
+          .limit(1)
+          .single();
+        if (contactRow?.email) contact_email = contactRow.email;
+      }
     }
 
     await supabase.from('abm_visits').insert({

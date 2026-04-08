@@ -58,6 +58,7 @@ export default function AnalyticsDashboard() {
   const [days, setDays] = useState(30);
   const [section, setSection] = useState<'overview' | 'content' | 'acquisition' | 'abm' | 'sessions'>('overview');
   const [retargeting, setRetargeting] = useState<Record<string, 'sending' | 'sent' | 'error'>>({});
+  const [retargetEmails, setRetargetEmails] = useState<Record<string, string>>({});
   const [abmSupabase, setAbmSupabase] = useState<any[]>([]);
 
   const fetchData = useCallback(async () => {
@@ -75,8 +76,10 @@ export default function AnalyticsDashboard() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const handleRetarget = async (visit: any) => {
+  const handleRetarget = async (visit: any, manualEmail?: string) => {
     const key = visit.id || `${visit.company}_${visit.contact_name}`;
+    const email = manualEmail || visit.contact_email;
+    if (!email) return;
     setRetargeting(p => ({ ...p, [key]: 'sending' }));
     try {
       const res = await fetch('/api/outreach/retarget', {
@@ -84,7 +87,7 @@ export default function AnalyticsDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           visitId: visit.id,
-          email: visit.contact_email,
+          email: email,
           company: visit.company,
           contactName: visit.contact_name,
           template: 'follow_up',
@@ -375,7 +378,20 @@ export default function AnalyticsDashboard() {
                         ) : v.contact_email ? (
                           <button onClick={() => handleRetarget(v)} style={{ ...P(false), fontSize: 11, padding: '4px 10px', background: '#023047', color: '#fff' }}><Send size={11} /> Retarget</button>
                         ) : (
-                          <span style={{ fontSize: 10, color: '#8BA3B5' }}>No email</span>
+                          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                            <input
+                              type="email"
+                              placeholder="email"
+                              value={retargetEmails[v.id] || ''}
+                              onChange={e => setRetargetEmails(p => ({ ...p, [v.id]: e.target.value }))}
+                              style={{ width: 120, padding: '3px 6px', borderRadius: 6, border: '1px solid #E8EDF2', fontSize: 11, fontFamily: 'inherit' }}
+                            />
+                            <button
+                              onClick={() => handleRetarget(v, retargetEmails[v.id])}
+                              disabled={!retargetEmails[v.id]?.includes('@')}
+                              style={{ ...P(false), fontSize: 11, padding: '4px 8px', background: retargetEmails[v.id]?.includes('@') ? '#023047' : '#e2e8f0', color: retargetEmails[v.id]?.includes('@') ? '#fff' : '#8BA3B5', cursor: retargetEmails[v.id]?.includes('@') ? 'pointer' : 'default' }}
+                            ><Send size={11} /></button>
+                          </div>
                         )}
                       </td>
                     </tr>
