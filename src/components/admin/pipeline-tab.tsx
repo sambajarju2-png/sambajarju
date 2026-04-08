@@ -137,6 +137,30 @@ export default function PipelineTab() {
         </div>
       )}
 
+      {/* Conversion funnel */}
+      {leads.length > 0 && (
+        <div className="bg-white rounded-2xl border border-[#E8EDF2] p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <ArrowRight size={13} className="text-[#8BA3B5]" />
+            <span className="text-[11px] font-bold text-[#023047]">Funnel</span>
+          </div>
+          <div className="flex items-end gap-1">
+            {STAGES.filter(s => grouped[s.id].length > 0 || ['prospect', 'contacted', 'won'].includes(s.id)).map(stage => {
+              const count = grouped[stage.id].length;
+              const max = Math.max(...Object.values(grouped).map(g => g.length), 1);
+              const pct = (count / max) * 100;
+              return (
+                <div key={stage.id} className="flex-1 flex flex-col items-center gap-1 min-w-0">
+                  <span className="text-[10px] font-bold text-[#023047]">{count}</span>
+                  <div className="w-full rounded-t" style={{ height: Math.max(pct * 0.6, 4), background: stage.color, opacity: 0.7, transition: 'height 0.3s' }} />
+                  <span className="text-[8px] text-[#8BA3B5] truncate w-full text-center">{stage.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Kanban */}
       <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollSnapType: 'x mandatory' }}>
         {activeStages.map(stage => {

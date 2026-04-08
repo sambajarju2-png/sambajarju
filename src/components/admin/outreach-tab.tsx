@@ -193,18 +193,27 @@ export default function OutreachTab({
             <table className="w-full text-xs border-collapse">
               <thead>
                 <tr className="border-t border-b border-[#E8EDF2] bg-[#fafbfc]">
-                  <th className="text-left px-5 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Subject</th>
+                  <th className="text-left px-5 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Contact</th>
+                  <th className="text-left px-3 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Subject</th>
                   <th className="text-left px-3 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Status</th>
-                  <th className="text-left px-3 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Verzonden</th>
+                  <th className="text-left px-3 py-2 font-semibold text-[#4A6B7F] text-[10px] uppercase tracking-wide">Datum</th>
                 </tr>
               </thead>
               <tbody>
                 {recentOutreach.map((log, i) => {
                   const st = String(log.status || 'sent');
                   const colors = statusColor[st] || statusColor.sent;
+                  const contact = log.contacts as Record<string, unknown> | null;
+                  const company = log.companies as Record<string, unknown> | null;
                   return (
                     <tr key={i} className="border-b border-[#f4f7fa] hover:bg-[#fafbfc] transition">
-                      <td className="px-5 py-2.5 text-[#023047] font-medium">{String(log.subject || '—')}</td>
+                      <td className="px-5 py-2.5">
+                        <div className="flex flex-col">
+                          <span className="text-[#023047] font-semibold">{contact ? `${contact.first_name} ${contact.last_name}` : '—'}</span>
+                          <span className="text-[10px] text-[#8BA3B5]">{company ? String(company.domain || company.name) : ''}</span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2.5 text-[#4A6B7F]">{String(log.subject || '—')}</td>
                       <td className="px-3 py-2.5">
                         <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${colors.bg} ${colors.text}`}>{st}</span>
                       </td>
