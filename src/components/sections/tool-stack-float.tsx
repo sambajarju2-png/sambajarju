@@ -61,22 +61,28 @@ const tools: Tool[] = [
 function ToolIcon({ tool, size = 40 }: { tool: Tool; size?: number }) {
   const initials = tool.name.split(' ').map(w => w[0]).join('').slice(0, 2);
   const fallback = (
-    <div
-      className="rounded-lg flex items-center justify-center font-bold text-white"
-      style={{ width: size, height: size, backgroundColor: tool.color, fontSize: size * 0.35 }}
-    >
-      {initials}
-    </div>
+    <>
+      <div
+        className="rounded-lg flex items-center justify-center font-bold text-white dark:hidden"
+        style={{ width: size, height: size, backgroundColor: '#023047', fontSize: size * 0.35 }}
+      >
+        {initials}
+      </div>
+      <div
+        className="rounded-lg items-center justify-center font-bold text-white hidden dark:flex"
+        style={{ width: size, height: size, backgroundColor: tool.color, fontSize: size * 0.35 }}
+      >
+        {initials}
+      </div>
+    </>
   );
 
   if (!tool.slug) return fallback;
 
-  const darkColor = tool.color.replace('#', '');
-  const lightSafe = ['ffffff', 'FFE01B', '000000'].includes(darkColor) ? '023047' : darkColor;
   return (
     <>
       <img
-        src={`https://cdn.simpleicons.org/${tool.slug}/${lightSafe}`}
+        src={`https://cdn.simpleicons.org/${tool.slug}/023047`}
         alt={tool.name}
         width={size}
         height={size}
