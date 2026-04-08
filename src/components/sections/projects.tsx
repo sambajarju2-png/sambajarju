@@ -3,8 +3,9 @@
 import { useTranslations } from 'next-intl';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion';
 import { motion } from 'framer-motion';
-import { ExternalLink, TrendingUp, Wrench, GraduationCap, AlertTriangle, Globe, Sparkles } from 'lucide-react';
+import { ExternalLink, TrendingUp, Wrench, GraduationCap, AlertTriangle, Globe, Sparkles, Zap } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export function Projects() {
   const t = useTranslations('projects');
@@ -17,8 +18,9 @@ export function Projects() {
   ];
 
   const otherProjects = [
-    { key: 'workwings', icon: Globe, url: 'https://workwings.nl', color: 'from-blue-500/20 to-cyan-500/20', comingSoon: true },
-    { key: 'cleanprofs', icon: Sparkles, url: 'https://cleanprofs.nl', color: 'from-emerald-500/20 to-teal-500/20', comingSoon: false },
+    { key: 'abm_outreach', icon: Zap, url: '/abm-outreach', color: 'from-pink-500/20 to-rose-500/20', comingSoon: false, internal: true },
+    { key: 'cleanprofs', icon: Sparkles, url: 'https://cleanprofs.nl', color: 'from-emerald-500/20 to-teal-500/20', comingSoon: false, internal: false },
+    { key: 'workwings', icon: Globe, url: 'https://workwings.nl', color: 'from-blue-500/20 to-cyan-500/20', comingSoon: true, internal: false },
   ];
 
   return (
@@ -118,12 +120,15 @@ export function Projects() {
 
         {/* Other projects */}
         <StaggerContainer className="grid md:grid-cols-3 gap-6 mt-8">
-          {otherProjects.map(({ key, icon: Icon, url, color, comingSoon }) => (
+          {otherProjects.map(({ key, icon: Icon, url, color, comingSoon, internal }) => {
+            const Wrapper = internal && !comingSoon ? Link : 'a';
+            const linkProps = comingSoon ? {} : internal
+              ? { href: url }
+              : { href: url, target: '_blank' as const, rel: 'noopener noreferrer' };
+            return (
             <StaggerItem key={key}>
-              <a
-                href={comingSoon ? undefined : url}
-                target={comingSoon ? undefined : '_blank'}
-                rel={comingSoon ? undefined : 'noopener noreferrer'}
+              <Wrapper
+                {...linkProps}
                 className={`group block rounded-2xl border border-border bg-surface p-6 transition-all relative overflow-hidden ${comingSoon ? 'cursor-default' : 'hover:border-border-hover hover:shadow-md'}`}
               >
                 {comingSoon && (
@@ -144,8 +149,10 @@ export function Projects() {
                   {t('view_project')}
                   <ExternalLink className="w-3 h-3" />
                 </div>
-              </a>
+              </Wrapper>
             </StaggerItem>
+            );
+          })}
           ))}
         </StaggerContainer>
       </div>

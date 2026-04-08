@@ -55,7 +55,11 @@
       "description": "Freelance marketing automation via Deployteq for a professional cleaning company."
     },
     "view_project": "View project",
-    "case_study": "Case study"
+    "case_study": "Case study",
+    "abm_outreach": {
+      "title": "ABM Outreach System",
+      "description": "Fully automated Account-Based Marketing pipeline with AI personalization, branded CVs and personalized landing pages."
+    }
   },
   "tools": {
     "label": "Tool stack",
