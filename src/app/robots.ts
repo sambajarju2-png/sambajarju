@@ -6,9 +6,26 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin', '/studio', '/api/'],
+        disallow: [
+          '/admin',
+          '/admin/',
+          '/studio',
+          '/studio/',
+          '/api/',
+          '/landing',
+          '/_next/',
+        ],
+      },
+      {
+        userAgent: 'GPTBot',
+        disallow: ['/'],
+      },
+      {
+        userAgent: 'CCBot',
+        disallow: ['/'],
       },
     ],
     sitemap: 'https://sambajarju.com/sitemap.xml',
+    host: 'https://sambajarju.com',
   };
 }
