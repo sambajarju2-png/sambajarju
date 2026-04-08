@@ -224,8 +224,11 @@ export default function AdminPage() {
               const iconMap: Record<string, React.ReactNode> = {
                 hot: <Flame size={13} className="text-[#EF476F]" />,
                 stale: <AlertTriangle size={13} className="text-[#f59e0b]" />,
+                ghost: <AlertTriangle size={13} className="text-[#dc2626]" />,
                 linkedin: <Send size={13} className="text-[#0A66C2]" />,
                 inbox: <Inbox size={13} className="text-[#8B5CF6]" />,
+                ip_identified: <Eye size={13} className="text-[#06B6D4]" />,
+                multi_visit: <Flame size={13} className="text-[#8B5CF6]" />,
               };
               return (
                 <button

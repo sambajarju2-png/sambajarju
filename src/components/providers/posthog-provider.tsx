@@ -42,6 +42,7 @@ export function PostHogPageView() {
       posthog.identify(distinctId, {
         company,
         contact_name: contactname || undefined,
+        source: 'abm_link',
       });
 
       // Also store in Supabase for retargeting
@@ -56,6 +57,33 @@ export function PostHogPageView() {
           session_id: posthog.get_session_id?.() || null,
         }),
       }).catch(() => {});
+    } else {
+      // Try IP-based company identification for organic visitors (once per session)
+      const identified = window.sessionStorage?.getItem('_ip_identified');
+      if (!identified) {
+        fetch('/api/identify').then(r => r.json()).then(data => {
+          if (data.company && data.isLikelyBusiness) {
+            posthog.capture('ip_company_identified', {
+              ip_company: data.company,
+              ip_domain: data.domain,
+              ip_asn: data.asn,
+            });
+            // Store in Supabase
+            fetch('/api/track/abm', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                company: data.domain || data.company,
+                contact_name: null,
+                page: pathname,
+                referrer: document.referrer || null,
+                session_id: posthog.get_session_id?.() || null,
+              }),
+            }).catch(() => {});
+          }
+          window.sessionStorage?.setItem('_ip_identified', '1');
+        }).catch(() => {});
+      }
     }
 
     posthog.capture('$pageview', {

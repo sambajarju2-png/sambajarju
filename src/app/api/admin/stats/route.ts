@@ -38,6 +38,41 @@ export async function GET() {
     if (['clicked', 'visited'].includes(l.pipeline_stage) && daysSince < 2) {
       focus.push({ type: 'hot', priority: 1, label: `Hot lead: ${l.first_name} ${l.last_name}`, detail: `${company} — ${l.pipeline_stage} recently`, leadId: l.id });
     }
+    // Ghosting: was engaged (clicked/visited) but gone cold 5+ days
+    if (['clicked', 'visited'].includes(l.pipeline_stage) && daysSince > 5) {
+      focus.push({ type: 'ghost', priority: 1, label: `Ghosting: ${l.first_name} ${l.last_name}`, detail: `${company} — was ${l.pipeline_stage}, silent ${Math.floor(daysSince)}d. Re-engage now`, leadId: l.id });
+    }
+  });
+
+  // IP-identified companies (organic visitors detected via IPInfo)
+  const { data: recentAbm } = await supabase
+    .from('abm_visits')
+    .select('company, contact_name, visited_at')
+    .is('contact_name', null)
+    .gte('visited_at', new Date(now - 48 * 3600000).toISOString())
+    .order('visited_at', { ascending: false })
+    .limit(5);
+
+  const ipCompanies = new Set<string>();
+  (recentAbm || []).forEach((v: any) => {
+    if (v.company && !ipCompanies.has(v.company)) {
+      ipCompanies.add(v.company);
+      focus.push({ type: 'ip_identified', priority: 2, label: `New visitor: ${v.company}`, detail: 'Identified via IP — consider outreach' });
+    }
+  });
+
+  // Multi-visit alert (same company 3+ visits in 48h)
+  const { data: multiVisits } = await supabase
+    .from('abm_visits')
+    .select('company')
+    .gte('visited_at', new Date(now - 48 * 3600000).toISOString());
+
+  const visitCounts: Record<string, number> = {};
+  (multiVisits || []).forEach((v: any) => { if (v.company) visitCounts[v.company] = (visitCounts[v.company] || 0) + 1; });
+  Object.entries(visitCounts).forEach(([co, count]) => {
+    if (count >= 3) {
+      focus.push({ type: 'multi_visit', priority: 1, label: `Account surge: ${co}`, detail: `${count} visits in 48h — high interest signal` });
+    }
   });
 
   // Due LinkedIn actions
@@ -62,6 +97,6 @@ export async function GET() {
     pageViews: pageViews.count || 0,
     recentOutreach: logs,
     inboxReplies: threads.data || [],
-    focus: focus.slice(0, 5),
+    focus: focus.slice(0, 8),
   });
 }
