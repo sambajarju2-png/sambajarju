@@ -48,6 +48,25 @@ export default function AdminPage() {
     setContactSubs(prev => prev.map(c => c.id === id ? { ...c, read: true } : c));
   };
 
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [replyMsg, setReplyMsg] = useState('');
+  const [replySending, setReplySending] = useState(false);
+
+  const sendReply = async (sub: ContactSubmission) => {
+    if (!replyMsg.trim()) return;
+    setReplySending(true);
+    try {
+      const res = await fetch('/api/admin/reply', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: sub.id, toEmail: sub.email, toName: sub.name, subject: `Re: ${sub.subject}`, message: replyMsg }),
+      });
+      const data = await res.json();
+      if (data.success) { setReplyTo(null); setReplyMsg(''); setContactSubs(prev => prev.map(c => c.id === sub.id ? { ...c, read: true } : c)); }
+      else alert(data.error || 'Fout bij verzenden');
+    } catch { alert('Netwerkfout'); }
+    setReplySending(false);
+  };
+
   const deleteContact = async (id: string) => {
     await supabase.from('contact_submissions').delete().eq('id', id);
     setContactSubs(prev => prev.filter(c => c.id !== id));
@@ -284,13 +303,33 @@ export default function AdminPage() {
                   </div>
                   <p style={{ fontSize: 12, fontWeight: 600, color: '#4A6B7F', margin: '0 0 6px' }}>{sub.subject}</p>
                   <p style={{ fontSize: 13, color: '#374151', margin: 0, whiteSpace: 'pre-wrap' }}>{sub.message}</p>
-                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                    <a href={`mailto:${sub.email}?subject=Re: ${sub.subject}`} style={{ padding: '6px 12px', borderRadius: 8, background: '#EF476F', color: '#fff', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Beantwoorden</a>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+                    <button onClick={() => { setReplyTo(replyTo === sub.id ? null : sub.id); setReplyMsg(''); }} style={{ padding: '6px 12px', borderRadius: 8, background: replyTo === sub.id ? '#023047' : '#EF476F', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', border: 'none' }}>
+                      {replyTo === sub.id ? 'Annuleren' : 'Beantwoorden'}
+                    </button>
                     {!sub.read && (
                       <button onClick={() => markRead(sub.id)} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Markeer gelezen</button>
                     )}
                     <button onClick={() => { if (confirm('Weet je het zeker?')) deleteContact(sub.id); }} style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #fecaca', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#dc2626' }}>Verwijderen</button>
                   </div>
+                  {replyTo === sub.id && (
+                    <div style={{ marginTop: 12, padding: 12, borderRadius: 10, background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                      <textarea
+                        value={replyMsg}
+                        onChange={(e) => setReplyMsg(e.target.value)}
+                        placeholder={`Typ je antwoord aan ${sub.name}...`}
+                        rows={4}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d1d5db', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                      />
+                      <button
+                        onClick={() => sendReply(sub)}
+                        disabled={replySending || !replyMsg.trim()}
+                        style={{ marginTop: 8, padding: '8px 16px', borderRadius: 8, border: 'none', background: replySending ? '#8BA3B5' : '#EF476F', color: '#fff', fontSize: 13, fontWeight: 600, cursor: replySending ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}
+                      >
+                        {replySending ? 'Verzenden...' : '📨 Verstuur via Mailgun'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
