@@ -4,6 +4,10 @@ import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import AnalyticsDashboard from '@/components/admin/analytics-dashboard';
 import type { User } from '@supabase/supabase-js';
+import {
+  Building2, Users, Send, MailOpen, MousePointerClick, MessageSquareReply, Eye,
+  Mail, FileSpreadsheet, Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard
+} from 'lucide-react';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
 
@@ -136,20 +140,20 @@ export default function AdminPage() {
     setBulkSending(false);
   };
 
-  if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><p style={{ color: '#8BA3B5' }}>Loading...</p></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-[#8BA3B5] text-sm">Loading...</p></div>;
 
   if (!user) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <div style={{ width: 48, height: 48, borderRadius: 12, background: '#EF476F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 18 }}>SJ</div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Samba Admin</h1>
-      <button onClick={signIn} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Sign in with Google</button>
+    <div className="min-h-screen flex items-center justify-center flex-col gap-4">
+      <div className="w-12 h-12 rounded-xl bg-[#023047] flex items-center justify-center text-white font-bold text-lg">SJ</div>
+      <h1 className="text-2xl font-bold">Samba Admin</h1>
+      <button onClick={signIn} className="flex items-center gap-2 px-6 py-3 rounded-lg border border-[#E2E8F0] bg-white text-sm font-semibold cursor-pointer hover:bg-[#f8fafc] transition">Sign in with Google</button>
     </div>
   );
 
   if (user.email !== ADMIN_EMAIL) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700 }}>Niet geautoriseerd</h1>
-      <button onClick={signOut} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer' }}>Sign out</button>
+    <div className="min-h-screen flex items-center justify-center flex-col gap-4">
+      <h1 className="text-2xl font-bold">Niet geautoriseerd</h1>
+      <button onClick={signOut} className="px-5 py-2.5 rounded-lg border border-[#E2E8F0] bg-white cursor-pointer hover:bg-[#f8fafc] transition">Sign out</button>
     </div>
   );
 
@@ -158,46 +162,75 @@ export default function AdminPage() {
   const labelStyle = { fontSize: 12, fontWeight: 600 as const, color: '#4A6B7F', marginBottom: 4, display: 'block' as const };
   const pillBtn = (active: boolean) => ({ padding: '8px 16px', borderRadius: 99, border: 'none', background: active ? '#023047' : '#f1f5f9', color: active ? '#fff' : '#64748b', fontWeight: 600 as const, fontSize: 13, cursor: 'pointer' as const, fontFamily: 'inherit' });
 
+  const statItems = [
+    { label: 'Bedrijven', value: stats?.companies ?? '—', icon: Building2 },
+    { label: 'Contacten', value: stats?.contacts ?? '—', icon: Users },
+    { label: 'Verzonden', value: stats?.sent ?? '—', icon: Send, color: 'text-[#EF476F]' },
+    { label: 'Geopend', value: stats?.opened ?? '—', icon: MailOpen, color: 'text-[#3FCF8E]' },
+    { label: 'Geklikt', value: stats?.clicked ?? '—', icon: MousePointerClick, color: 'text-[#06B6D4]' },
+    { label: 'Replied', value: stats?.replied ?? '—', icon: MessageSquareReply, color: 'text-[#8B5CF6]' },
+    { label: 'Views', value: stats?.pageViews ?? '—', icon: Eye },
+  ];
+
+  const tabItems = [
+    { id: 'single' as const, label: 'Enkel', icon: Mail, action: () => setTab('single') },
+    { id: 'bulk' as const, label: 'Bulk', icon: FileSpreadsheet, action: () => setTab('bulk') },
+    { id: 'contact' as const, label: `Contact (${contactSubs.filter(c => !c.read).length})`, icon: Inbox, action: () => { setTab('contact'); fetchContacts(); } },
+    { id: 'analytics' as const, label: 'Analytics', icon: BarChart3, action: () => setTab('analytics') },
+  ];
+
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>ABM Dashboard</h1>
-          <p style={{ color: '#8BA3B5', margin: '4px 0 0', fontSize: 13 }}>{user.email}</p>
+    <div className="max-w-[960px] mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8 flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-[#023047] flex items-center justify-center">
+            <LayoutDashboard size={18} className="text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold leading-tight">ABM Dashboard</h1>
+            <p className="text-xs text-[#8BA3B5]">{user.email}</p>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <a href="/" style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Portfolio</a>
-          <a href="/studio" style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', textDecoration: 'none', color: '#023047', fontSize: 13 }}>Sanity</a>
-          <button onClick={signOut} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #E2E8F0', background: '#fff', cursor: 'pointer', fontSize: 13 }}>Uitloggen</button>
+        <div className="flex gap-2">
+          <a href="/" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs font-medium hover:bg-[#f8fafc] transition no-underline text-[#023047]">
+            <ExternalLink size={12} /> Portfolio
+          </a>
+          <a href="/studio" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs font-medium hover:bg-[#f8fafc] transition no-underline text-[#023047]">
+            <ExternalLink size={12} /> Sanity
+          </a>
+          <button onClick={signOut} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E2E8F0] bg-white text-xs font-medium hover:bg-[#f8fafc] transition cursor-pointer">
+            <LogOut size={12} /> Uit
+          </button>
         </div>
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 10, marginBottom: 28 }}>
-        {[
-          { label: 'Bedrijven', value: stats?.companies ?? '—' },
-          { label: 'Contacten', value: stats?.contacts ?? '—' },
-          { label: 'Verzonden', value: stats?.sent ?? '—', color: '#EF476F' },
-          { label: 'Geopend', value: stats?.opened ?? '—', color: '#3FCF8E' },
-          { label: 'Geklikt', value: stats?.clicked ?? '—', color: '#06B6D4' },
-          { label: 'Replied', value: stats?.replied ?? '—', color: '#8B5CF6' },
-          { label: 'Views', value: stats?.pageViews ?? '—' },
-        ].map(({ label, value, color }) => (
-          <div key={label} style={{ padding: 14, borderRadius: 12, background: '#fff', border: '1px solid #E2E8F0' }}>
-            <p style={{ fontSize: 10, color: '#8BA3B5', margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
-            <p style={{ fontSize: 22, fontWeight: 700, margin: 0, color: color || '#023047' }}>{value}</p>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2.5 mb-7">
+        {statItems.map(({ label, value, icon: Icon, color }) => (
+          <div key={label} className="p-3.5 rounded-xl bg-white border border-[#E8EDF2]">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Icon size={13} className="text-[#8BA3B5]" />
+              <span className="text-[10px] text-[#8BA3B5] uppercase tracking-wide font-semibold">{label}</span>
+            </div>
+            <p className={`text-xl font-extrabold m-0 ${color || 'text-[#023047]'}`}>{value}</p>
           </div>
         ))}
       </div>
 
-      {/* Tab toggle */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        <button onClick={() => setTab('single')} style={pillBtn(tab === 'single')}>📧 Enkel</button>
-        <button onClick={() => setTab('bulk')} style={pillBtn(tab === 'bulk')}>📋 Bulk (CSV)</button>
-        <button onClick={() => { setTab('contact'); fetchContacts(); }} style={pillBtn(tab === 'contact')}>
-          📩 Contact ({contactSubs.filter(c => !c.read).length})
-        </button>
-        <button onClick={() => setTab('analytics')} style={pillBtn(tab === 'analytics')}>📊 Analytics</button>
+      {/* Tabs */}
+      <div className="flex gap-1.5 mb-4 flex-wrap">
+        {tabItems.map(({ id, label, icon: Icon, action }) => (
+          <button
+            key={id}
+            onClick={action}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer border-none ${
+              tab === id ? 'bg-[#023047] text-white' : 'bg-[#f1f5f9] text-[#64748b] hover:bg-[#e8edf2]'
+            }`}
+          >
+            <Icon size={13} /> {label}
+          </button>
+        ))}
       </div>
 
       {/* SINGLE SEND */}
@@ -376,7 +409,7 @@ export default function AdminPage() {
       {/* Inbox */}
       {tab !== 'analytics' && stats?.inboxReplies && stats.inboxReplies.length > 0 && (
         <div style={{ padding: 24, borderRadius: 16, background: '#fff', border: '1px solid #E2E8F0' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>📬 Inbox</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 16px' }}>Inbox</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {stats.inboxReplies.map((msg: Record<string, unknown>, i: number) => (
               <div key={i} style={{ padding: 16, borderRadius: 12, background: '#f8fafc', border: '1px solid #E2E8F0' }}>

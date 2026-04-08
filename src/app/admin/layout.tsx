@@ -1,7 +1,20 @@
+import localFont from "next/font/local";
+import "../globals.css";
+
+const geistSans = localFont({
+  src: "../../../public/fonts/GeistVF.woff2",
+  variable: "--font-geist-sans",
+});
+
+const geistMono = localFont({
+  src: "../../../public/fonts/GeistMonoVF.woff2",
+  variable: "--font-geist-mono",
+});
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl">
-      <body style={{ margin: 0, fontFamily: 'system-ui, sans-serif', background: '#FAFBFC', color: '#023047' }}>
+    <html lang="nl" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="min-h-screen bg-[#FAFBFC] text-[#023047] font-[family-name:var(--font-geist-sans)] antialiased">
         {children}
       </body>
     </html>
