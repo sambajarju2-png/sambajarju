@@ -12,9 +12,9 @@ export function Projects() {
   const [activeTab, setActiveTab] = useState<'problem' | 'solution' | 'learned'>('problem');
 
   const tabs = [
-    { key: 'problem' as const, icon: AlertTriangle, label: 'Problem' },
-    { key: 'solution' as const, icon: Wrench, label: 'Solution' },
-    { key: 'learned' as const, icon: GraduationCap, label: 'Learned' },
+    { key: 'problem' as const, icon: AlertTriangle, label: t('tab_problem') },
+    { key: 'solution' as const, icon: Wrench, label: t('tab_solution') },
+    { key: 'learned' as const, icon: GraduationCap, label: t('tab_learned') },
   ];
 
   const otherProjects = [
@@ -126,7 +126,7 @@ export function Projects() {
               <>
                 {comingSoon && (
                   <div className="absolute inset-0 backdrop-blur-[2px] bg-surface/60 z-10 flex items-center justify-center">
-                    <span className="px-4 py-2 rounded-full text-sm font-semibold bg-accent/10 text-accent border border-accent/20">Coming soon</span>
+                    <span className="px-4 py-2 rounded-full text-sm font-semibold bg-accent/10 text-accent border border-accent/20">{t('coming_soon')}</span>
                   </div>
                 )}
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4`}>

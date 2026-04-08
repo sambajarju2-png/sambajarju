@@ -43,7 +43,7 @@ export function Playground() {
                 <h3 className="font-bold text-foreground text-base sm:text-lg mb-1.5 sm:mb-2 group-hover:text-accent transition-colors">{title}</h3>
                 <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed">{desc}</p>
                 <div className="mt-3 sm:mt-4 flex items-center gap-1 text-sm font-medium text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                  Try it
+                  {t('try_it')}
                   <ArrowRight className="w-3 h-3" />
                 </div>
               </Link>
@@ -57,7 +57,7 @@ export function Playground() {
               href="/playground"
               className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
             >
-              View all demos
+              {t('view_all')}
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

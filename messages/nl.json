@@ -59,7 +59,11 @@
     "abm_outreach": {
       "title": "ABM Outreach System",
       "description": "Volledig geautomatiseerde Account-Based Marketing pipeline met AI-personalisatie, branded CVs en gepersonaliseerde landingspaginas."
-    }
+    },
+    "tab_problem": "Probleem",
+    "tab_solution": "Oplossing",
+    "tab_learned": "Geleerd",
+    "coming_soon": "Binnenkort"
   },
   "tools": {
     "label": "Tool stack",
@@ -147,7 +151,9 @@
     "emails_sent": "Emails Verzonden",
     "open_rate": "Open Rate",
     "click_rate": "Click Rate",
-    "conversions": "Conversies"
+    "conversions": "Conversies",
+    "try_it": "Probeer het",
+    "view_all": "Bekijk alle demos"
   },
   "faq": {
     "title": "FAQ",
