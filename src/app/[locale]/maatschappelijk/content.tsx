@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Heart, Users, Globe, HandHeart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { urlFor } from '@/lib/sanity';
+import { useLocale } from 'next-intl';
 
 interface SanityPhoto {
   caption?: string;
@@ -156,6 +157,8 @@ function ImageCarousel({ photos }: { photos: SanityPhoto[] }) {
 }
 
 export function MaatschappelijkContent({ sanityData }: { sanityData: SanityData | null }) {
+  const locale = useLocale();
+  const isEN = locale === 'en';
   const photos = sanityData?.photos || [];
   const sections = sanityData?.sections?.length
     ? sanityData.sections.map((s, i) => ({ title: s.title, icon: iconMap[i] || <Heart className="w-6 h-6" />, content: [s.content] }))
@@ -174,7 +177,7 @@ export function MaatschappelijkContent({ sanityData }: { sanityData: SanityData 
         <div className="max-w-6xl mx-auto px-6 pt-32 pb-20 relative">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
             <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors" style={{ color: '#A7DADC' }}>
-              <ArrowLeft className="w-4 h-4" /> Terug naar home
+              <ArrowLeft className="w-4 h-4" /> {isEN ? 'Back to home' : 'Terug naar home'}
             </Link>
           </motion.div>
           <motion.p className="text-sm font-mono tracking-widest uppercase mb-4" style={{ color: '#EF476F' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
@@ -258,14 +261,14 @@ export function MaatschappelijkContent({ sanityData }: { sanityData: SanityData 
       <section className="py-20" style={{ backgroundColor: '#023047' }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: '#ffffff' }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Wil je meer weten of bijdragen?
+            {isEN ? 'Want to learn more or contribute?' : 'Wil je meer weten of bijdragen?'}
           </motion.h2>
           <motion.p className="text-lg mb-8" style={{ color: '#A7DADC' }} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            Neem gerust contact op. Ik vertel je er graag meer over.
+            {isEN ? 'Feel free to reach out. I would love to tell you more.' : 'Neem gerust contact op. Ik vertel je er graag meer over.'}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-white transition-transform hover:scale-105" style={{ backgroundColor: '#EF476F' }}>
-              Neem contact op <ArrowLeft className="w-4 h-4 rotate-180" />
+              {isEN ? 'Get in touch' : 'Neem contact op'} <ArrowLeft className="w-4 h-4 rotate-180" />
             </Link>
           </motion.div>
         </div>
