@@ -9,16 +9,20 @@ const supabase = createClient(
 );
 
 export async function GET() {
-  const [{ data: leads, error }, { data: actions }] = await Promise.all([
+  const [{ data: leads, error }, { data: actions }, { data: companyScores }] = await Promise.all([
     supabase
       .from('contacts')
-      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, company_id, companies(domain, name, logo_url, brand_color_primary)')
+      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, engagement_score, ai_next_action, ai_reasoning, score_updated_at, first_contacted_at, first_opened_at, first_clicked_at, first_visited_at, first_replied_at, company_id, companies(domain, name, logo_url, brand_color_primary, engagement_score, active_contacts, last_activity_at)')
       .order('pipeline_updated_at', { ascending: false }),
     supabase
       .from('scheduled_actions')
       .select('*')
       .eq('status', 'pending')
       .order('scheduled_for', { ascending: true }),
+    supabase
+      .from('companies')
+      .select('id, domain, name, engagement_score, active_contacts, last_activity_at')
+      .order('engagement_score', { ascending: false }),
   ]);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -33,7 +37,13 @@ export async function GET() {
     return lead;
   });
 
-  return NextResponse.json({ leads: enrichedLeads, scheduledActions: actions || [] });
+  const enrichedCompanies = (companyScores || []).map((co: any) => {
+    const domain = co.domain?.toLowerCase().replace(/^https?:\/\//, '');
+    if (domain && logoToken) co.logo_dev_url = `https://img.logo.dev/${domain}?token=${logoToken}&size=128&format=png`;
+    return co;
+  });
+
+  return NextResponse.json({ leads: enrichedLeads, scheduledActions: actions || [], companyScores: enrichedCompanies });
 }
 
 export async function PATCH(req: Request) {

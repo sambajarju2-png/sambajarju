@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import {
   Users, UserCheck, MailOpen, MousePointerClick, Globe, MessageSquareReply,
   CalendarCheck, Trophy, XCircle, ChevronRight, X, StickyNote, RefreshCw,
-  ArrowRight, Building2, Loader2, Clock, Link2, Bell, Check
+  ArrowRight, Building2, Loader2, Clock, Link2, Bell, Check, Zap, Brain
 } from 'lucide-react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -37,23 +37,35 @@ function LogoImg({ company, size = 20 }: { company: any; size?: number }) {
 export default function PipelineTab() {
   const [leads, setLeads] = useState<any[]>([]);
   const [actions, setActions] = useState<any[]>([]);
+  const [companyScores, setCompanyScores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [scoring, setScoring] = useState(false);
   const [selected, setSelected] = useState<any>(null);
   const [moving, setMoving] = useState<string | null>(null);
   const [noteEdit, setNoteEdit] = useState('');
   const [linkedinEdit, setLinkedinEdit] = useState('');
   const [scheduling, setScheduling] = useState(false);
+  const [view, setView] = useState<'leads' | 'companies'>('leads');
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch('/api/pipeline');
-      if (res.ok) { const d = await res.json(); setLeads(d.leads || []); setActions(d.scheduledActions || []); }
+      if (res.ok) { const d = await res.json(); setLeads(d.leads || []); setActions(d.scheduledActions || []); setCompanyScores(d.companyScores || []); }
     } catch (e) { console.error(e); }
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
+
+  const runScoring = async () => {
+    setScoring(true);
+    try {
+      await fetch('/api/scoring/run', { method: 'POST' });
+      await fetchLeads();
+    } catch (e) { console.error(e); }
+    setScoring(false);
+  };
 
   const moveToStage = async (leadId: string, stage: string) => {
     setMoving(leadId);
@@ -114,15 +126,26 @@ export default function PipelineTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <Building2 size={16} className="text-[#8BA3B5]" />
           <h3 className="text-sm font-bold text-[#023047]">Lead Pipeline</h3>
           <span className="text-[10px] text-[#8BA3B5] bg-[#f1f5f9] px-2 py-0.5 rounded-full font-semibold">{leads.length}</span>
         </div>
-        <button onClick={fetchLeads} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f1f5f9] text-[11px] font-semibold text-[#64748b] cursor-pointer border-none hover:bg-[#e8edf2] transition">
-          <RefreshCw size={11} /> Refresh
-        </button>
+        <div className="flex gap-1.5 items-center">
+          <button onClick={() => setView('leads')} className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer border-none transition ${view === 'leads' ? 'bg-[#023047] text-white' : 'bg-[#f1f5f9] text-[#64748b]'}`}>
+            <Users size={11} className="inline mr-1" />Leads
+          </button>
+          <button onClick={() => setView('companies')} className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer border-none transition ${view === 'companies' ? 'bg-[#023047] text-white' : 'bg-[#f1f5f9] text-[#64748b]'}`}>
+            <Building2 size={11} className="inline mr-1" />Companies
+          </button>
+          <button onClick={runScoring} disabled={scoring} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#EF476F] text-white text-[11px] font-semibold cursor-pointer border-none hover:bg-[#d93a5e] transition disabled:opacity-50">
+            {scoring ? <Loader2 size={11} className="animate-spin" /> : <Brain size={11} />} {scoring ? 'Scoring...' : 'Run AI'}
+          </button>
+          <button onClick={fetchLeads} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#f1f5f9] text-[11px] font-semibold text-[#64748b] cursor-pointer border-none hover:bg-[#e8edf2] transition">
+            <RefreshCw size={11} />
+          </button>
+        </div>
       </div>
 
       {/* Upcoming LinkedIn actions */}
@@ -146,7 +169,7 @@ export default function PipelineTab() {
       )}
 
       {/* Conversion funnel */}
-      {leads.length > 0 && (
+      {view === 'leads' && leads.length > 0 && (
         <div className="bg-white rounded-2xl border border-[#E8EDF2] p-4">
           <div className="flex items-center gap-2 mb-3">
             <ArrowRight size={13} className="text-[#8BA3B5]" />
@@ -170,6 +193,7 @@ export default function PipelineTab() {
       )}
 
       {/* Kanban */}
+      {view === 'leads' && (
       <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollSnapType: 'x mandatory' }}>
         {activeStages.map(stage => {
           const Icon = stage.icon;
@@ -192,6 +216,9 @@ export default function PipelineTab() {
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-[11px] font-bold text-[#023047] truncate">{lead.first_name} {lead.last_name}</span>
                         <div className="flex items-center gap-1">
+                          {lead.engagement_score > 0 && (
+                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${lead.engagement_score >= 60 ? 'bg-emerald-50 text-emerald-700' : lead.engagement_score >= 30 ? 'bg-amber-50 text-amber-700' : 'bg-[#f1f5f9] text-[#8BA3B5]'}`}>{lead.engagement_score}</span>
+                          )}
                           {hasLinkedin && <LinkedinIcon size={10} className="text-[#0A66C2]" />}
                           <ChevronRight size={12} className="text-[#8BA3B5] opacity-0 group-hover:opacity-100 transition" />
                         </div>
@@ -206,6 +233,12 @@ export default function PipelineTab() {
                         <span className="text-[9px] text-[#8BA3B5]">{lead.role || ''}</span>
                         <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full ${momentum(lead).bg} ${momentum(lead).color}`}>{momentum(lead).label}</span>
                       </div>
+                      {lead.ai_next_action && (
+                        <div className="flex items-center gap-1 mt-1.5 pt-1.5 border-t border-[#f4f7fa]">
+                          <Zap size={9} className="text-[#EF476F] flex-shrink-0" />
+                          <span className="text-[9px] text-[#4A6B7F] truncate">{lead.ai_next_action}</span>
+                        </div>
+                      )}
                     </button>
                   );
                 })}
@@ -214,6 +247,58 @@ export default function PipelineTab() {
           );
         })}
       </div>
+      )}
+
+      {/* Company view */}
+      {view === 'companies' && (
+        <div className="flex flex-col gap-2">
+          {companyScores.filter(c => c.engagement_score > 0 || leads.some(l => l.company_id === c.id)).map((co: any) => {
+            const coLeads = leads.filter(l => l.company_id === co.id);
+            const topLead = coLeads.sort((a, b) => (b.engagement_score || 0) - (a.engagement_score || 0))[0];
+            return (
+              <div key={co.id} className="bg-white rounded-xl border border-[#E8EDF2] p-4 hover:border-[#023047] transition">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <LogoImg company={{ logo_dev_url: co.logo_dev_url }} size={32} />
+                    <div>
+                      <p className="text-sm font-bold text-[#023047]">{co.name || co.domain}</p>
+                      <p className="text-[10px] text-[#8BA3B5]">{co.domain} — {coLeads.length} contact{coLeads.length !== 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`text-lg font-extrabold ${co.engagement_score >= 60 ? 'text-[#16a34a]' : co.engagement_score >= 30 ? 'text-[#f59e0b]' : 'text-[#8BA3B5]'}`}>{co.engagement_score || 0}</div>
+                    <div className="text-[9px] text-[#8BA3B5] uppercase font-semibold">Score</div>
+                  </div>
+                </div>
+                {coLeads.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {coLeads.map((l: any) => {
+                      const st = STAGES.find(s => s.id === l.pipeline_stage);
+                      return (
+                        <button key={l.id} onClick={() => { setSelected(l); setNoteEdit(l.notes || ''); setLinkedinEdit(l.linkedin_url || ''); setView('leads'); }}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold border border-[#E8EDF2] bg-[#fafbfc] hover:bg-white transition cursor-pointer text-[#023047]">
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: st?.color || '#8BA3B5' }} />
+                          {l.first_name} {l.last_name}
+                          {l.engagement_score > 0 && <span className="text-[#8BA3B5]">{l.engagement_score}</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {topLead?.ai_next_action && (
+                  <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-[#f4f7fa]">
+                    <Zap size={10} className="text-[#EF476F]" />
+                    <span className="text-[10px] text-[#4A6B7F]">{topLead.ai_next_action}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {companyScores.filter(c => c.engagement_score > 0 || leads.some(l => l.company_id === c.id)).length === 0 && (
+            <div className="text-center py-12 text-[#8BA3B5] text-sm">No companies with activity yet. Run AI scoring first.</div>
+          )}
+        </div>
+      )}
 
       {/* Detail slide-over */}
       {selected && (
@@ -313,6 +398,30 @@ export default function PipelineTab() {
                   </p>
                 </div>
               </div>
+
+              {/* AI Decision */}
+              {(selected.ai_next_action || selected.engagement_score > 0) && (
+                <div className="p-3 rounded-xl bg-gradient-to-r from-[#fdf2f8] to-[#fef7ff] border border-[#fce7f3]">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Brain size={13} className="text-[#EF476F]" />
+                    <span className="text-[11px] font-bold text-[#023047]">AI Recommendation</span>
+                    {selected.engagement_score > 0 && (
+                      <span className={`ml-auto text-xs font-extrabold ${selected.engagement_score >= 60 ? 'text-[#16a34a]' : selected.engagement_score >= 30 ? 'text-[#f59e0b]' : 'text-[#8BA3B5]'}`}>{selected.engagement_score}/100</span>
+                    )}
+                  </div>
+                  {selected.ai_next_action && (
+                    <p className="text-xs font-semibold text-[#023047] flex items-center gap-1.5">
+                      <Zap size={11} className="text-[#EF476F] flex-shrink-0" /> {selected.ai_next_action}
+                    </p>
+                  )}
+                  {selected.ai_reasoning && (
+                    <p className="text-[10px] text-[#4A6B7F] mt-1 leading-relaxed">{selected.ai_reasoning}</p>
+                  )}
+                  {selected.score_updated_at && (
+                    <p className="text-[9px] text-[#8BA3B5] mt-1.5">Scored {new Date(selected.score_updated_at).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</p>
+                  )}
+                </div>
+              )}
 
               {/* Move to */}
               <div>
