@@ -121,16 +121,9 @@ export function Projects() {
         {/* Other projects */}
         <StaggerContainer className="grid md:grid-cols-3 gap-6 mt-8">
           {otherProjects.map(({ key, icon: Icon, url, color, comingSoon, internal }) => {
-            const Wrapper = internal && !comingSoon ? Link : 'a';
-            const linkProps = comingSoon ? {} : internal
-              ? { href: url }
-              : { href: url, target: '_blank' as const, rel: 'noopener noreferrer' };
-            return (
-            <StaggerItem key={key}>
-              <Wrapper
-                {...linkProps}
-                className={`group block rounded-2xl border border-border bg-surface p-6 transition-all relative overflow-hidden ${comingSoon ? 'cursor-default' : 'hover:border-border-hover hover:shadow-md'}`}
-              >
+            const cardClass = `group block rounded-2xl border border-border bg-surface p-6 transition-all relative overflow-hidden ${comingSoon ? 'cursor-default' : 'hover:border-border-hover hover:shadow-md'}`;
+            const cardContent = (
+              <>
                 {comingSoon && (
                   <div className="absolute inset-0 backdrop-blur-[2px] bg-surface/60 z-10 flex items-center justify-center">
                     <span className="px-4 py-2 rounded-full text-sm font-semibold bg-accent/10 text-accent border border-accent/20">Coming soon</span>
@@ -149,8 +142,19 @@ export function Projects() {
                   {t('view_project')}
                   <ExternalLink className="w-3 h-3" />
                 </div>
-              </Wrapper>
-            </StaggerItem>
+              </>
+            );
+
+            return (
+              <StaggerItem key={key}>
+                {comingSoon ? (
+                  <div className={cardClass}>{cardContent}</div>
+                ) : internal ? (
+                  <Link href={url} className={cardClass}>{cardContent}</Link>
+                ) : (
+                  <a href={url} target="_blank" rel="noopener noreferrer" className={cardClass}>{cardContent}</a>
+                )}
+              </StaggerItem>
             );
           })}
         </StaggerContainer>
