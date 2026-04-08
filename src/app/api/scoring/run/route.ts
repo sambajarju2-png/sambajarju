@@ -64,8 +64,11 @@ Respond ONLY in this JSON format, nothing else:
 
     if (!res.ok) return { action: 'Review manually', reasoning: 'AI request failed' };
     const data = await res.json();
-    const text = data.content?.[0]?.text || '';
-    const parsed = JSON.parse(text);
+    const text = (data.content?.[0]?.text || '').trim();
+    // Strip markdown backticks and any preamble
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return { action: 'Review manually', reasoning: text.slice(0, 80) };
+    const parsed = JSON.parse(jsonMatch[0]);
     return { action: parsed.action || 'Review', reasoning: parsed.reasoning || '' };
   } catch {
     return { action: 'Review manually', reasoning: 'AI parse error' };
