@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import {
   Users, UserCheck, MailOpen, MousePointerClick, Globe, MessageSquareReply,
   CalendarCheck, Trophy, XCircle, ChevronRight, X, StickyNote, RefreshCw,
-  ArrowRight, Building2, Loader2, Clock, Link2, Bell, Check, Zap, Brain
+  ArrowRight, Building2, Loader2, Clock, Link2, Bell, Check, Zap, Brain, Play, ExternalLink
 } from 'lucide-react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -328,6 +328,58 @@ export default function PipelineTab() {
                 <div className="flex justify-between"><span className="text-[#8BA3B5]">Role</span><span className="text-[#023047] font-medium">{selected.role || '—'}</span></div>
               </div>
 
+              {/* Visit history + Session replays */}
+              {selected.visits?.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-semibold text-[#8BA3B5] uppercase tracking-wide mb-2 flex items-center gap-1"><Globe size={12} /> Site visits ({selected.visits.length})</p>
+                  <div className="flex flex-col gap-1.5 max-h-[160px] overflow-y-auto">
+                    {selected.visits.slice(0, 10).map((v: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-[11px] p-2 rounded-lg bg-[#f8fafc] border border-[#f4f7fa]">
+                        <span className="text-[#023047] font-medium flex-1 truncate">{v.page || '/'}</span>
+                        <span className="text-[9px] text-[#8BA3B5] flex-shrink-0">{v.visited_at ? new Date(v.visited_at).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                        {v.session_id && (
+                          <a
+                            href={`https://eu.posthog.com/project/155797/replay/recent?sessionId=${v.session_id}`}
+                            target="_blank"
+                            rel="noopener"
+                            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#023047] text-white text-[9px] font-semibold no-underline hover:bg-[#034a6e] transition flex-shrink-0"
+                          >
+                            <Play size={8} /> Replay
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Time-to-convert */}
+              {selected.first_contacted_at && (
+                <div>
+                  <p className="text-[11px] font-semibold text-[#8BA3B5] uppercase tracking-wide mb-2 flex items-center gap-1"><Clock size={12} /> Conversion timeline</p>
+                  <div className="flex flex-col gap-1 text-[10px]">
+                    {[
+                      { label: 'Contacted', date: selected.first_contacted_at },
+                      { label: 'Opened', date: selected.first_opened_at },
+                      { label: 'Clicked', date: selected.first_clicked_at },
+                      { label: 'Visited', date: selected.first_visited_at },
+                      { label: 'Replied', date: selected.first_replied_at },
+                    ].filter(s => s.date).map((step, i, arr) => {
+                      const prevDate = i > 0 ? arr[i-1]?.date : null;
+                      const diff = prevDate ? Math.round((new Date(step.date).getTime() - new Date(prevDate).getTime()) / 3600000) : 0;
+                      return (
+                        <div key={step.label} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#023047]" />
+                          <span className="text-[#023047] font-semibold w-16">{step.label}</span>
+                          <span className="text-[#8BA3B5]">{new Date(step.date).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                          {diff > 0 && <span className="text-[9px] text-[#EF476F] font-semibold ml-auto">{diff < 24 ? `${diff}h` : `${Math.round(diff/24)}d`}</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* LinkedIn */}
               <div>
                 <p className="text-[11px] font-semibold text-[#8BA3B5] uppercase tracking-wide mb-2 flex items-center gap-1"><LinkedinIcon size={12} className="text-[#0A66C2]" /> LinkedIn</p>
@@ -416,6 +468,11 @@ export default function PipelineTab() {
                   )}
                   {selected.ai_reasoning && (
                     <p className="text-[10px] text-[#4A6B7F] mt-1 leading-relaxed">{selected.ai_reasoning}</p>
+                  )}
+                  {selected.ai_send_window && (
+                    <p className="text-[10px] text-[#023047] mt-1.5 flex items-center gap-1">
+                      <Clock size={10} className="text-[#f59e0b]" /> Best time to reach out: <strong>{selected.ai_send_window}</strong>
+                    </p>
                   )}
                   {selected.score_updated_at && (
                     <p className="text-[9px] text-[#8BA3B5] mt-1.5">Scored {new Date(selected.score_updated_at).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</p>

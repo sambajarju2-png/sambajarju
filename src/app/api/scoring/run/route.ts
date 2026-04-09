@@ -37,41 +37,38 @@ function calculateScore(lead: any, outreachLogs: any[], abmVisits: any[]): { sco
   return { score: Math.max(0, Math.min(100, score)), reasons };
 }
 
-async function getAiDecision(lead: any, score: number, reasons: string[]): Promise<{ action: string; reasoning: string }> {
+async function getAiDecision(lead: any, score: number, reasons: string[]): Promise<{ action: string; reasoning: string; send_window: string }> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return { action: 'Review manually', reasoning: 'AI unavailable' };
+  if (!apiKey) return { action: 'Review manually', reasoning: 'AI unavailable', send_window: '' };
 
   try {
     const company = lead.companies?.name || lead.companies?.domain || 'Unknown';
-    const prompt = `You are an ABM (Account-Based Marketing) advisor. Given this lead data, suggest the ONE best next action in max 8 words, and a one-sentence reasoning.
+    const prompt = `You are an ABM advisor for a Dutch marketer. Given this lead, suggest: 1) ONE best next action (max 8 words), 2) one-sentence reasoning, 3) best day+time to send follow-up (NL timezone).
 
 Lead: ${lead.first_name} ${lead.last_name} at ${company}
-Stage: ${lead.pipeline_stage}
-Score: ${score}/100
+Stage: ${lead.pipeline_stage}, Score: ${score}/100
 Signals: ${reasons.join(', ')}
-Days since last activity: ${Math.floor((Date.now() - new Date(lead.pipeline_updated_at).getTime()) / 86400000)}
-Has LinkedIn: ${lead.linkedin_url ? 'yes' : 'no'}
-Has email reply: ${lead.pipeline_stage === 'replied' ? 'yes' : 'no'}
+Days inactive: ${Math.floor((Date.now() - new Date(lead.pipeline_updated_at).getTime()) / 86400000)}
+LinkedIn: ${lead.linkedin_url ? 'yes' : 'no'}
 
-Respond ONLY in this JSON format, nothing else:
-{"action": "...", "reasoning": "..."}`;
+Respond ONLY in JSON, no backticks:
+{"action":"...","reasoning":"...","send_window":"e.g. Tuesday 9:30 AM"}`;
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 150, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 200, messages: [{ role: 'user', content: prompt }] }),
     });
 
-    if (!res.ok) return { action: 'Review manually', reasoning: 'AI request failed' };
+    if (!res.ok) return { action: 'Review manually', reasoning: 'AI request failed', send_window: '' };
     const data = await res.json();
     const text = (data.content?.[0]?.text || '').trim();
-    // Strip markdown backticks and any preamble
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) return { action: 'Review manually', reasoning: text.slice(0, 80) };
+    if (!jsonMatch) return { action: 'Review manually', reasoning: text.slice(0, 80), send_window: '' };
     const parsed = JSON.parse(jsonMatch[0]);
-    return { action: parsed.action || 'Review', reasoning: parsed.reasoning || '' };
+    return { action: parsed.action || 'Review', reasoning: parsed.reasoning || '', send_window: parsed.send_window || '' };
   } catch {
-    return { action: 'Review manually', reasoning: 'AI parse error' };
+    return { action: 'Review manually', reasoning: 'AI parse error', send_window: '' };
   }
 }
 
@@ -94,12 +91,13 @@ export async function POST() {
 
   for (const lead of leads) {
     const { score, reasons } = calculateScore(lead, outreachLogs || [], abmVisits || []);
-    const { action, reasoning } = await getAiDecision(lead, score, reasons);
+    const { action, reasoning, send_window } = await getAiDecision(lead, score, reasons);
 
     await supabase.from('contacts').update({
       engagement_score: score,
       ai_next_action: action,
       ai_reasoning: reasoning,
+      ai_send_window: send_window,
       score_updated_at: new Date().toISOString(),
     }).eq('id', lead.id);
 

@@ -12,7 +12,7 @@ export async function GET() {
   const [{ data: leads, error }, { data: actions }, { data: companyScores }] = await Promise.all([
     supabase
       .from('contacts')
-      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, engagement_score, ai_next_action, ai_reasoning, score_updated_at, first_contacted_at, first_opened_at, first_clicked_at, first_visited_at, first_replied_at, company_id, companies(domain, name, logo_url, brand_color_primary, engagement_score, active_contacts, last_activity_at)')
+      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, engagement_score, ai_next_action, ai_reasoning, ai_send_window, score_updated_at, first_contacted_at, first_opened_at, first_clicked_at, first_visited_at, first_replied_at, company_id, companies(domain, name, logo_url, brand_color_primary, engagement_score, active_contacts, last_activity_at)')
       .order('pipeline_updated_at', { ascending: false }),
     supabase
       .from('scheduled_actions')
@@ -27,13 +27,29 @@ export async function GET() {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Add Logo.dev URLs server-side
+  // Fetch ABM visits for session replay links
+  const { data: abmVisits } = await supabase
+    .from('abm_visits')
+    .select('company, contact_name, page, session_id, visited_at')
+    .order('visited_at', { ascending: false })
+    .limit(200);
+
+  // Group visits by company domain
+  const visitsByCompany: Record<string, any[]> = {};
+  (abmVisits || []).forEach((v: any) => {
+    const key = v.company?.toLowerCase();
+    if (key) { if (!visitsByCompany[key]) visitsByCompany[key] = []; visitsByCompany[key].push(v); }
+  });
+
+  // Add Logo.dev URLs + visit history server-side
   const logoToken = process.env.LOGO_DEV_TOKEN;
   const enrichedLeads = (leads || []).map((lead: any) => {
     const domain = lead.companies?.domain?.toLowerCase().replace(/^https?:\/\//, '');
     if (domain && logoToken) {
       lead.companies = { ...lead.companies, logo_dev_url: `https://img.logo.dev/${domain}?token=${logoToken}&size=128&format=png` };
     }
+    // Attach visit history
+    lead.visits = visitsByCompany[domain || ''] || [];
     return lead;
   });
 
