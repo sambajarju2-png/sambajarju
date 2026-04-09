@@ -34,6 +34,11 @@ function calculateScore(lead: any, outreachLogs: any[], abmVisits: any[]): { sco
   // Has LinkedIn
   if (lead.linkedin_url) { score += 3; reasons.push('LinkedIn available (+3)'); }
 
+  // Company size bonus (from Apollo enrichment)
+  const empCount = parseInt(lead.companies?.employee_count || '0');
+  if (empCount >= 10000) { score += 5; reasons.push('Enterprise company (+5)'); }
+  else if (empCount >= 1000) { score += 3; reasons.push('Mid-market company (+3)'); }
+
   return { score: Math.max(0, Math.min(100, score)), reasons };
 }
 
@@ -42,10 +47,13 @@ async function getAiDecision(lead: any, score: number, reasons: string[]): Promi
   if (!apiKey) return { action: 'Review manually', reasoning: 'AI unavailable', send_window: '' };
 
   try {
-    const company = lead.companies?.name || lead.companies?.domain || 'Unknown';
-    const prompt = `You are an ABM advisor for a Dutch marketer. Given this lead, suggest: 1) ONE best next action (max 8 words), 2) one-sentence reasoning, 3) best day+time to send follow-up (NL timezone).
+    const company = lead.companies?.display_name || lead.companies?.name || lead.companies?.domain || 'Unknown';
+    const industry = lead.companies?.industry || 'unknown';
+    const employees = lead.companies?.employee_count || 'unknown';
+    const prompt = `You are an ABM advisor for a Dutch marketing automation specialist. Given this lead, suggest: 1) ONE best next action (max 8 words), 2) one-sentence reasoning, 3) best day+time to send follow-up (NL timezone).
 
 Lead: ${lead.first_name} ${lead.last_name} at ${company}
+Industry: ${industry}, Size: ${employees} employees
 Stage: ${lead.pipeline_stage}, Score: ${score}/100
 Signals: ${reasons.join(', ')}
 Days inactive: ${Math.floor((Date.now() - new Date(lead.pipeline_updated_at).getTime()) / 86400000)}
@@ -76,7 +84,7 @@ export async function POST() {
   // Fetch all leads with company data
   const { data: leads } = await supabase
     .from('contacts')
-    .select('*, companies(domain, name)')
+    .select('*, companies(domain, name, display_name, industry, employee_count)')
     .not('pipeline_stage', 'eq', 'lost');
 
   if (!leads?.length) return NextResponse.json({ scored: 0 });

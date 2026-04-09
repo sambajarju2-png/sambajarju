@@ -6,11 +6,12 @@ import AnalyticsDashboard from '@/components/admin/analytics-dashboard';
 import OutreachTab from '@/components/admin/outreach-tab';
 import InboxTab from '@/components/admin/inbox-tab';
 import PipelineTab from '@/components/admin/pipeline-tab';
+import InsightsTab from '@/components/admin/insights-tab';
 import type { User } from '@supabase/supabase-js';
 import {
   Building2, Users, Send, MailOpen, MousePointerClick, MessageSquareReply, Eye,
   Inbox, BarChart3, LogOut, ExternalLink, LayoutDashboard, Columns3,
-  Flame, AlertTriangle, ChevronRight
+  Flame, AlertTriangle, ChevronRight, TrendingUp
 } from 'lucide-react';
 
 const ADMIN_EMAIL = 'sambajarju2@gmail.com';
@@ -28,7 +29,7 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState('');
   const [form, setForm] = useState({ companyDomain: '', contactFirstName: '', contactLastName: '', contactEmail: '', contactRole: '', language: 'nl' as 'nl' | 'en' });
-  const [tab, setTab] = useState<'outreach' | 'inbox' | 'pipeline' | 'analytics'>('outreach');
+  const [tab, setTab] = useState<'outreach' | 'inbox' | 'pipeline' | 'analytics' | 'insights'>('outreach');
   const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
   const [bulkStatus, setBulkStatus] = useState('');
   const [bulkSending, setBulkSending] = useState(false);
@@ -170,6 +171,7 @@ export default function AdminPage() {
     { id: 'pipeline' as const, label: 'Pipeline', icon: Columns3, action: () => setTab('pipeline') },
     { id: 'inbox' as const, label: `Inbox (${contactSubs.filter(c => !c.read).length})`, icon: Inbox, action: () => { setTab('inbox'); fetchContacts(); } },
     { id: 'analytics' as const, label: 'Analytics', icon: BarChart3, action: () => setTab('analytics') },
+    { id: 'insights' as const, label: 'Insights', icon: TrendingUp, action: () => setTab('insights') },
   ];
 
   return (
@@ -297,6 +299,7 @@ export default function AdminPage() {
       )}
 
       {tab === 'analytics' && <AnalyticsDashboard />}
+      {tab === 'insights' && <InsightsTab />}
     </div>
   );
 }
