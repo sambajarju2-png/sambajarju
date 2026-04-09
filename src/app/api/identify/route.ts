@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 // Uses IPInfo Lite (free, unlimited) for ASN/org data
 // Upgrade to Business tier for actual company name + domain
 // Set IPINFO_TOKEN in Vercel env vars (get free at ipinfo.io)
@@ -19,7 +21,7 @@ export async function GET() {
 
   try {
     const res = await fetch(`https://api.ipinfo.io/lite/${ip}?token=${token}`, {
-      next: { revalidate: 3600 }, // cache 1 hour
+      cache: 'no-store',
     });
 
     if (!res.ok) return NextResponse.json({ company: null, ip, reason: 'ipinfo error' });
