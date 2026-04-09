@@ -14,15 +14,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing email or company' }, { status: 400 });
     }
 
+    // Look up display name
+    const { data: companyRow } = await supabase.from('companies').select('display_name, name').ilike('domain', company).limit(1).single();
+    const companyName = companyRow?.display_name || companyRow?.name || company.split('.')[0];
+
     const firstName = contactName?.split(' ')[0] || 'Hi';
     const subject = template === 'follow_up'
       ? `${firstName}, noticed you checked out my portfolio`
-      : `${firstName}, let's connect about ${company}`;
+      : `${firstName}, let's connect about ${companyName}`;
 
     const html = `
       <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; color: #023047;">
         <p>Hi ${firstName},</p>
-        <p>I noticed you visited my portfolio — thanks for taking a look! I'd love to chat about how I can help ${company} with email marketing and marketing automation.</p>
+        <p>I noticed you visited my portfolio — thanks for taking a look! I'd love to chat about how I can help ${companyName} with email marketing and marketing automation.</p>
         <p>Some things I could help with:</p>
         <ul style="color: #4A6B7F;">
           <li>Email marketing strategy & execution (500k+ emails/month experience)</li>

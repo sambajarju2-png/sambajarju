@@ -46,6 +46,7 @@ export default function PipelineTab() {
   const [linkedinEdit, setLinkedinEdit] = useState('');
   const [scheduling, setScheduling] = useState(false);
   const [view, setView] = useState<'leads' | 'companies'>('leads');
+  const [enriching, setEnriching] = useState(false);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -65,6 +66,15 @@ export default function PipelineTab() {
       await fetchLeads();
     } catch (e) { console.error(e); }
     setScoring(false);
+  };
+
+  const enrichAll = async () => {
+    setEnriching(true);
+    try {
+      await fetch('/api/enrich', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+      await fetchLeads();
+    } catch (e) { console.error(e); }
+    setEnriching(false);
   };
 
   const moveToStage = async (leadId: string, stage: string) => {
@@ -138,6 +148,9 @@ export default function PipelineTab() {
           </button>
           <button onClick={() => setView('companies')} className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer border-none transition ${view === 'companies' ? 'bg-[#023047] text-white' : 'bg-[#f1f5f9] text-[#64748b]'}`}>
             <Building2 size={11} className="inline mr-1" />Companies
+          </button>
+          <button onClick={enrichAll} disabled={enriching} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#06B6D4] text-white text-[11px] font-semibold cursor-pointer border-none hover:bg-[#0891b2] transition disabled:opacity-50">
+            {enriching ? <Loader2 size={11} className="animate-spin" /> : <Building2 size={11} />} {enriching ? 'Enriching...' : 'Enrich'}
           </button>
           <button onClick={runScoring} disabled={scoring} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#EF476F] text-white text-[11px] font-semibold cursor-pointer border-none hover:bg-[#d93a5e] transition disabled:opacity-50">
             {scoring ? <Loader2 size={11} className="animate-spin" /> : <Brain size={11} />} {scoring ? 'Scoring...' : 'Run AI'}
@@ -226,7 +239,7 @@ export default function PipelineTab() {
                       {co && (
                         <div className="flex items-center gap-1.5 mb-1">
                           <LogoImg company={co} size={14} />
-                          <span className="text-[10px] text-[#4A6B7F] truncate">{co.name || co.domain}</span>
+                          <span className="text-[10px] text-[#4A6B7F] truncate">{co.display_name || co.name || co.domain}</span>
                         </div>
                       )}
                       <div className="flex items-center justify-between mt-1.5">
@@ -261,8 +274,8 @@ export default function PipelineTab() {
                   <div className="flex items-center gap-3">
                     <LogoImg company={{ logo_dev_url: co.logo_dev_url }} size={32} />
                     <div>
-                      <p className="text-sm font-bold text-[#023047]">{co.name || co.domain}</p>
-                      <p className="text-[10px] text-[#8BA3B5]">{co.domain} — {coLeads.length} contact{coLeads.length !== 1 ? 's' : ''}</p>
+                      <p className="text-sm font-bold text-[#023047]">{co.display_name || co.name || co.domain}</p>
+                      <p className="text-[10px] text-[#8BA3B5]">{co.domain} — {coLeads.length} contact{coLeads.length !== 1 ? 's' : ''}{co.industry ? ` — ${co.industry}` : ''}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -316,8 +329,8 @@ export default function PipelineTab() {
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#f8fafc] border border-[#f4f7fa]">
                   <LogoImg company={selected.companies} size={40} />
                   <div>
-                    <p className="text-sm font-bold text-[#023047]">{selected.companies.name || selected.companies.domain}</p>
-                    <p className="text-[11px] text-[#8BA3B5]">{selected.companies.domain}</p>
+                    <p className="text-sm font-bold text-[#023047]">{selected.companies.display_name || selected.companies.name || selected.companies.domain}</p>
+                    <p className="text-[11px] text-[#8BA3B5]">{selected.companies.domain}{selected.companies.industry ? ` — ${selected.companies.industry}` : ''}</p>
                   </div>
                 </div>
               )}

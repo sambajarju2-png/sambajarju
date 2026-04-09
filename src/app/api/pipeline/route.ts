@@ -12,7 +12,7 @@ export async function GET() {
   const [{ data: leads, error }, { data: actions }, { data: companyScores }] = await Promise.all([
     supabase
       .from('contacts')
-      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, engagement_score, ai_next_action, ai_reasoning, ai_send_window, score_updated_at, first_contacted_at, first_opened_at, first_clicked_at, first_visited_at, first_replied_at, company_id, companies(domain, name, logo_url, brand_color_primary, engagement_score, active_contacts, last_activity_at)')
+      .select('id, first_name, last_name, email, role, linkedin_url, pipeline_stage, pipeline_updated_at, notes, deal_value, display_name, engagement_score, ai_next_action, ai_reasoning, ai_send_window, score_updated_at, first_contacted_at, first_opened_at, first_clicked_at, first_visited_at, first_replied_at, company_id, companies(domain, name, display_name, industry, logo_url, brand_color_primary, engagement_score, active_contacts, last_activity_at)')
       .order('pipeline_updated_at', { ascending: false }),
     supabase
       .from('scheduled_actions')
@@ -21,7 +21,7 @@ export async function GET() {
       .order('scheduled_for', { ascending: true }),
     supabase
       .from('companies')
-      .select('id, domain, name, engagement_score, active_contacts, last_activity_at')
+      .select('id, domain, name, display_name, industry, engagement_score, active_contacts, last_activity_at')
       .order('engagement_score', { ascending: false }),
   ]);
 
@@ -74,6 +74,19 @@ export async function PATCH(req: Request) {
 
   const { error } = await supabase.from('contacts').update(update).eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Log activity
+  if (pipeline_stage) {
+    const { data: contact } = await supabase.from('contacts').select('company_id').eq('id', id).single();
+    await supabase.from('lead_activity').insert({
+      contact_id: id,
+      company_id: contact?.company_id || null,
+      event_type: 'stage_change',
+      source: 'manual',
+      metadata: { new_stage: pipeline_stage },
+    });
+  }
+
   return NextResponse.json({ ok: true });
 }
 

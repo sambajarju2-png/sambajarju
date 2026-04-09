@@ -89,8 +89,10 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({ company: companyDomain }),
       });
       const brandData = brandRes.ok ? await brandRes.json() : {};
+      const rawName = brandData.companyName || companyDomain.split('.')[0];
+      const cleanName = rawName.replace(/\s*(B\.?V\.?|N\.?V\.?|GmbH|Inc\.?|Ltd\.?|plc|LLC)\s*$/i, '').trim();
       const { data: newCompany } = await supabase.from('companies').insert({
-        domain: companyDomain, name: brandData.companyName || companyDomain.split('.')[0],
+        domain: companyDomain, name: rawName, display_name: cleanName,
         logo_url: brandData.logoUrl || null,
         brand_color_primary: brandData.primaryColor || '#023047',
         brand_color_secondary: brandData.secondaryColor || '#EF476F',
@@ -116,18 +118,19 @@ export async function POST(request: NextRequest) {
     const colors = safeBrandColors(primary, secondary);
     const landingLocale = lang === 'en' ? '/en' : '';
     const landingUrl = `https://sambajarju.com${landingLocale}/landing?company=${companyDomain}&contactname=${contactFirstName}`;
-    const logoHtml = company.logo_url ? `<img src="${company.logo_url}" width="48" height="48" style="border-radius:12px;background:#fff;padding:4px;margin-bottom:16px" alt="${company.name}">` : '';
+    const companyDisplayName = company.display_name || company.name;
+    const logoHtml = company.logo_url ? `<img src="${company.logo_url}" width="48" height="48" style="border-radius:12px;background:#fff;padding:4px;margin-bottom:16px" alt="${companyDisplayName}">` : '';
     const subject = lang === 'en'
-      ? `${contactFirstName}, here's how I can help ${company.name}`
-      : `${contactFirstName}, zo kan ik ${company.name} helpen`;
+      ? `${contactFirstName}, here's how I can help ${companyDisplayName}`
+      : `${contactFirstName}, zo kan ik ${companyDisplayName} helpen`;
 
-    const emailHtml = emailTemplates[lang](contactFirstName, company.name, landingUrl, colors.sidebarBg, colors.accent, logoHtml);
+    const emailHtml = emailTemplates[lang](contactFirstName, companyDisplayName, landingUrl, colors.sidebarBg, colors.accent, logoHtml);
 
     // 4. Generate PDF
     let pdfBuffer: Buffer | null = null;
     try {
       pdfBuffer = await generateCVBuffer({
-        companyDomain, contactName: contactFirstName, companyName: company.name,
+        companyDomain, contactName: contactFirstName, companyName: companyDisplayName,
         primary, secondary, logoUrl: company.logo_url || '', language: lang,
       });
     } catch (e) { console.error('CV generation error:', e); }
