@@ -8,11 +8,8 @@ import { Footer } from "@/components/layout/footer";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const ChatBot = dynamic(() => import("@/components/ui/chatbot").then(m => ({ default: m.ChatBot })), { ssr: false });
-const PostHogProvider = dynamic(() => import("@/components/providers/posthog-provider").then(m => ({ default: m.PostHogProvider })), { ssr: false });
-const PostHogPageView = dynamic(() => import("@/components/providers/posthog-provider").then(m => ({ default: m.PostHogPageView })), { ssr: false });
+import { ChatBotDynamic } from "@/components/ui/chatbot-dynamic";
+import { PostHogProviderDynamic, PostHogPageViewDynamic } from "@/components/providers/posthog-dynamic";
 
 const geistSans = localFont({
   src: "../../../public/fonts/GeistVF.woff2",
@@ -125,18 +122,18 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
         <JsonLd />
-        <PostHogProvider>
-          <Suspense fallback={null}><PostHogPageView /></Suspense>
+        <PostHogProviderDynamic>
+          <Suspense fallback={null}><PostHogPageViewDynamic /></Suspense>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <NextIntlClientProvider locale={locale} messages={messages}>
               <ScrollProgress />
               <Header />
               <main>{children}</main>
               <Footer />
-              <ChatBot />
+              <ChatBotDynamic />
             </NextIntlClientProvider>
           </ThemeProvider>
-        </PostHogProvider>
+        </PostHogProviderDynamic>
       </body>
     </html>
   );
