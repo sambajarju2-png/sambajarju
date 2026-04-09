@@ -5,11 +5,14 @@ import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { ChatBot } from "@/components/ui/chatbot";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { PostHogProvider, PostHogPageView } from "@/components/providers/posthog-provider";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+const ChatBot = dynamic(() => import("@/components/ui/chatbot").then(m => ({ default: m.ChatBot })), { ssr: false });
+const PostHogProvider = dynamic(() => import("@/components/providers/posthog-provider").then(m => ({ default: m.PostHogProvider })), { ssr: false });
+const PostHogPageView = dynamic(() => import("@/components/providers/posthog-provider").then(m => ({ default: m.PostHogPageView })), { ssr: false });
 
 const geistSans = localFont({
   src: "../../../public/fonts/GeistVF.woff2",
@@ -115,6 +118,10 @@ export default async function LocaleLayout({
             }),
           }}
         />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://img.logo.dev" />
+        <link rel="preconnect" href="https://cdn.simpleicons.org" />
+        <link rel="dns-prefetch" href="https://eu.i.posthog.com" />
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
         <JsonLd />

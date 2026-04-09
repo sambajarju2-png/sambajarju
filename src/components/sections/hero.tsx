@@ -165,20 +165,20 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-16 lg:pt-[80px] lg:pb-[48px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full animate-[fadeInUp_0.5s_ease-out]" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)' }}>
               <Sparkles style={{ width: 14, height: 14, color: '#A7DADC' }} />
               <span style={{ color: '#A7DADC', fontSize: 13, fontWeight: 500 }}>{t('greeting')}</span>
-            </motion.div>
+            </div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.1 }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mt-4 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mt-4 mb-4 animate-[fadeInUp_0.6s_ease-out_0.05s_both]">
               {t('title').split(' ').map((word: string, i: number) => (
                 <span key={i} style={{ color: i === 1 ? '#A7DADC' : '#ffffff' }}>{word}{' '}</span>
               ))}
-            </motion.h1>
+            </h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.3 }} style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
+            <p className="animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
               {t('subtitle')}
-            </motion.p>
+            </p>
 
             {/* CTAs — hidden on mobile (iOS Safari GPU compositing bug with motion.div), visible on desktop */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="hidden sm:flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
