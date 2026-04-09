@@ -1,0 +1,27 @@
+# sambajarju.com
+> Samba Jarju — Data Marketeer & Marketing Automation specialist based in Rotterdam, Netherlands.
+
+## Pages
+- [Home](https://sambajarju.com/): Portfolio homepage with about, projects, experience, tools, testimonials, FAQ and contact.
+- [ABM Outreach](https://sambajarju.com/abm-outreach): Case study of a fully automated Account-Based Marketing pipeline with AI personalization, branded CVs, and personalized landing pages.
+- [Playground](https://sambajarju.com/playground): Interactive marketing demos — A/B Test Arena, Subject Line Analyzer, SQL Query Builder.
+- [Dynamic Branding](https://sambajarju.com/for): Live demo showing personalized landing pages that adapt to any company's brand colors and logo.
+- [Blog](https://sambajarju.com/blog): Articles on marketing automation, email marketing, and data-driven strategies.
+
+## Projects
+- [PayWatch.app](https://www.paywatch.app): AI-powered invoice tracker for Dutch households. Built with Next.js, Supabase, Gemini AI.
+- [Cleanprofs.nl](https://cleanprofs.nl): Freelance marketing automation via Deployteq for a professional cleaning company.
+- [Workwings.nl](https://workwings.nl): Staffing agency website.
+
+## Professional
+- Role: Email Marketeer at Vandebron (Dutch energy company)
+- Specialties: CRM, email marketing, marketing automation, SQL, AMPScript, Salesforce Marketing Cloud, Snowflake
+- Tools: HubSpot, Deployteq, Mailchimp, Klaviyo, Zapier, Make, n8n, Sanity CMS, Supabase
+- Education: Rotterdam Business School, Entrepreneurship BA 2021-2025
+
+## Contact
+- Email: samba@sambajarju.nl
+- LinkedIn: https://www.linkedin.com/in/sambajarju/
+- Phone: +31 6 87975656
+- Location: Rotterdam, Netherlands
+- KvK: 83474889

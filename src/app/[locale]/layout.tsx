@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { ChatBot } from "@/components/ui/chatbot";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { PostHogProvider, PostHogPageView } from "@/components/providers/posthog-provider";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Suspense } from "react";
 
 const geistSans = localFont({
@@ -116,6 +117,7 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
+        <JsonLd />
         <PostHogProvider>
           <Suspense fallback={null}><PostHogPageView /></Suspense>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
