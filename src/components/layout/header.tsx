@@ -62,7 +62,7 @@ export function Header() {
         </nav>
 
         {/* Right side */}
-        <div className={`flex items-center gap-2 sm:gap-3 transition-colors duration-300 ${scrolled ? '' : 'text-white [&_button]:text-white [&_button]:border-white/20'}`}>
+        <div className={`flex items-center gap-2 sm:gap-3 transition-colors duration-300 ${scrolled ? '' : '[&_button]:text-white/80 [&_button]:border-white/20 [&_button]:bg-white/10 [&_button]:hover:text-white [&_button]:hover:bg-white/20'}`}>
           <span className="hidden lg:block"><CommandMenu /></span>
           <ThemeToggle />
           <LanguageToggle />
