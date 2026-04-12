@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowRight, Briefcase, Euro, Users, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Briefcase, Euro, Users, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useEffect, useState, memo } from 'react';
 
@@ -165,25 +165,29 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-16 lg:pt-[80px] lg:pb-[48px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full animate-[fadeInUp_0.5s_ease-out]" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)' }}>
-              <Sparkles style={{ width: 14, height: 14, color: '#A7DADC' }} />
-              <span style={{ color: '#A7DADC', fontSize: 13, fontWeight: 500 }}>{t('greeting')}</span>
+            {/* Eyebrow */}
+            <div className="inline-flex items-center gap-2.5 mb-5 animate-[fadeInUp_0.5s_ease-out]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3FCF8E] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3FCF8E]" />
+              </span>
+              <span className="text-[11px] font-mono font-medium uppercase tracking-[0.15em]" style={{ color: 'rgba(167,218,220,0.7)' }}>{t('eyebrow')}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight mt-4 mb-5 animate-[fadeInUp_0.6s_ease-out_0.05s_both]">
+            <h1 className="text-[clamp(1.75rem,6vw,4.5rem)] font-extrabold leading-[1.08] tracking-tight mb-5 animate-[fadeInUp_0.6s_ease-out_0.05s_both]">
               <span className="text-white">{t('title_line1')}</span><br />
               <span className="text-white">{t('title_line2')}</span><br />
               <span className="text-[#A7DADC]" style={{ fontStyle: 'italic' }}>{t('title_accent')}</span>
               {' '}
               <span className="relative inline-block">
                 <span className="text-[#EF476F]">{t('title_highlight')}</span>
-                <svg className="absolute -bottom-1 left-0 w-full" height="8" viewBox="0 0 120 8" fill="none" preserveAspectRatio="none">
+                <svg className="absolute -bottom-0.5 left-0 w-full" height="8" viewBox="0 0 120 8" fill="none" preserveAspectRatio="none">
                   <path d="M2 5.5C20 2 40 7 60 4C80 1 100 6 118 3" stroke="#EF476F" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
                 </svg>
               </span>
             </h1>
 
-            <p className="animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.55)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
+            <p className="text-[14px] sm:text-[15px] leading-[1.7] mb-6 pr-2 animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.5)' }}>
               {t('subtitle')}
             </p>
 
