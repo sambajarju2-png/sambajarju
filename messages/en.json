@@ -9,13 +9,17 @@
   "hero": {
     "greeting": "Hey, I'm Samba",
     "title": "Creativity meets strategy",
-    "subtitle": "I use data-driven strategies to automate marketing and maximize impact.",
-    "cta_primary": "Let's talk",
-    "cta_secondary": "View projects",
+    "subtitle": "I build B2B outbound systems that reach the right person at the right moment. From targeting to conversion, fully automated.",
+    "cta_primary": "See what I can build for your company",
+    "cta_secondary": "Get in touch",
     "badge_role": "Data Marketer",
     "badge_salary": "Projects",
     "badge_team": "Team player",
-    "visited": "Site visited by"
+    "visited": "Site visited by",
+    "title_line1": "Your CRM knows more",
+    "title_line2": "than you think.",
+    "title_accent": "I make it",
+    "title_highlight": "act on it."
   },
   "companies": {
     "title": "Trusted by companies like"

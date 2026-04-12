@@ -170,29 +170,35 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               <span style={{ color: '#A7DADC', fontSize: 13, fontWeight: 500 }}>{t('greeting')}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-tight mt-4 mb-4 animate-[fadeInUp_0.6s_ease-out_0.05s_both]">
-              {t('title').split(' ').map((word: string, i: number) => (
-                <span key={i} style={{ color: i === 1 ? '#A7DADC' : '#ffffff' }}>{word}{' '}</span>
-              ))}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight mt-4 mb-5 animate-[fadeInUp_0.6s_ease-out_0.05s_both]">
+              <span className="text-white">{t('title_line1')}</span><br />
+              <span className="text-white">{t('title_line2')}</span><br />
+              <span className="text-[#A7DADC]" style={{ fontStyle: 'italic' }}>{t('title_accent')}</span>
+              {' '}
+              <span className="relative inline-block">
+                <span className="text-[#EF476F]">{t('title_highlight')}</span>
+                <svg className="absolute -bottom-1 left-0 w-full" height="8" viewBox="0 0 120 8" fill="none" preserveAspectRatio="none">
+                  <path d="M2 5.5C20 2 40 7 60 4C80 1 100 6 118 3" stroke="#EF476F" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
+                </svg>
+              </span>
             </h1>
 
-            <p className="animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
+            <p className="animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.55)', fontSize: 15, lineHeight: 1.7, maxWidth: 480, marginBottom: 24 }}>
               {t('subtitle')}
             </p>
 
-            {/* CTAs — hidden on mobile (iOS Safari GPU compositing bug with motion.div), visible on desktop */}
+            {/* CTAs */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.4 }} className="hidden sm:flex flex-col gap-3 mb-6 sm:flex-row sm:items-center">
+              <a
+                href="/for"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#EF476F] border-0 text-white text-sm font-semibold transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] no-underline w-full sm:w-auto"
+              >
+                <span suppressHydrationWarning>{t('cta_primary')}</span>
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+              </a>
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#EF476F] border-0 text-white text-sm font-semibold transition-all hover:opacity-90 appearance-none w-full sm:w-auto"
-              >
-                <span suppressHydrationWarning>{t('cta_primary')}</span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollTo('projects')}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-white/20 bg-transparent text-white text-sm font-medium transition-all hover:bg-white/10 appearance-none w-full sm:w-auto"
               >
                 <span suppressHydrationWarning>{t('cta_secondary')}</span>

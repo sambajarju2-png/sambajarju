@@ -9,13 +9,17 @@
   "hero": {
     "greeting": "Hey, ik ben Samba",
     "title": "Creativiteit ontmoet strategie",
-    "subtitle": "Ik gebruik data-driven strategieën om marketing te automatiseren en impact te maximaliseren.",
-    "cta_primary": "Laten we praten",
-    "cta_secondary": "Bekijk projecten",
+    "subtitle": "Ik bouw B2B outbound systemen die de juiste persoon op het juiste moment bereiken. Van targeting tot conversie, volledig geautomatiseerd.",
+    "cta_primary": "Bekijk wat ik voor jouw bedrijf kan doen",
+    "cta_secondary": "Neem contact op",
     "badge_role": "Data Marketeer",
     "badge_salary": "Projecten",
     "badge_team": "Team player",
-    "visited": "Website bezocht door"
+    "visited": "Website bezocht door",
+    "title_line1": "Je CRM weet meer",
+    "title_line2": "dan je denkt.",
+    "title_accent": "Ik maak het",
+    "title_highlight": "actief."
   },
   "companies": {
     "title": "Vertrouwd door bedrijven als"
