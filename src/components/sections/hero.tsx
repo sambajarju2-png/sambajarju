@@ -164,10 +164,10 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center min-h-[auto] lg:min-h-[100svh] pt-28 pb-16 lg:pt-[80px] lg:pb-[48px]">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center w-full">
-          <div>
+          <div className="min-w-0 overflow-hidden">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2.5 mb-5 animate-[fadeInUp_0.5s_ease-out]">
-              <span className="relative flex h-2 w-2">
+              <span className="relative flex h-2 w-2 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3FCF8E] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3FCF8E]" />
               </span>
@@ -187,7 +187,7 @@ export function Hero({ heroData }: { heroData?: HeroData | null }) {
               </span>
             </h1>
 
-            <p className="text-[14px] sm:text-[15px] leading-[1.7] mb-6 pr-2 animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-[14px] sm:text-[15px] leading-[1.7] mb-6 animate-[fadeInUp_0.5s_ease-out_0.15s_both]" style={{ color: 'rgba(255,255,255,0.5)' }}>
               {t('subtitle')}
             </p>
 
