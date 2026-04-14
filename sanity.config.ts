@@ -35,6 +35,12 @@ export default defineConfig({
               .schemaType('abmOutreach')
               .child(S.documentTypeList('abmOutreach').title('ABM Outreach')),
             S.divider(),
+            // Page Builder
+            S.listItem()
+              .title('📄 Pages (Builder)')
+              .schemaType('page')
+              .child(S.documentTypeList('page').title('Pages')),
+            S.divider(),
             // Collections
             S.listItem()
               .title('📁 Projects')

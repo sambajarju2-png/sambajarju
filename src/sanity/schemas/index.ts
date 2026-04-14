@@ -8,5 +8,13 @@ import { tool } from './tool';
 import { maatschappelijk } from './maatschappelijk';
 import { blogPost } from './blog-post';
 import { abmOutreach } from './abm-outreach';
+import {
+  page, heroBlock, richTextBlock, splitImageBlock, statsBlock,
+  ctaBlock, testimonialBlock, faqBlock, imageBlock, featureGridBlock,
+} from './page-builder';
 
-export const schemaTypes = [heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk, blogPost, abmOutreach];
+export const schemaTypes = [
+  heroSettings, about, project, experience, testimonial, faq, tool, maatschappelijk, blogPost, abmOutreach,
+  // Page builder
+  page, heroBlock, richTextBlock, splitImageBlock, statsBlock, ctaBlock, testimonialBlock, faqBlock, imageBlock, featureGridBlock,
+];
