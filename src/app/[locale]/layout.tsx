@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { Suspense } from "react";
 import { ChatBotDynamic } from "@/components/ui/chatbot-dynamic";
 import { PostHogProviderDynamic, PostHogPageViewDynamic } from "@/components/providers/posthog-dynamic";
+import { SanityVisualEditing } from "@/components/providers/sanity-visual-editing";
 
 const geistSans = localFont({
   src: "../../../public/fonts/GeistVF.woff2",
@@ -122,6 +123,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
         <JsonLd />
+        <SanityVisualEditing />
         <PostHogProviderDynamic>
           <Suspense fallback={null}><PostHogPageViewDynamic /></Suspense>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

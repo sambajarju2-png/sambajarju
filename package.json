@@ -11,6 +11,7 @@
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.19.0",
+    "@sanity/visual-editing": "^5.3.4",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "colorthief": "^3.3.1",

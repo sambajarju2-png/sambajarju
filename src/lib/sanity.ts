@@ -12,6 +12,9 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: false,
+  stega: {
+    studioUrl: '/studio',
+  },
 });
 
 const builder = createImageUrlBuilder({ projectId, dataset });

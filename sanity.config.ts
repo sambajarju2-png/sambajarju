@@ -2,6 +2,7 @@
 
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
+import { presentationTool } from 'sanity/presentation';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from '@/sanity/schemas';
 
@@ -67,6 +68,15 @@ export default defineConfig({
               .schemaType('tool')
               .child(S.documentTypeList('tool').title('Tools')),
           ]),
+    }),
+    presentationTool({
+      previewUrl: {
+        initial: '/',
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+          disable: '/api/draft-mode/disable',
+        },
+      },
     }),
     visionTool(),
   ],
